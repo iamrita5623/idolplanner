@@ -284,7 +284,7 @@
                                             {{ isPrivacyMode ? '****' : '$' + formatMoney(calculateTotal(event.expenses)) }}
                                         </span>
                                         <button @click.stop="togglePrivacy" class="text-slate-400 hover:text-primary ml-1 p-1 rounded-full active:bg-slate-100">
-                                            <i class="ph text-lg align-middle" :class="isPrivacyMode ? 'ph-eye-slash' : 'ph-eye'"></i>
+                                            <i class="ph" :class="isPrivacyMode ? 'ph-eye-slash' : 'ph-eye'"></i>
                                         </button>
                                     </div>
                                     
@@ -362,18 +362,33 @@
                         <div class="text-xs text-slate-500 mb-1">累計場次</div>
                         <div class="text-2xl font-bold text-slate-800">{{ statsData.count }} <span class="text-sm font-normal text-slate-400">場</span></div>
                     </div>
-                    <div class="bg-gradient-to-br from-primary/10 to-primary/5 p-4 rounded-2xl border border-primary/20 flex flex-col justify-center">
-                        <div class="text-xs text-primary-dark mb-1">累計投資</div>
-                        <div class="text-2xl font-bold" :style="{ color: themeColor }"> 
+                    <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                        <div class="text-xs text-slate-500 mb-1">累計投資</div>
+                        <div class="text-2xl font-bold text-slate-800"> 
                              {{ isPrivacyMode ? '****' : '$' + formatMoney(statsData.totalSpent) }}
                         </div>
-                        <div class="text-[10px] font-medium mt-1 leading-tight opacity-80 italic" :style="{ color: themeColor }">{{ idolNagging }}</div>
+                        <div class="text-[10px] font-medium mt-1 leading-tight opacity-80 italic text-slate-500">{{ idolNagging }}</div>
                     </div>
                 </div>
                  <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-crown text-yellow-500"></i> 本命排行榜</h3><span class="text-[10px] text-slate-500 px-2 py-1 rounded-full">含見面/錄製/簽售</span></div>
                     <div v-if="statsData.topArtists.length > 0" class="space-y-4">
-                        <div v-for="(artist, index) in statsData.topArtists" :key="artist.name" class="relative"><div class="flex justify-between text-sm mb-1 z-10 relative"><span class="font-bold text-slate-700"><span class="inline-block w-5 text-center mr-1" :class="{'text-yellow-500': index===0, 'text-slate-400': index>0}">#{{index+1}}</span>{{ artist.name }}</span><span class="text-slate-500">{{ artist.count }} 次見面</span></div><div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full transition-all duration-1000 ease-out" :style="{ width: (artist.count / statsData.maxArtistCount * 100) + '%', backgroundColor: artist.color }"></div></div></div>
+                        <div v-for="(artist, index) in statsData.topArtists" :key="artist.name" class="relative">
+                            <div class="flex justify-between text-sm mb-1 z-10 relative">
+                                <span class="font-bold text-slate-700">
+                                    <span class="inline-block w-5 text-center mr-1" 
+                                          :class="{'text-yellow-500': index===0, 'text-gray-500': index===1, 'text-amber-700': index===2, 'text-slate-400': index > 2}">
+                                        #{{index+1}}
+                                    </span>
+                                    {{ artist.name }}
+                                </span>
+                                <span class="text-slate-500">{{ artist.count }} 次見面</span>
+                            </div>
+                            <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full transition-all duration-1000 ease-out" 
+                                     :style="{ width: (artist.count / statsData.maxArtistCount * 100) + '%', backgroundColor: themeColor }"></div>
+                            </div>
+                        </div>
                     </div>
                     <div v-else class="text-center text-slate-400 text-sm py-4">區間內無資料</div>
                 </div>
