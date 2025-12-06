@@ -437,8 +437,7 @@
                         <div class="relative rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
                             
                             <div v-if="fan.coverUrl" class="w-full h-40 shrink-0 relative overflow-hidden bg-slate-100">
-                                <img :src="fan.coverUrl" class="w-full h-full object-cover" alt="Fandom Cover" onerror="this.style.display='none'">
-                                
+                                <img :src="fan.coverUrl" class="w-full h-full object-cover rounded-xl" alt="Fandom Cover" onerror="this.style.display='none'">
                             </div>
 
                             <div class="flex justify-between items-start p-4 shrink-0 border-b border-slate-100">
@@ -708,7 +707,7 @@
         <transition name="slide-up">
             <div v-if="showChangelogModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="showChangelogModal = false"></div>
-                <div class="bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div class="bg-white w-full max-w-md max-h-[70vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h2 class="text-xl font-bold text-slate-800">更新日誌 📄</h2>
                         <button @click="showChangelogModal = false" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
@@ -800,7 +799,7 @@
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">代表貼紙 (Emoji)</label><input v-model="fandomForm.sticker" type="text" placeholder="✨" maxlength="3" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800 text-xl text-center"></div>
 
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">封面圖片 URL (選填)</label><input v-model="fandomForm.coverUrl" type="text" placeholder="https://..." class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800">
-                                <p class="text-xs text-slate-400 mt-1">貼上 Imgur 或官方圖片網址，建議使用直式圖。</p>
+                                <p class="text-xs text-slate-400 mt-1">貼上 Imgur 或官方圖片網址，建議使用橫式圖。</p>
                             </div>
                             
                             <hr class="border-slate-100 my-2">
@@ -983,15 +982,27 @@
                 // --- END FANDOM STATES ---
 
                 const changelogContent = ref([ 
+                    { version: 'v1.0.3', date: '2025/12/06', items: [
+                        '優化入坑紀念日卡片排版：將偶像名稱/Emoji和編輯按鈕移到圖片下方，確保所有內容不被圖片疊蓋。',
+                        '修正出道日計算邏輯：現在同時顯示「出道年數」和「距離下一個紀念日倒數天數」。',
+                        '修復生日/出道日當天，祝賀詞正確顯示，並避免顯示倒數天數。',
+                        '修正入坑日卡片在沒有封面圖片時，文字區域會自動佔滿卡片空間，消除留白。'
+                    ] },
+                    { version: 'v1.0.2', date: '2025/12/05', items: [
+                        '新增入坑紀念日編輯功能（鉛筆按鈕）。',
+                        '入坑紀念日表單新增生日和出道日分離輸入欄位，並加入日期格式防呆。',
+                        '修復票根頁面：去除封面圖上的應援色濾鏡，保持圖片原色。',
+                        '優化入坑紀念日卡片：偶像名稱和 Emoji 樣式修正。'
+                    ] },
+                    { version: 'v1.0.1', date: '2025/12/05', items: [
+                        '新增追星儀表板數據（統計場次、花費、熱門本命）。',
+                        '新增資料匯入（JSON）和備份功能。',
+                        '優化行程頁面搜索功能，提供即將到來和歷史回憶篩選。',
+                    ] },
                     { version: 'v1.0.0', date: '2025/12/04', items: [
-                        '新增「入坑紀念日」頁面：追蹤多位偶像的入坑天數。',
-                        '修正 Header 留白過多的問題，使介面更緊湊。',
-                        '入坑紀念日頁面支援封面圖片、Emoji 和重要日期（生日/出道日）輸入。',
-                        '優化入坑紀念日卡片排版，支援左側直式圖片，右側顯示天數。',
-                        '新增生日/出道日當天的情緒祝賀詞功能（20+ 條）。',
-                        '修復行程卡片有封面時，應援色被覆蓋的問題。',
-                        '修復並整合了所有刪除按鈕，加入了「此操作無法恢復」的確認提示。',
-                        '修復 App 標題輸入時，無法清除文字的問題。'
+                        '初始版本發布，支援行程、費用、地圖紀錄。',
+                        '新增主題色自適應功能。',
+                        '優化加入日曆多選單。'
                     ] },
                 ]);
 
