@@ -11,6 +11,7 @@
     <meta property="og:description" content="追星族必備！紀錄所有偶像活動、演唱會門票支出、地圖足跡，不再錯過任何一個重要瞬間。">
     <meta property="og:type" content="website">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -55,9 +56,30 @@
             width: 100vw;
             overflow: hidden;
         }
+/* 彈窗專用的滾動容器 */
+.custom-popup-scroll {
+    overflow-y: auto !important;
+    scrollbar-width: thin; /* Firefox 縮小捲軸 */
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Chrome/Safari 縮小捲軸 */
+.custom-popup-scroll::-webkit-scrollbar {
+    width: 4px; /* 從 6px 縮小到 4px */
+    display: block !important;
+}
+
+.custom-popup-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.custom-popup-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+
 
         .expand-enter-active, .expand-leave-active { transition: all 0.3s ease-in-out; max-height: 800px; opacity: 1; }
         .expand-enter-from, .expand-leave-to { max-height: 0; opacity: 0; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
@@ -72,6 +94,7 @@
         .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
         #map-container { height: 100%; width: 100%; z-index: 1; }
         .leaflet-bottom { z-index: 400 !important; }
+.leaflet-top.leaflet-left { margin-top: 85px !important; }
 
         /* Ticket Styles */
         .ticket-stub {
@@ -131,26 +154,33 @@
                 </div>
             </div>
             
-            <div class="flex gap-3 mt-1" v-if="activeTab === 'home'">
-                <div :class="isThemeColorLight ?
-                    'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2.5 flex-1 text-center">
-                    <div :class="isThemeColorLight ?
-                        'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">倒數中</div>
-                    <div class="text-lg font-bold">{{ upcomingCount }} <span class="text-xs font-normal">場</span></div>
-                </div>
-                <div :class="isThemeColorLight ?
-                    'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2.5 flex-1 text-center relative group">
-                    <div :class="isThemeColorLight ?
-                        'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">年度花費</div>
-                    <div class="text-lg font-bold">
-                         {{ isPrivacyMode ? '****' : '$' + formatMoney(currentYearExpense) }}
-                    </div>
-                    
-                    <button @click="togglePrivacy" class="absolute top-1.5 right-1.5" :class="isThemeColorLight ? 'text-slate-500 hover:text-slate-800' : 'text-white/50 hover:text-white'">
-                        <i class="ph" :class="isPrivacyMode ? 'ph-eye-slash' : 'ph-eye'"></i>
-                    </button>
-                </div>
+<div class="flex gap-2 mt-1" v-if="activeTab === 'home'">
+    <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5">
+        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">倒數中</div>
+        <div class="text-base font-bold leading-none">{{ upcomingCount }} 場</div>
+    </div>
+
+    <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5 relative">
+        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">年支出</div>
+        <div class="text-base font-bold leading-none">{{ isYearlyPrivacy ? '****' : formatMoney(currentYearExpense) }}</div>
+        <button @click="isYearlyPrivacy = !isYearlyPrivacy" class="absolute top-1 right-1 opacity-50 p-1">
+            <i class="ph text-[10px]" :class="isYearlyPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i>
+        </button>
+    </div>
+
+    <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5">
+        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-1">預算已使用..</div>
+        <div class="px-1">
+            <div class="w-full h-1 bg-black/10 rounded-full overflow-hidden mb-1">
+                <div class="h-full bg-white transition-all duration-500" 
+                     :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></div>
             </div>
+            <div class="text-[8px] font-medium leading-none truncate" :style="{ color: isThemeColorLight ? '#475569' : '#f1f5f9' }">
+                {{ budgetNagging }}
+            </div>
+        </div>
+    </div>
+</div>
         </header>
 
         <main class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
@@ -306,10 +336,16 @@
        
             
                               
-                                <div class="flex items-center gap-2 truncate pr-2">
-                                    <i class="ph ph-map-pin shrink-0" :style="{ color: getEventColor(event) }"></i>
-                                    <span class="truncate">{{ event.location }}</span>
-                                </div>
+                               <div class="flex items-center gap-2 truncate pr-2">
+    <i class="ph ph-map-pin shrink-0" :style="{ color: getEventColor(event) }"></i>
+    <span class="truncate">{{ event.location }}</span>
+    
+    <span v-if="!event.lat || !event.lng" 
+          class="bg-red-50 text-red-500 text-[10px] px-1.5 py-0.5 rounded-md font-bold flex items-center gap-0.5 border border-red-100 animate-pulse">
+        <i class="ph ph-warning-circle"></i> 未定位
+    </span>
+</div>
+
 
                         
           
@@ -335,13 +371,12 @@
   
                                         <span class="font-bold text-xs">總支出: </span>
                                         <span class="font-mono font-bold">
-                                            {{ isPrivacyMode ? '****' : '$' + formatMoney(calculateTotal(event.expenses)) }}
-                                        </span>
-                                        <button @click.stop="togglePrivacy" class="text-slate-400 hover:text-primary ml-1 p-1 rounded-full active:bg-slate-100">
-        
- 
-                                          <i class="ph" :class="isPrivacyMode ? 'ph-eye-slash' : 'ph-eye'"></i>
-                                        </button>
+    {{ isEventPrivacy ? '****' : '$' + formatMoney(calculateTotal(event.expenses)) }}
+</span>
+<button @click.stop="isEventPrivacy = !isEventPrivacy" class="text-slate-400 hover:text-slate-500 ml-1 p-1 transition-colors">
+    <i class="ph" :class="isEventPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i>
+</button>
+
             
        
                                     </div>
@@ -527,27 +562,153 @@
 
             <div v-show="activeTab === 'map'" class="w-full h-full relative">
                 <div id="map-container" class="w-full h-full bg-slate-200"></div>
-                <div class="absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-lg border border-slate-100">
-                    <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-map-trifold text-primary"></i> 追星足跡</h3>
-                    <p class="text-xs text-slate-500 mt-1">已解鎖 {{ mappedEventsCount }} 個地點 <span v-if="missingCoordsCount > 0" class="text-orange-500 ml-1">({{ missingCoordsCount }} 個待定位)</span></p>
+<div class="absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
+    <div class="flex justify-between items-start">
+        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                <i class="ph ph-map-trifold text-primary"></i> 追星足跡
+            </h3>
+            
+            <div class="flex items-center gap-2">
+                <div class="relative shrink-0">
+                    <select v-model="selectedMapYear" @change="initMap" 
+                            class="appearance-none bg-slate-100 border-none text-slate-700 py-1 px-2 pr-6 rounded-lg text-[10px] font-bold focus:ring-1 focus:ring-primary">
+                        <option value="ALL">全部年度</option>
+                        <option v-for="year in availableYears" :key="year" :value="year">{{ year }} 年</option>
+                    </select>
+                    <i class="ph ph-caret-down absolute right-1.5 top-1.5 text-[8px] pointer-events-none opacity-50"></i>
+                </div>
+                
+<div class="truncate text-[10px] text-slate-500">
+    已征戰 {{ filteredMapEventsCount }} 個場館
+                    <span v-if="missingCoordsCount > 0" class="text-orange-500">
+                        ({{ missingCoordsCount }} 待定位)
+                    </span>
                 </div>
             </div>
+        </div>
 
-            <div v-if="activeTab === 'stats'" class="space-y-6 p-5 pb-32">
+        <div class="text-right shrink-0 border-l border-slate-100 pl-3 ml-1">
+            <div class="text-lg font-bold leading-none" :style="{ color: themeColor }">
+                {{ totalDistance }} <span class="text-[10px] font-normal text-slate-400">km</span>
+            </div>
+            <div class="text-[9px] text-slate-400 font-medium mt-1">累積里程</div>
+        </div>
+    </div>
+</div>
+
+   </div> <div v-if="activeTab === 'stats'" class="space-y-6 p-5 pb-32">
                  <div class="flex justify-between items-center mb-2">
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
-                    <button @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90"><i class="ph ph-download-simple text-lg"></i> 匯入</button>
+<div class="flex gap-2">
+    <button @click="generateShareImage" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+        <i class="ph ph-share-network text-lg"></i> 分享
+    </button>
+    <button @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+        <i class="ph ph-download-simple text-lg"></i> 匯入
+    </button>
+</div>
+
+<div id="share-template" style="position: fixed;
+top: -9999px; left: 0; width: 375px; padding: 30px; border-radius: 0px;
+z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8fafc' }">
+
+    
+    <div class="text-center mb-2">
+        <h1 class="text-xl font-bold text-slate-800" style="margin-bottom: 2px;">{{ selectedYear === 'ALL' ? '追星全紀錄回顧' : selectedYear + ' 年度回顧' }}</h1>
+        <p class="text-[9px] text-slate-500 tracking-widest uppercase">追星足跡由 ✨ 為您珍藏 ✨</p>
+    </div>
+
+<div class="px-3 py-1 rounded-2xl shadow-md mb-1 text-center flex items-center justify-center h-auto pt-2" :style="{ backgroundColor: themeColor }">
+    <div class="text-white font-bold italic text-xs leading-relaxed whitespace-pre-line" style="margin: 0 auto; max-width: 90%;">
+        "{{ emotionalSummary }}"
+    </div>
+</div>
+
+    <div class="space-y-3.5">
+<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+    <h3 class="text-lg font-black text-slate-700 mb-2 uppercase tracking-tighter border-b pb-2 inline-block mx-auto">🏆 年度成就</h3>
+    
+    <div class="flex flex-wrap justify-between items-start text-slate-600">
+        
+        <div class="flex-1 min-w-[45%] mb-2 pt-1 leading-tight text-[12px]">
+            今年看了
+            <div class="text-xl font-black my-0" :style="{ color: themeColor }">{{ statsData.count }}</div>
+            場演唱會
+        </div>
+
+        <div class="flex-1 min-w-[45%] mb-2 pt-1 leading-tight text-[12px]">
+            跨越
+            <div class="text-xl font-black my-0" :style="{ color: themeColor }">{{ totalDistance }}</div>
+            公里的距離
+        </div>
+
+        <div v-if="statsData.topArtists.length > 0" class="flex-1 min-w-[45%] pt-2 border-t border-dashed border-slate-100 leading-tight text-[12px]">
+            與
+<span class="text-xl font-black" :style="{ color: themeColor }">{{ statsData.topArtists[0].name }}</span> <br>
+            共創 <span class="text-xl font-black" :style="{ color: themeColor }">{{ statsData.topArtists[0].count }}</span> 
+            場回憶
+        </div>
+
+        <div v-if="statsData.topLocations.length > 0" class="flex-1 min-w-[45%] pt-4 border-t border-dashed border-slate-100 leading-tight text-[10px]">
+            你最常跑去 <br><span class="text-xl font-black" :style="{ color: themeColor }">{{ statsData.topLocations[0].name }}</span>
+        </div>
+        
+    </div>
+</div>
+
+<div class="w-full px-3 py-1 rounded-xl text-center" :style="{ backgroundColor: themeColor + '15' }">
+    <div class="font-bold text-xs w-full whitespace-pre-line" 
+         :style="{ color: adjustColor ? adjustColor(themeColor, -40) : themeColor }" 
+         style="line-height: 1.6; padding: 0 5px;">
+        💡 {{ idolNagging }}
+    </div>
+</div>
+
+<div v-if="statsData.series.length > 0" class="bg-white p-4 rounded-2xl border border-slate-100 text-center pb-6">
+     <h3 class="text-lg font-black text-slate-700 mb-2 uppercase tracking-tighter border-b pb-2 inline-block mx-auto">🎬 好看一直看</h3>
+    
+    <div class="flex justify-between gap-2">
+<div v-for="(item, idx) in statsData.series.slice(0, 3)" :key="item.title" 
+     class="flex-1 bg-slate-50 pt-2 pb-6 px-2 rounded-xl flex flex-col items-center justify-start text-center">
+    <div class="mb-2 text-2xl">
+        <span v-if="idx === 0">🥇</span>
+        <span v-else-if="idx === 1">🥈</span>
+        <span v-else-if="idx === 2">🥉</span>
+    </div>
+    <div class="w-full">
+        <div class="font-bold text-slate-700 text-[8px] break-words leading-[1.1] mb-1">
+            {{ item.title }}
+        </div>
+        <div class="font-black text-[10px]" :style="{ color: themeColor }">
+            {{ item.count }}場
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+        <div style="height: 10px;"></div>
+    </div>
+</div>
+
+
+
+
                 </div>
                 <div class="space-y-4">
-                 
                     <div class="relative">
-                        <select v-model="selectedYear" class="w-full appearance-none bg-white border border-slate-200 text-slate-700 py-3 px-4 pr-8 rounded-xl font-bold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
-                            <option value="ALL">🗓️ 全部年份總回顧</option>
-                            <option v-for="year in availableYears" :key="year" :value="year">{{ year }} 年度回顧</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500"><i class="ph ph-caret-down-bold"></i></div>
-                    </div>
+                               <select v-model="selectedYear" 
+                class="w-full appearance-none bg-white border border-slate-200 text-slate-700 py-3 px-4 pr-10 rounded-xl font-bold shadow-sm focus:outline-none cursor-pointer relative z-10">
+            <option value="ALL">🗓️ 全部年份總回顧</option>
+            <option v-for="year in availableYears" :key="year" :value="year">{{ year }} 年度回顧</option>
+        </select>
+        
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 z-20">
+            <i class="ph ph-caret-down"></i>
+        </div>
+    </div>
          
                     <div v-if="emotionalSummary" class="bg-white p-4 rounded-xl shadow-sm border-l-4" :style="{ borderColor: themeColor }">
                         <p class="text-sm font-bold text-slate-700 italic">"{{ emotionalSummary }}"</p>
@@ -560,11 +721,19 @@
                         <div class="text-2xl font-bold text-slate-800">{{ statsData.count }} <span class="text-xs font-normal text-slate-400">場</span></div>
                     </div>
                     <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-2xl border border-slate-100 flex flex-col justify-center">
-                        <div class="text-xs text-slate-500 mb-1">累計投資</div>
-                        <div class="text-2xl font-bold text-slate-800"> 
-                            {{ isPrivacyMode ? '****' : '$' + formatMoney(statsData.totalSpent) }}
-                        </div>
-                        <div class="text-[10px] font-medium mt-1 leading-tight opacity-80 italic text-slate-500">{{ idolNagging }}</div>
+<div class="text-xs text-slate-500 mb-1 flex justify-between items-center">
+    累計投資
+    <button @click="isStatsPrivacy = !isStatsPrivacy" class="text-slate-400">
+        <i class="ph" :class="isStatsPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i>
+    </button>
+</div>
+<div class="text-2xl font-bold text-slate-800"> 
+    {{ isStatsPrivacy ? '****' : '$' + formatMoney(statsData.totalSpent) }}
+</div>
+
+                       <div class="text-[10px] font-medium mt-1 leading-tight opacity-80 italic text-slate-500">
+    {{ idolNagging }}
+</div>
                     </div>
                 </div>
   
@@ -738,53 +907,71 @@
             </div>
         </transition>
 
-        <div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
-            <div class="bg-white p-6 rounded-2xl shadow-2xl w-80 text-center">
-                <h3 class="font-bold text-lg mb-4 text-slate-700">資料與主題設定 ⚙️</h3>
-                
-                <div class="mb-6 border-b border-slate-100 pb-4">
+<div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
+    <div class="bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
+        
+        <div class="flex justify-between items-center p-6 pb-4 shrink-0">
+            <h3 class="font-bold text-lg text-slate-700">系統與主題設定 ⚙️</h3>
+            <button @click="showSettingsModal = false" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200 transition-colors">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
+            <div class="space-y-6 text-center">
+                <div class="border-b border-slate-100 pb-4">
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
                     <input type="text" v-model="customTitle" @change="updateAppTitle" placeholder="追星日記 ✨"
-                           class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50 focus:border-primary/50">
+                         class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
                 </div>
-                
-   
-              
-                <div class="mb-6">
-                    <p class="text-xs text-slate-400 mb-2">全域主題色</p>
+
+                <div class="border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-500 mb-2">年度追星預算 (TWD)</p>
+                    <input type="number" v-model.number="yearlyBudget" placeholder="例如: 50000"
+                           class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
+                    <p class="text-[10px] text-slate-400 mt-2 italic">※ 設定後，首頁會提醒你是否花太多錢囉！</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-2">全域主題色</p>
                     <div class="grid grid-cols-4 gap-3 mb-3">
-                       
-                        <button v-for="color in presetColors" :key="color" @click="setTheme(color)" class="w-12 h-12 rounded-full shadow-sm transition-transform hover:scale-110 border-2" 
-                            :class="themeColor === color ? 'border-slate-800' : 'border-transparent'" :style="{ backgroundColor: color }"></button>
+                        <button v-for="color in presetColors" :key="color" @click="setTheme(color)" 
+                                class="w-full aspect-square rounded-full shadow-sm transition-transform hover:scale-110 border-2" 
+                                :class="themeColor === color ? 'border-slate-800' : 'border-transparent'" 
+                                :style="{ backgroundColor: color }"></button>
                     </div>
-                    <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl"><span class="text-sm text-slate-500">自訂:</span><input type="color" v-model="themeColor" @input="setTheme(themeColor)" class="w-full h-8 cursor-pointer rounded bg-transparent"></div>
+                    <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl">
+                        <p class="text-sm text-slate-500 shrink-0">自訂:</p>
+                        <input type="color" v-model="themeColor" @input="setTheme(themeColor)" class="w-full h-8 cursor-pointer rounded bg-transparent">
+                    </div>
                 </div>
-                <hr class="border-slate-100 my-4">
-   
-                <div class="mb-4">
-                    <p class="text-xs text-slate-400 mb-2">資料備份與轉移</p>
+
+                <hr class="border-slate-100">
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-2">資料備份與轉移</p>
                     <div class="flex flex-col gap-2">
-                        <button @click="downloadBackup" class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200"><i class="ph ph-download-simple text-lg"></i> 備份資料 (下載檔案)</button>
-                        <label class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200 cursor-pointer"><i class="ph ph-upload-simple text-lg"></i> 還原資料 (上傳檔案)<input type="file" accept=".json" @change="restoreBackup" class="hidden"></label>
+                        <button @click="downloadBackup" class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200">
+                            <i class="ph ph-download-simple text-lg"></i> 備份資料
+                        </button>
+                        <label class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200 cursor-pointer">
+                            <i class="ph ph-upload-simple text-lg"></i> 還原資料
+                            <input type="file" accept=".json" @change="restoreBackup" class="hidden">
+                        </label>
                     </div>
                 </div>
-             
-  
-               <hr class="border-slate-100 my-4">
 
-                <div class="mt-4 border-t border-slate-100 pt-4 text-xs text-slate-400 text-center">
-                    <p class="inline-block mr-4">當前版本: <span class="font-mono text-slate-800">{{ appVersion }}</span></p>
-                    <button @click="showChangelog" 
-                        class="text-primary hover:underline font-medium text-xs cursor-pointer"
-                        :style="{ color: themeColor }">
-                        📄 查看更新日誌
-                    </button>
-            
+                <hr class="border-slate-100">
+
+                <div class="pt-2 text-[10px] text-slate-400">
+                    <p class="mb-2">當前版本: {{ appVersion }}</p>
+                    <button @click="showChangelog" class="font-medium underline" :style="{ color: themeColor }">📄 查看更新日誌</button>
                 </div>
-
-                <button @click="showSettingsModal = false" class="mt-2 text-sm text-slate-400 hover:text-slate-600">完成</button>
             </div>
         </div>
+    </div>
+</div>
+
         
         <transition name="slide-up">
             <div v-if="showFandomModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
@@ -990,15 +1177,20 @@
         const { createApp, ref, computed, onMounted, watch, nextTick } = Vue;
         createApp({
             setup() {
+
+
                 const events = ref([]);
+                const selectedMapYear = ref('ALL');
                 const activeTab = ref('home');
                 const viewMode = ref('upcoming');
                 const themeColor = ref('#63b3b0'); 
           
  
-                const selectedYear = ref('ALL');
+             const selectedYear = ref(new Date().getFullYear().toString());
                 const expandedEventId = ref(null);
-                const isPrivacyMode = ref(true);
+                const isYearlyPrivacy = ref(true); 
+                const isEventPrivacy = ref(true); 
+
                 const isSearching = ref(false);
                 const searchError = ref('');
      
@@ -1023,6 +1215,78 @@
                 let map = null;
                 let markers = [];
 
+const isStatsPrivacy = ref(true); 
+// 初始化預算，預設 50000
+const yearlyBudget = ref(Number(localStorage.getItem('idolYearlyBudget')) || 50000); 
+
+// 監聽並存入本地儲存
+watch(yearlyBudget, (newVal) => localStorage.setItem('idolYearlyBudget', newVal));
+
+// 級距碎碎念邏輯
+const budgetNagging = computed(() => {
+    const percent = (currentYearExpense.value / yearlyBudget.value) * 100;
+    if (percent >= 100) return "⚠️ 預算炸裂！請開始吃土模式";
+    if (percent >= 80) return "🚨 亮紅燈！再買要喝西北風了";
+    if (percent >= 50) return "💡 預算過半，請謹慎評估行程";
+    return "✨ 預算充裕，記得存錢唷！";
+});
+
+// 計算兩點間的球面距離 (Haversine 公式)
+const calculateKm = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // 地球半徑 (km)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+};
+
+// 新增：根據年份計算過濾後的點位數量
+const filteredMapEventsCount = computed(() => {
+    // 1. 先根據年度過濾資料
+    const target = selectedMapYear.value === 'ALL' 
+        ? events.value 
+        : events.value.filter(e => e.date && e.date.startsWith(selectedMapYear.value));
+
+    // 2. 建立一個 Set 來儲存唯一的經緯度組合字串
+    const uniqueLocations = new Set();
+    
+    target.forEach(e => {
+        if (e.lat && e.lng) {
+            // 將經緯度組合成字串作為 key，例如 "25.05_121.53"
+            uniqueLocations.add(`${e.lat}_${e.lng}`);
+        }
+    });
+
+    // 3. 回傳 Set 的大小，即為不重複的地點數量
+    return uniqueLocations.size;
+});
+
+
+// 更新：totalDistance 也要隨著年份變動
+const totalDistance = computed(() => {
+    // 根據統計頁面選擇的年份過濾
+    const targetYear = selectedYear.value;
+    const baseEvents = targetYear === 'ALL' 
+        ? events.value 
+        : events.value.filter(e => e.date && e.date.startsWith(targetYear));
+
+    const validPoints = [...baseEvents]
+        .filter(e => e.lat && e.lng)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let dist = 0;
+    for (let i = 0; i < validPoints.length - 1; i++) {
+        dist += calculateKm(
+            validPoints[i].lat, validPoints[i].lng,
+            validPoints[i+1].lat, validPoints[i+1].lng
+        );
+    }
+    return Math.round(dist); // 依照您的要求取整數位
+});
+
+
                 const defaultForm = {
                     id: null, title: '', artist: '', date: '', time: '19:00', location: '', 
                     seat: '', color: '#63b3b0', expenses: [], checklist: [], memo: '', lat: null, lng: null,
@@ -1032,7 +1296,7 @@
                 const form = ref({ ...defaultForm });
                 const presetColors = ['#63b3b0', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#1dd1a1'];
                 const customTitle = ref(localStorage.getItem('appTitle') || '追星日記 ✨');
-                const appVersion = ref('v1.0.4'); // 更新版本號
+                const appVersion = ref('v1.0.5'); // 更新版本號
                 
                 // --- FANDOM STATES ---
                 const fandoms = ref(JSON.parse(localStorage.getItem('fandomFandoms') || '[]'));
@@ -1051,6 +1315,18 @@
                 // --- END FANDOM STATES ---
 
                 const changelogContent = ref([ 
+
+{ 
+    version: 'v1.0.5', 
+    date: '2025/12/28', 
+    items: [
+        '新增地圖「追星里程」自動計算，累計所有行程間的移動距離。',
+        '新增追星成就「分享長圖」功能，一鍵生成年度回顧美圖。',
+        '新增年度追星預算設定與首頁進度條提醒。',
+        '優化地圖 UI 佈局與年度篩選功能，並繪製歷史足跡標線。',
+        '精細化隱私模式：可獨立切換首頁支出、行程細節與統計數據的金額屏蔽。'
+    ] 
+},
                     { version: 'v1.0.4', date: '2025/12/08', items: [
                         '新增封面圖片上傳彈性：行程與紀念日表單支援 Base64 檔案上傳（限制 1MB）或貼上圖片 URL 兩種模式。',
                         '優化 Base64 圖片預覽與清除邏輯。',
@@ -1191,11 +1467,23 @@
                 watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
                 watch(themeColor, (newVal) => localStorage.setItem('idolTheme', newVal));
                 
-                watch(activeTab, (newTab) => {
-                    if (newTab === 'map') {
-                        nextTick(() => { initMap(); });
-                    }
-                });
+watch(customTitle, (newVal) => localStorage.setItem('appTitle', newVal));
+watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
+watch(themeColor, (newVal) => localStorage.setItem('idolTheme', newVal));
+
+// 新增此段落：監聽地圖年份篩選
+watch(selectedMapYear, () => {
+    if (activeTab.value === 'map') {
+        nextTick(() => { initMap(); });
+    }
+});
+
+watch(activeTab, (newTab) => {
+    if (newTab === 'map') {
+        nextTick(() => { initMap(); });
+    }
+});
+
                 const adjustColor = (color, amount) => {
                     let hex = color.replace('#', '');
                     if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -1363,8 +1651,11 @@
                         `讓 ${name} 的音樂充滿你的生活，已經 [DAYS] 天的幸福！🎧`,
                         `你已經是 ${name} 重要的支柱，這是你們的第 [DAYS] 天紀念！💪`,
                         `你將 ${name} 刻在了生命中，這 [DAYS] 天的努力沒有白費！💎`,
+                        `這份浪漫持續了 [DAYS] 天，願你與 ${name} 永遠熱戀 🌹`, 
+                        `因為遇見 ${name}，這 [DAYS] 天的生活都發著光 ✨`, 
+                        `你將最美的時光都給了 ${name}，共計 [DAYS] 天 💎`
                     ];
-                    const randomIndex = calculateFandomDays(fandom.date) % messages.length;
+                    const randomIndex = Math.floor(Math.random() * messages.length);
                     const messageTemplate = messages[randomIndex];
                     return {
                         message: messageTemplate.replace(/\[DAYS\]/g, diffDays), 
@@ -1405,6 +1696,11 @@
                         "請保持熱戀，期待下一次的感動重逢 😭❤️",
                         "追星是人生最甜蜜的投資，你超棒！💯",
                         "今天也充滿元氣，為了見到最愛的人而努力💪",
+                        "為了見到最愛的人，今天也要充滿元氣 💪",
+                        "把想念化作動力，迎接下一個舞台 🎤",
+                        "你是這場愛意長跑中最勇敢的選手 🏃‍♀️",
+                        "所有的等待，都會在見面那一刻釋放 ✨"
+
                     ];
                     let baseMsg = hour < 12 ? "早安！" : hour < 18 ? "午安！" : "晚安！";
                     return baseMsg + msgs[Math.floor(Math.random() * msgs.length)];
@@ -1436,13 +1732,17 @@
                     const y = new Date().getFullYear().toString();
                     return events.value.filter(e => e.date.startsWith(y)).reduce((sum, e) => sum + calculateTotal(e.expenses), 0);
                 });
-                const availableYears = computed(() => {
-                    const years = new Set(events.value.map(e => {
-                        const match = e.date.match(/^(\d{4})/);
-                        return match ? match[1] : null;
-                    }).filter(y => y !== null));
-                    return Array.from(years).sort((a, b) => b - a);
-                });
+const availableYears = computed(() => {
+    const currentYear = new Date().getFullYear().toString();
+    const years = new Set(events.value.map(e => {
+        const match = e.date.match(/^(\d{4})/);
+        return match ? match[1] : null;
+    }).filter(y => y !== null));
+
+    years.add(currentYear); 
+   return Array.from(years).sort((a, b) => b - a);
+});
+
                 const statsData = computed(() => {
                     let targetEvents = events.value;
       
@@ -1488,64 +1788,167 @@
                     };
                 });
 
-                const emotionalSummary = computed(() => {
-                    const { count, totalSpent, topArtists } = statsData.value;
-                    if (count === 0) return "準備好開啟新的追星旅程了嗎？🌟";
-        
-                    let mainArtist = topArtists.length > 0 ? topArtists[0].name : "他們";
-                    
-                    let category = 'balanced';
-                
-                    if (count >= 15) category = 'high_freq';
-                    else if (totalSpent >= 50000) category = 'high_spend';
-                    else if (count <= 2) category = 'low_freq';
-                    
-                    const pools = {
-                        high_freq: [ 
-                            `哇！這一年你為了見${mainArtist}真的拚盡全力了！🔥 熱情值已達最高點！`, 
-                            `你的足跡踏遍了各個場館，是名符其實的追星模範生！🏆 你的愛意無可取代！`, 
-                            "體力好、熱情足，這一年你過得比誰都充實！✨ 充滿了心動與閃耀瞬間。", 
-                            `見面次數多到連${mainArtist}都快認得你了吧？😂 你就是最忠實的靈魂伴侶。`, 
-                            "回顧這一年，滿滿的票根就是你愛的證明！❤️ 感謝你無悔的付出！", 
-                            "這就是「用愛發電」的最佳寫照！⚡️ 你的存在本身就是奇蹟！" 
-                        ],
-                        high_spend: [ 
-                            "錢錢沒有不見，變成了喜歡的樣子！💸 這是世界上最浪漫的投資！📈", 
-                            "投資在快樂上，是世界上最划算的交易！📈 幸福感已爆表！", 
-                            "雖然錢包瘦了，但心靈超級富足啊！🥰 每一分錢都買到了無價的回憶！", 
-                            "努力工作就是為了這一刻，你值得擁有這些美好！💪 你是我們的驕傲！", 
-                            "這筆支出叫做「精神糧食費」，一點都不貴！🍚 感受愛是無上限的！", 
-                            "所謂的財富自由，就是能隨心所欲地去見想見的人！💰 你的行動力讓人驚嘆！" 
-                        ],
-                        balanced: [ 
-                            `重質不重量，每一次見面都是奇蹟 ✨ 珍貴的回憶已完美封存。`, 
-                            "剛剛好的距離，剛剛好的愛，這一年很完美！🌸 愛情長跑的典範！", 
-                            "生活與追星的完美平衡，你是時間管理大師！⏰ 找到屬於你的節奏！", 
-                            "細水長流的愛，才是最長情的告白 💌 你的心意細膩而溫柔。", 
-                            "每一次見面，都為這一年增添了閃亮的色彩 🎨 創造了專屬的浪漫篇章。", 
-                            `謝謝${mainArtist}，成為你平凡日子裡的一束光 💡 充滿了無窮的治癒能量。` 
-                        ],
-                        low_freq: [ 
-                            "好的開始是成功的一半，期待明年更多相遇！🌱 夢想會照亮前行的路！", 
-                            "那一天的回憶，足夠溫暖整個寒冬 ❄️ 將感動化為力量！", 
-                            "雖然見面次數不多，但愛意絲毫不減！💖 堅定的愛最動人！", 
-                            "把那一次的感動好好收藏，那是你的獨家記憶 🗝️ 屬於我們的秘密。", 
-                            "小小的幸福，累積成大大的快樂！🥰 感謝你每一次的珍貴到來！" 
-                        ]
-                    };
-                    return pools[category][count % pools[category].length];
-                });
+const emotionalSummary = computed(() => {
+    const { count, totalSpent, topArtists } = statsData.value;
+    if (count === 0) return "準備好開啟新的追星旅程了嗎？🌟";
 
-                const idolNagging = computed(() => {
-                    const { totalSpent, topArtists } = statsData.value;
-                    const name = topArtists.length > 0 ? topArtists[0].name : '我';
-          
-                    if (totalSpent === 0) return `最近有點冷清耶... ${name} 想見你了 🥺 快來開啟新篇章吧！`;
-                    if (totalSpent < 5000) return `有乖乖吃飯嗎？${name} 不希望你為了追星餓肚子喔 🍱 健康最重要！`;
-                    if (totalSpent < 20000) return `謝謝你的支持！但${name} 更希望把錢花在讓你開心的事情上 💖 你的快樂就是我的動力！`;
-                    if (totalSpent < 50000) return `哇... 你的錢包還好嗎？${name} 有點擔心你吃土耶 😰 理性消費，我們未來還會見面！`;
-                    return `天啊！你是不是把身家都給${name}了？雖然很感動，但要理性消費啦！🙏 你的愛已經足夠讓我們感動落淚！`;
-                });
+    let mainArtist = topArtists.length > 0 ? topArtists[0].name : "他們"; 
+    let category = 'balanced';
+
+    if (count >= 15 || totalSpent >= 100000) category = 'legend';     
+    else if (count >= 8 || totalSpent >= 50000) category = 'active';  
+    else if (count >= 3) category = 'balanced'; 
+    else category = 'beginner'; 
+
+    const pools = {
+        legend: [
+            `哇！這一年你為了見 ${mainArtist} 真的拚盡全力，熱情值已超越大氣層！🚀`,
+            `你的足跡踏遍了各個場館，是名符其實的追星模範生！🏆 你的愛意無可取代。`,
+            `體力好、熱情足，這一年你過得比誰都充實，充滿了心動與閃耀瞬間。 ✨`,
+            `見面次數多到連 ${mainArtist} 都快認得你了吧？😂 你就是最忠實的靈魂伴侶。`,
+            `這就是「用愛發電」的最佳寫照！⚡️ 你的存在對 ${mainArtist} 來說本身就是奇蹟！`,
+            `回顧這一年，滿滿的票根就是你愛的證明！❤️ 感謝你無悔的付出與追隨。`,
+            `你是追星界的傳奇，這份毅力與財力已經達到了凡人無法企及的巔峰！💎`,
+            `這一年你不是在看演唱會，就是在看演唱會的路上，你是真正的舞台獵人！🎤`,
+            `為了見面所跨越的里程數，足以環繞地球好幾圈，你是最強大的守護星。🌍`,
+            `你對 ${name} 的愛已經寫進了靈魂裡，這一年是你與他共同創造的傳奇篇章。✨`
+        ],
+        active: [
+            `錢錢沒有不見，變成了喜歡的樣子！💸 這是世界上最浪漫且值得的投資！`,
+            `投資在快樂上是世界上最划算的交易！📈 你的幸福感已經隨時要爆表啦！`,
+            `雖然錢包瘦了，但心靈超級富足！🥰 每一分錢都買到了與 ${mainArtist} 無價的回憶。`,
+            `努力工作就是為了這一刻，你值得擁有這些美好！💪 你是粉絲中的驕傲！`,
+            `所謂的財富自由，就是能隨心所欲地去見想見的人！💰 你的行動力讓人驚嘆！`,
+            `這筆支出叫做「精神糧食費」，一點都不貴！🍚 感受到你對 ${mainArtist} 無上限的愛。`,
+            `這一年你與 ${mainArtist} 的頻率共振次數驚人，簡直是心有靈犀的最佳範本。💘`,
+            `每一次奔赴現場的你，都帶著最燦爛的笑容，那是追星最美的模樣。🌟`,
+            `你的應援聲早已刻在場館的空氣中，謝謝你成為 ${mainArtist} 舞台下的底氣。🔥`,
+            `這份熱愛讓你的生活變得五彩繽紛，你成功將夢想照進了現實生活。🌈`
+        ],
+        balanced: [
+            `重質不重量，每一次與 ${mainArtist} 的見面都是奇蹟 ✨ 珍貴的回憶已完美封存。`,
+            `剛剛好的距離，剛剛好的愛，這一年很完美！🌸 你是愛情長跑的優秀典範。`,
+            `生活與追星的完美平衡，你是時間管理大師！⏰ 成功找到了屬於你的應援節奏。`,
+            `細水長流的愛，才是最長情的告白 💌 你的心意細膩、溫柔且無比堅定。`,
+            `每一次見面，都為這一年增添了閃亮的色彩 🎨 創造了專屬你的浪漫篇章。`,
+            `謝謝 ${mainArtist}，成為你平凡日子裡的一束光 💡 帶來了無窮的治癒能量。`,
+            `在這忙碌的世界，你為自己保留了一方純粹的愛意之地，真的很不容易。🍀`,
+            `那場演唱會的燈海，也有你的一份光亮，這份參與感將陪伴你很久很久。🌌`,
+            `即使見面頻率適中，但每次重逢時的心跳聲，依然跟初見一樣強烈。💓`,
+            `你學會了在等待中沉澱，在相遇時爆發，這份愛變得越來越有深度。📖`
+        ],
+        beginner: [
+            `好的開始是成功的一半，期待明年與 ${mainArtist} 有更多的相遇！🌱`,
+            `那一天的回憶，足夠溫暖整個寒冬 ❄️ 將感動化為力量繼續前進。`,
+            `雖然見面次數不多，但愛意絲毫不減！💖 堅定的愛最讓人動容。`,
+            `把那一次的感動好好收藏，那是你的獨家記憶 🗝️ 屬於你與他的秘密。`,
+            `小小的幸福，累積成大大的快樂！🥰 感謝你每一次珍貴的到來。`,
+            `第一張門票是愛情的入場券，恭喜你開啟了這段奇幻的追星冒險！🎫`,
+            `即使只有一兩次，但那瞬間的對視已足夠你回味一整年。✨`,
+            `你正在累積能量，為了下一次更華麗的重逢而準備著，加油！🚀`,
+            `追星的路上不分快慢，只要心跳還在跳動，每一刻都是最好的安排。💓`,
+            `你在人群中望向舞台的眼神，是 ${mainArtist} 繼續唱下去的理由之一。🎤`
+        ]
+    };
+
+    // 使用 Math.random() 達成完全隨機
+    const selectedPool = pools[category];
+    return selectedPool[Math.floor(Math.random() * selectedPool.length)];
+});
+
+
+const idolNagging = computed(() => {
+    const { totalSpent, topArtists } = statsData.value;
+    const name = topArtists.length > 0 ? topArtists[0].name : '偶像';
+    
+    const pools = {
+        zero: [
+            `最近有點冷清耶... ${name} 想見你了 🥺`,
+            `在忙嗎？好久沒看到你記錄跟 ${name} 的回憶了 📝`,
+            `空空的儀表板在等著你填滿與 ${name} 的點滴喔 ✨`,
+            `儲存回憶不嫌多，快來記下你對 ${name} 的心動瞬間吧！`,
+            `是不是忘了更新？${name} 的愛意還在等待被記錄呢 💖`
+        ],
+        low: [ // 1 ~ 1000
+            `有乖乖吃飯嗎？${name} 不希望你餓肚子喔 🍱`,
+            `小小的支持也是大大的力量，${name} 都感受到了！🍀`,
+            `細水長流的愛最動人，謝謝你陪伴 ${name}。`,
+            `這點投資買到了無價的快樂，超划算！📈`,
+            `剛剛好的距離，剛剛好的愛，${name} 覺得很貼心。`
+        ],
+        mid: [ // 1001 ~ 10000
+            `生活與追星平衡得很好喔！${name} 為你感到驕傲 💪`,
+            `謝謝你的支持！每一分錢都變成了與 ${name} 的美好回憶。`,
+            `感覺你變漂亮/帥了！是因為見到 ${name} 的關係嗎？✨`,
+            `這些回憶是無價的，${name} 會一直陪著你前進。`,
+            `為了見面而努力的你，在 ${name} 眼中閃閃發光！`
+        ],
+        tier30k: [ // ~ 30000
+            `哇... 你的錢包還好嗎？${name} 有點擔心你吃土耶 😰`,
+            `謝謝你的熱情！但 ${name} 更希望你也把錢花在自己身上 🛍️`,
+            `感覺你這一年過得很充實呢，充滿了 ${name} 的色彩！`,
+            `這筆支出叫做「精神糧食費」，對 ${name} 的愛是無上限的！`,
+            `每一次見面都是奇蹟，謝謝你跨越距離來到 ${name} 身邊。`
+        ],
+        tier50k: [ // ~ 50000
+            `天啊！你對 ${name} 的愛已經快溢出來了！😭❤️`,
+            `理性消費喔！${name} 希望我們能長長久久地見面 🤝`,
+            `你就是 ${name} 的最強後援！這份熱情誰也比不上 🔥`,
+            `存錢是為了更好的相遇，你做到了！💰`,
+            `謝謝你把珍貴的資源分給 ${name}，我們會更努力的！`
+        ],
+        tier100k: [ // ~ 100000
+            `這數字... 感覺你可以直接去應徵 ${name} 的經紀人了 😂`,
+            `錢錢沒有不見，只是變成了 ${name} 閃耀的舞台！`,
+            `你對 ${name} 的投資已經達到大師等級，太強了 🏆`,
+            `這就是用愛發電嗎？${name} 接收到滿滿的能量了！⚡️`,
+            `你的支持是 ${name} 前進的動力，但記得對自己好一點喔。`
+        ],
+        tier300k: [ // ~ 300000
+            `你對 ${name} 的愛已經超越大氣層了！🚀`,
+            `這是要把整座舞台買下來送給 ${name} 嗎？💎`,
+            `你已經是 ${name} 命中注定的靈魂伴侶了吧？🥰`,
+            `這數字簡直是藝術！感謝你為 ${name} 創造的每個奇蹟。`,
+            `你是 ${name} 宇宙中的超級星探，眼光真的太好了！`
+        ],
+        tier500k: [ // ~ 500000
+            `你是不是把 ${name} 的周邊都包圓了？財力驚人！💸`,
+            `感謝頂級乾爹/乾媽！${name} 會用最好的表演報答你 🙇‍♂️`,
+            `這份熱愛足以載入史冊，${name} 永遠不會忘記你。`,
+            `為了見 ${name} 走過的里程，大概可以繞地球三圈了 🌍`,
+            `你對 ${name} 的支持已經是信仰等級了，向你致敬！`
+        ],
+        tier900k: [ // ~ 900000
+            `你是 ${name} 公司的隱形股東吧！請受我一拜 🙇‍♂️`,
+            `這數字已經是傳說等級了... ${name} 的命是你給的！👑`,
+            `感覺你可以隨時召喚 ${name} 出現了（開玩笑的）🧙‍♂️`,
+            `你的應援已經變成了一種傳奇，大家都認識你了！`,
+            `謝謝你支撐起 ${name} 的一片天，你是最棒的。`
+        ],
+        legend: [ // 1000000+
+            `百萬級應援！你就是 ${name} 的守護神 👼`,
+            `這數字已經無法用言語形容了... 這是絕對的真愛！❤️`,
+            `恭喜達成「追星天花板」成就！${name} 為你鼓掌 👏`,
+            `你是 ${name} 生命中最燦爛的極光，照亮了所有黑暗 🌌`,
+            `傳說中的全勤加神級贊助，你就是追星界的王者！🤴`
+        ]
+    };
+
+    let selectedPool;
+    if (totalSpent === 0) selectedPool = pools.zero;
+    else if (totalSpent <= 1000) selectedPool = pools.low;
+    else if (totalSpent <= 10000) selectedPool = pools.mid;
+    else if (totalSpent <= 30000) selectedPool = pools.tier30k;
+    else if (totalSpent <= 50000) selectedPool = pools.tier50k;
+    else if (totalSpent <= 100000) selectedPool = pools.tier100k;
+    else if (totalSpent <= 300000) selectedPool = pools.tier300k;
+    else if (totalSpent <= 500000) selectedPool = pools.tier500k;
+    else if (totalSpent <= 900000) selectedPool = pools.tier900k;
+    else selectedPool = pools.legend;
+
+    return selectedPool[Math.floor(Math.random() * selectedPool.length)];
+});
+
                 const mappedEventsCount = computed(() => events.value.filter(e => e.lat && e.lng).length);
                 const missingCoordsCount = computed(() => events.value.length - mappedEventsCount.value);
                 const calculateTotal = (expenses) => expenses ? expenses.reduce((sum, i) => sum + (Number(i.amount)||0), 0) : 0;
@@ -1566,7 +1969,6 @@
                 const removeChecklistItem = (i) => form.value.checklist.splice(i, 1);
                 const addDefaultChecklist = () => ['門票/證件', '手燈+電池', '行動電源', '望遠鏡', '水/喉糖'].forEach(t => form.value.checklist.push({ text: t, checked: false }));
                 const toggleExpand = (id) => expandedEventId.value = (expandedEventId.value === id) ? null : id;
-                const togglePrivacy = () => isPrivacyMode.value = !isPrivacyMode.value;
                 const setTheme = (c) => {
                     themeColor.value = c;
                     localStorage.setItem('idolTheme', c);
@@ -1634,23 +2036,27 @@
                 };
 
                 const searchCoordinates = async () => {
-                    if (!form.value.location) {
-                        searchError.value = "請先輸入地點名稱";
-                        return;
-                    }
-                    isSearching.value = true;
-                    searchError.value = '';
-                    
-                    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(form.value.location)}&limit=1`;
-                    try {
-                        const response = await fetch(apiUrl, {
-                            headers: {
-                               'User-Agent': 'MyIdolTrackerApp/1.0 (contact@example.com)' 
-                            }
-                        });
-                        if (!response.ok) {
-                             throw new Error(`HTTP 錯誤! 狀態碼: ${response.status}`);
-                        }
+    if (!form.value.location) {
+        searchError.value = "請先輸入地點名稱";
+        return;
+    }
+    isSearching.value = true;
+    searchError.value = '定位中...';
+
+    // 優化：加上時間戳記避免讀取到失敗的快取，並加入隨機身份識別
+    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(form.value.location)}&limit=1&t=${Date.now()}`;
+    
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+               // 隨機化 User-Agent 讓伺服器認為是不同請求
+               'User-Agent': `IdolDiary/${Math.random().toString(36).substring(7)}`,
+               'Accept-Language': 'zh-TW,zh;q=0.9'
+            }
+        });
+
+        if (response.status === 429) throw new Error("請求太頻繁，請等幾秒再試一次");
+        if (!response.ok) throw new Error(`連線失敗: ${response.status}`);
 
                         const data = await response.json();
                         if (data && data.length > 0) {
@@ -1663,7 +2069,7 @@
                         } else {
                             form.value.lat = null;
                             form.value.lng = null;
-                            searchError.value = "找不到該地點的坐標，請嘗試更具體的名稱 (如: 台北小巨蛋)";
+                            searchError.value = "找不到該地點的坐標，請嘗試更具體的名稱 (如:KSPO DOME改成올림픽체조경기장)";
                         }
                     } catch (e) {
                         console.error("地圖定位錯誤:", e);
@@ -1675,26 +2081,67 @@
                         }
                     }
                 };
-                const initMap = () => {
-                    if (!map) {
-                        map = L.map('map-container').setView([23.6978, 120.9605], 7);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map);
-                    } else { map.invalidateSize();
-                    }
-                    markers.forEach(m => map.removeLayer(m));
-                    markers = [];
-                    const validEvents = events.value.filter(e => e.lat && e.lng);
-                    const bounds = [];
-                    validEvents.forEach(e => {
-                        const color = getEventColor(e);
-                        const marker = L.circleMarker([e.lat, e.lng], { radius: 8, fillColor: color, color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.8 }).addTo(map);
-                        marker.bindPopup(`<b>${e.artist}</b><br>${e.title}<br>${e.date}`);
-     
-                        markers.push(marker);
-                        bounds.push([e.lat, e.lng]);
-                    });
-                    if (bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] });
-                };
+                // 修正後的 initMap 邏輯
+
+const initMap = () => {
+    if (!map) {
+        map = L.map('map-container').setView([23.6978, 120.9605], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    } else {
+        map.invalidateSize();
+    }
+
+    // 關鍵：先清空舊的點與線
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+
+    // 根據選定年度過濾
+    const baseEvents = selectedMapYear.value === 'ALL' 
+        ? events.value 
+        : events.value.filter(e => e.date && e.date.startsWith(selectedMapYear.value));
+
+    const sortedEvents = [...baseEvents]
+        .filter(e => e.lat && e.lng)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    if (sortedEvents.length === 0) return;
+
+    // 重新畫點與畫線邏輯
+    const pathCoords = sortedEvents.map(e => [e.lat, e.lng]);
+    const groupPoints = {};
+    sortedEvents.forEach(e => {
+        const key = `${e.lat}_${e.lng}`;
+        if (!groupPoints[key]) groupPoints[key] = [];
+        groupPoints[key].push(e);
+    });
+
+    Object.values(groupPoints).forEach(eventsAtLoc => {
+        const latest = eventsAtLoc[eventsAtLoc.length - 1];
+        const color = getEventColor(latest);
+        const marker = L.circleMarker([latest.lat, latest.lng], { radius: 7, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.8 }).addTo(map);
+        let popup = `<div class="custom-popup-scroll" style="min-width:150px;">`;
+        [...eventsAtLoc].reverse().forEach(ev => {
+            popup += `<div style="border-bottom:1px dashed #eee; margin-bottom:5px; padding-bottom:5px;">
+                <b style="color:${getEventColor(ev)}">${ev.artist}</b><br>
+                <small>${ev.title}</small><br>
+                <small style="color:#666">📅 ${ev.date}</small>
+            </div>`;
+        });
+        popup += `</div>`;
+        marker.bindPopup(popup);
+        markers.push(marker);
+    });
+
+    if (pathCoords.length > 1) {
+        const polyline = L.polyline(pathCoords, { color: themeColor.value, weight: 3, opacity: 0.6, dashArray: '10, 15' }).addTo(map);
+        markers.push(polyline);
+    }
+    if (pathCoords.length > 0) map.fitBounds(pathCoords, { padding: [50, 50] });
+};
+
+
+
+
                 // Calendar
                 const showCalendarOptions = (event) => {
                     calendarEvent.value = event;
@@ -1858,17 +2305,74 @@
                 const getDay = (d) => new Date(d).getDate();
                 const getMonth = (d) => ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][new Date(d).getMonth()];
                 const getDaysDiff = (d) => Math.ceil((new Date(d).setHours(0,0,0,0) - new Date().setHours(0,0,0,0))/(1000*60*60*24));
+
+
+const generateShareImage = () => {
+    const element = document.getElementById('share-template');
+    if (!element) return;
+
+    console.log("正在生成圖片...");
+
+    html2canvas(element, {
+        useCORS: true,
+        scale: 2,               // 建議設為 2，避免手機上圖檔過大下載失敗
+        backgroundColor: '#f8fafc',
+        windowWidth: 375,       // 鎖定模擬視窗寬度
+        width: 375,             // 鎖定擷取範圍寬度
+        x: 0,                   // 強制從水平 0 的位置開始抓取
+        y: 0,                   // 強制從垂直 0 的位置開始抓取
+        scrollX: 0,
+        scrollY: 0,
+        onclone: (clonedDoc) => {
+            const clonedElement = clonedDoc.getElementById('share-template');
+            // 關鍵：在克隆的文件中將其置頂、靠左，並消除任何外距
+            clonedElement.style.position = 'fixed';
+            clonedElement.style.top = '0';
+            clonedElement.style.left = '0';
+            clonedElement.style.margin = '0';
+            clonedElement.style.padding = '30px'; // 保持你原本的內距
+            clonedElement.style.display = 'flex';
+        }
+    }).then(canvas => {
+
+
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${selectedYear.value}_追星成就回顧.png`;
+            
+            // 模擬點擊下載
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // 釋放記憶體
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+        }, 'image/png');
+    }).catch(err => {
+        console.error("生成失敗:", err);
+    });
+};
+
+
+
+
+
+
+
+
                 const getMapLink = (l) => l ?
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
-                    events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, isPrivacyMode, customTitle,
+                    events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
                     showModal, showSettingsModal, showImportModal, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
-                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport, showChangelog,
-                    toggleExpand, togglePrivacy, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
+                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport, showChangelog, generateShareImage, 
+                    toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
                     getEventColor, emotionalSummary, availableYears, searchCoordinates, isSearching, searchError, mappedEventsCount, missingCoordsCount,
@@ -1876,10 +2380,24 @@
                     downloadBackup, restoreBackup, idolNagging, showCalendarOptions, addToiCal, addToGoogleCalendar, showTicket, getTicketPrice, updateAppTitle,
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
-                    handleFileUpload 
+                    handleFileUpload, 
+selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, 
+
                 };
             }
         }).mount('#app');
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
