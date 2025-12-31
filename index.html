@@ -240,14 +240,10 @@
                          :class="{'ring-2 ring-primary/30': expandedEventId === event.id}">
                         
                  
-                       <div v-if="event.coverUrl" class="h-32 w-full bg-slate-100 relative overflow-hidden cursor-pointer" @click="toggleExpand(event.id)">
-                           <img :src="event.coverUrl" class="w-full h-full object-cover opacity-95 hover:opacity-100 transition-opacity" alt="Event Cover" onerror="this.style.display='none'">
-                           <div v-if="getDaysDiff(event.date) >= 0 && viewMode === 'upcoming'" class="absolute top-2 right-2 z-10">
-                               <span class="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-lg font-bold">
-                                   {{ getDaysDiff(event.date) === 0 ? 'D-DAY' : 'D-' + getDaysDiff(event.date) }}
-                               </span>
-                           </div>
-                           <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div v-if="event.coverUrl" class="h-32 w-full bg-slate-100 relative overflow-hidden cursor-pointer" @click="toggleExpand(event.id)">
+   
+                            <img :src="event.coverUrl" class="w-full h-full object-cover opacity-95 hover:opacity-100 transition-opacity" alt="Event Cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
              
                             <div class="absolute bottom-3 left-4 text-white right-4">
                                 <div class="flex justify-between items-end">
@@ -316,12 +312,10 @@
                                         <i class="ph ph-clock" :style="{ color: getEventColor(event) }"></i>
                                         <span>{{ event.time }}</span>
                               
-                                        <span v-if="getDaysDiff(event.date) > 0 && viewMode === 'upcoming'" class="text-xs bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded">
-                                      還有 {{ getDaysDiff(event.date) }} 天
-                                      </span>
-                                      <span v-else-if="getDaysDiff(event.date) === 0" class="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded font-bold animate-pulse">
-                                          D-DAY TODAY! 🔥
-                                      </span>
+                                        <span v-if="!event.coverUrl && getDaysDiff(event.date) > 0 && viewMode === 'upcoming'" class="text-xs bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded">
+                                            還有 {{ getDaysDiff(event.date) }} 天
+                           
+                                        </span>
     
                                     </div>
                                     <button @click.stop="showTicket(event)" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-500 px-2 py-0.5 rounded-md flex items-center gap-1 transition-colors shadow-sm">
@@ -623,7 +617,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     
     <div class="text-center mb-2">
         <h1 class="text-xl font-bold text-slate-800" style="margin-bottom: 2px;">{{ selectedYear === 'ALL' ? '追星全紀錄回顧' : selectedYear + ' 年度回顧' }}</h1>
-        <p class="text-[9px] text-slate-500 tracking-widest uppercase">珍藏追星足跡 ✨</p>
+        <p class="text-[9px] text-slate-500 tracking-widest uppercase">追星足跡由 ✨ 為您珍藏 ✨</p>
     </div>
 
 <div class="px-3 py-1 rounded-2xl shadow-md mb-1 text-center flex items-center justify-center h-auto pt-2" :style="{ backgroundColor: themeColor }">
@@ -1368,7 +1362,7 @@ const totalDistance = computed(() => {
                 const openFandomModal = () => {
                     isFandomEditing.value = false;
                     editFandomIndex.value = null;
-                    fandomForm.value = {...defaultFandomForm, date: new Date().toISOString().split('T')[0], useUrl: false};
+                    fandomForm.value = {...defaultFandomForm, date: new Date().toLocaleDateString('sv-SE'), useUrl: false};
                     showFandomModal.value = true;
                 };
                 const editFandom = (fandom, index) => {
@@ -1712,7 +1706,7 @@ watch(activeTab, (newTab) => {
                     return baseMsg + msgs[Math.floor(Math.random() * msgs.length)];
                 });
                 const filteredEvents = computed(() => {
-                    const today = new Date().toISOString().split('T')[0];
+                    const today = new Date().toLocaleDateString('sv-SE');
                     let sorted = [...events.value].sort((a, b) => new Date(a.date) - new Date(b.date));
                     
                     if (searchQuery.value) {
@@ -1733,7 +1727,7 @@ watch(activeTab, (newTab) => {
                         : sorted.filter(e => e.date < today).reverse();
                 });
 
-                const upcomingCount = computed(() => events.value.filter(e => e.date >= new Date().toISOString().split('T')[0]).length);
+                const upcomingCount = computed(() => events.value.filter(e => e.date >= new Date().toLocaleDateString('sv-SE')).length);
                 const currentYearExpense = computed(() => {
                     const y = new Date().getFullYear().toString();
                     return events.value.filter(e => e.date.startsWith(y)).reduce((sum, e) => sum + calculateTotal(e.expenses), 0);
@@ -1982,7 +1976,7 @@ const idolNagging = computed(() => {
                 const updateCustomTheme = (e) => setTheme(e.target.value);
                 const openModal = () => {
                     isEditing.value = false;
-                    form.value = { ...defaultForm, date: new Date().toISOString().split('T')[0], color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
+                    form.value = { ...defaultForm, date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
                     searchError.value = '';
                     showModal.value = true;
                 };
@@ -2181,7 +2175,7 @@ const initMap = () => {
                     const endHours = String(endDateObj.getHours()).padStart(2, '0');
                     const endMinutes = String(endDateObj.getMinutes()).padStart(2, '0');
                     const endSeconds = String(endDateObj.getSeconds()).padStart(2, '0');
-                    const end = endDateObj.toISOString().split('T')[0].replace(/-/g, '') + 'T' + endHours + endMinutes + endSeconds;
+                    const end = endDateObj.toLocaleDateString('sv-SE').replace(/-/g, '') + 'T' + endHours + endMinutes + endSeconds;
                     const gCalLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title + ' - ' + artist)}&dates=${start}/${end}&details=${encodeURIComponent('追星日記行程: ' + title)}&location=${encodeURIComponent(location)}&sf=true&output=xml`;
                     
                     window.open(gCalLink, '_blank');
@@ -2196,7 +2190,7 @@ const initMap = () => {
                     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(events.value));
                     const downloadAnchorNode = document.createElement('a');
                     downloadAnchorNode.setAttribute("href", dataStr);
-                    downloadAnchorNode.setAttribute("download", "idol_tracker_backup_" + new Date().toISOString().split('T')[0] + ".json");
+                    downloadAnchorNode.setAttribute("download", "idol_tracker_backup_" + new Date().toLocaleDateString('sv-SE') + ".json");
                     document.body.appendChild(downloadAnchorNode);
                     downloadAnchorNode.click();
                     downloadAnchorNode.remove();
@@ -2243,7 +2237,7 @@ const initMap = () => {
                                 let rawDate = d.date || d['日期'] || '';
                    
                  
-                                let formattedDate = new Date().toISOString().split('T')[0];
+                                let formattedDate = new Date().toLocaleDateString('sv-SE');
                                 if (rawDate) {
                                     const str = String(rawDate).trim();
                                     if (/^\d{6}$/.test(str)) formattedDate = `20${str.substring(0, 2)}-${str.substring(2, 4)}-${str.substring(4, 6)}`;
@@ -2395,8 +2389,6 @@ selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEvent
     </script>
 </body>
 </html>
-
-
 
 
 
