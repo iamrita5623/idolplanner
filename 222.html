@@ -1218,16 +1218,11 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 const currentUser = ref(null);
 
 // 1. Google 一鍵登入
-// 1. Google 一鍵登入與 Email Magic Link 登入
+const loginWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google'
     });
     if (error) alert("登入失敗: " + error.message);
-};
-const loginWithEmail = async (email) => {
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    if (error) alert("Magic Link 傳送失敗: " + error.message);
-    else alert("驗證連結已傳送至您的 Email，請前往收信！");
 };
 
 // 2. 登出
@@ -1235,7 +1230,7 @@ const logout = async () => {
     await supabase.auth.signOut();
     currentUser.value = null;
     events.value = []; // 清空畫面
-    alert('已成功登出');
+    alert('已成功登入');
 };
 
 // 3. 檢查目前是否已經登入，並自動把雲端資料抓下來
@@ -1258,15 +1253,6 @@ const checkUserAndFetchData = async () => {
 
 // 網頁一開機時先檢查登入狀態
 onMounted(() => {
-    // 監聽 Supabase 身份驗證狀態改變，實現自動背景同步
-    supabase.auth.onAuthStateChange((event, session) => {
-        if (session?.user) {
-            currentUser.value = session.user;
-            checkUserAndFetchData();
-        } else {
-            currentUser.value = null;
-        }
-    });
     // ... (你原本寫的 localStorage 讀取可以保留作為離線備份) ...
     checkUserAndFetchData();
 });
@@ -2504,7 +2490,7 @@ const generateShareImage = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginWithGoogle, loginWithEmail, logout, 
+selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginWithGoogle, logout, 
 
                 };
             }
@@ -2512,7 +2498,6 @@ selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEvent
     </script>
 </body>
 </html>
-
 
 
 
