@@ -936,9 +936,11 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
                     <div class="flex items-center justify-center gap-2">
                         <template v-if="currentUser">
-    <div class="flex flex-col items-center justify-center my-2">
+    <div style="background: #f8fafc; padding: 6px; border-radius: 8px; margin: 6px 0; width: 100%;">
         <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-        <span style="font-size: 11px; color: #666; margin-top: 2px;">{{ syncStatusText }}</span>
+        <div style="font-size: 12px; color: #0284c7; font-weight: bold; margin-top: 4px;">
+            {{ syncStatusText }}
+        </div>
     </div>
     <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
 </template>
