@@ -1238,7 +1238,7 @@ const logout = async () => {
     alert('已成功登出');
 };
 
-// 3. 檢查目前是否已經登入，並自動把雲端資料抓下來
+// 3. 檢查目前是否已經登入，並自動把雲端資料抓下來或主動備份
 const checkUserAndFetchData = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -1252,6 +1252,17 @@ const checkUserAndFetchData = async () => {
             
         if (data && data.length > 0 && data[0].event_data) {
             events.value = data[0].event_data; // 將雲端資料還原到畫面上
+        } else {
+            // 🌟 如果雲端是空的（第一次登入），但你的手機本來就有行程，直接主動上傳備份！
+            if (events.value.length > 0) {
+                await supabase
+                    .from('idol_events')
+                    .upsert({ 
+                        user_id: user.id, 
+                        event_data: events.value 
+                    }, { onConflict: 'user_id' });
+                console.log("已自動將本地舊行程備份到雲端！");
+            }
         }
     }
 };
