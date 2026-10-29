@@ -941,10 +941,19 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     </template>
 
     <div class="flex items-center justify-center gap-2">
-        <template v-if="currentUser">
-            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+       <template v-if="currentUser">
+    <div class="flex items-center justify-between w-full px-2 my-2">
+        <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+        <div class="flex items-center gap-2">
+            <!-- 🌟 手動同步按鈕：點了立刻上傳，並顯示狀態 -->
+            <button @click="syncToCloud(events.value)" class="text-[11px] bg-primary/10 text-primary px-2.5 py-1 rounded-md font-medium hover:bg-primary/20 transition-colors">
+                {{ syncStatusText }}
+            </button>
             <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
-        </template>
+        </div>
+    </div>
+</template>
+
         <template v-else>
             <!-- 尚未登入時的輸入框與按鈕保持不變 -->
             <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
