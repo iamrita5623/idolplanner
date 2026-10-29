@@ -930,30 +930,32 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
 
-                <!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
-                <div class="border-b border-slate-100 pb-4">
-                    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
-                    <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
-                    <div class="flex items-center justify-center gap-2">
-                        <template v-if="currentUser">
-    <div style="background: #f8fafc; padding: 6px; border-radius: 8px; margin: 6px 0; width: 100%;">
-        <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-        <div style="font-size: 12px; color: #0284c7; font-weight: bold; margin-top: 4px;">
-            {{ syncStatusText }}
-        </div>
+<!-- 👤 雲端同步帳號 (單一乾淨登入區塊) -->
+<div class="border-b border-slate-100 pb-4">
+    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
+    <p class="text-[10px] text-slate-400 mb-2 italic">登入僅供自動備份，資料隨時幫您安全存到雲端</p>
+    
+    <!-- 🌟 同步狀態文字放在這裡，只有登入時才會顯示 -->
+    <template v-if="currentUser">
+        <p class="text-[11px] text-slate-500 mb-3">{{ syncStatusText }}</p>
+    </template>
+
+    <div class="flex items-center justify-center gap-2">
+        <template v-if="currentUser">
+            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+            <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+        </template>
+        <template v-else>
+            <!-- 尚未登入時的輸入框與按鈕保持不變 -->
+            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
+                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
+                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
+                </button>
+            </div>
+        </template>
     </div>
-    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
-</template>
-                        <template v-else>
-                            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
-                                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
-                                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
-                                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
-                                </button>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+</div>
 
                 <div class="border-b border-slate-100 pb-4">
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
