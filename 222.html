@@ -2191,6 +2191,13 @@ const idolNagging = computed(() => {
                         if(expandedEventId.value === id) expandedEventId.value = null;
                     }
                 };
+// 🌟 將這段加在 script 裡面的函數區塊中
+const addExpenseItem = (typeName = '') => {
+    if (!currentEditingEvent.value.expenses) {
+        currentEditingEvent.value.expenses = [];
+    }
+    currentEditingEvent.value.expenses.push({ name: typeName, cost: 0 });
+};
                 const toggleSettingsModal = () => showSettingsModal.value = !showSettingsModal.value;
                 
                 const updateAppTitle = () => {
@@ -2559,14 +2566,6 @@ mapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy,
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
 
 
 
