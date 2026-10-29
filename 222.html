@@ -1578,6 +1578,7 @@ const syncToCloud = async (dataToSync) => {
     }
 };
 
+
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
     localStorage.setItem('idolEvents', JSON.stringify(newVal)); // 保留你原本的
