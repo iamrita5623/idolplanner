@@ -1538,17 +1538,40 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
-const syncToCloud = async (currentEvents) => {
-    if (!currentUser.value) return; // 沒登入就不自動同步到雲端
-
-    const { error } = await supabase
-        .from('idol_events')
-        .upsert({ 
-            user_id: currentUser.value.id, // 綁定當前登入的使用者 ID
-            event_data: currentEvents 
-        }, { onConflict: 'user_id' }); // 確保每個使用者只有一筆主要的資料包
+const syncToCloud = async (dataToSync) => {
+    if (!currentUser.value) return;
     
-    if (error) console.error("雲端自動同步失敗:", error);
+    try {
+        // 1. 先檢查雲端有沒有這個使用者的資料列
+        const { data: existing, error: selectError } = await supabase
+            .from('idol_events')
+            .select('id')
+            .eq('user_id', currentUser.value.id);
+
+        if (existing && existing.length > 0) {
+            // 2. 如果雲端已經有資料，就用 UPDATE 更新它
+            const { error: updateError } = await supabase
+                .from('idol_events')
+                .update({ event_data: dataToSync })
+                .eq('user_id', currentUser.value.id);
+                
+            if (updateError) console.error("更新雲端失敗:", updateError.message);
+            else console.log("雲端資料更新成功！");
+        } else {
+            // 3. 如果雲端是空的，就用 INSERT 新增一筆
+            const { error: insertError } = await supabase
+                .from('idol_events')
+                .insert({ 
+                    user_id: currentUser.value.id, 
+                    event_data: dataToSync 
+                });
+                
+            if (insertError) console.error("新增至雲端失敗:", insertError.message);
+            else console.log("雲端資料新增成功！");
+        }
+    } catch (err) {
+        console.error("同步發生異常:", err);
+    }
 };
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
