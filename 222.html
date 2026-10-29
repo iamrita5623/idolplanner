@@ -930,41 +930,25 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
 
-<!-- 👤 雲端同步帳號 (單一乾淨登入區塊) -->
-<div class="border-b border-slate-100 pb-4">
-    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
-    <p class="text-[10px] text-slate-400 mb-2 italic">登入僅供自動備份，資料隨時幫您安全存到雲端</p>
-    
-    <!-- 🌟 同步狀態文字放在這裡，只有登入時才會顯示 -->
-    <template v-if="currentUser">
-        <p class="text-[11px] text-slate-500 mb-3">{{ syncStatusText }}</p>
-    </template>
-
-    <div class="flex items-center justify-center gap-2">
-       <template v-if="currentUser">
-    <div class="flex items-center justify-between w-full px-2 my-2">
-        <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-        <div class="flex items-center gap-2">
-            <!-- 🌟 手動同步按鈕：點了立刻上傳，並顯示狀態 -->
-            <button @click="syncToCloud(events.value)" class="text-[11px] bg-primary/10 text-primary px-2.5 py-1 rounded-md font-medium hover:bg-primary/20 transition-colors">
-                {{ syncStatusText }}
-            </button>
-            <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
-        </div>
-    </div>
-</template>
-
-        <template v-else>
-            <!-- 尚未登入時的輸入框與按鈕保持不變 -->
-            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
-                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
-                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
-                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
-                </button>
-            </div>
-        </template>
-    </div>
-</div>
+                <!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
+                <div class="border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
+                    <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
+                    <div class="flex items-center justify-center gap-2">
+                        <template v-if="currentUser">
+                            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+                            <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+                        </template>
+                        <template v-else>
+                            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
+                                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
+                                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
 
                 <div class="border-b border-slate-100 pb-4">
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
@@ -1235,7 +1219,6 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
                 // 追蹤當前登入使用者狀態
 const currentUser = ref(null);
-const syncStatusText = ref("✅ 已與雲端同步");
 
 // 1. Email 免密碼一鍵登入 (Magic Link)
 const loginEmail = ref('');
@@ -1567,35 +1550,45 @@ const syncToCloud = async (dataToSync) => {
     if (!currentUser.value) return;
     
     try {
-        syncStatusText.value = "⏳ 雲端同步中..."; // 開始同步時顯示
-        
         const { data: existing, error: selectError } = await supabase
             .from('idol_events')
             .select('id')
             .eq('user_id', currentUser.value.id);
 
         if (existing && existing.length > 0) {
-            await supabase
+            const { error: updateError } = await supabase
                 .from('idol_events')
                 .update({ event_data: dataToSync })
                 .eq('user_id', currentUser.value.id);
+                
+            if (updateError) {
+                console.error("更新雲端失敗:", updateError.message);
+                alert("雲端同步失敗：" + updateError.message);
+            } else {
+                console.log("雲端資料更新成功！");
+                alert("☁️ 雲端同步成功！"); // 🌟 成功提示
+            }
         } else {
-            await supabase
+            const { error: insertError } = await supabase
                 .from('idol_events')
                 .insert({ 
                     user_id: currentUser.value.id, 
                     event_data: dataToSync 
                 });
+                
+            if (insertError) {
+                console.error("新增至雲端失敗:", insertError.message);
+                alert("雲端同步失敗：" + insertError.message);
+            } else {
+                console.log("雲端資料新增成功！");
+                alert("☁️ 雲端同步成功！"); // 🌟 成功提示
+            }
         }
-        
-        console.log("☁️ 雲端背景同步成功");
-        syncStatusText.value = "✅ 雲端同步成功"; // 成功後更新文字
     } catch (err) {
         console.error("同步發生異常:", err);
-        syncStatusText.value = "❌ 雲端同步失敗"; // 失敗時顯示
+        alert("同步發生異常，請檢查網路連線");
     }
 };
-
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
@@ -1635,23 +1628,9 @@ watch(events, (newVal) => {
                     if (savedTheme) themeColor.value = savedTheme;
                 });
                 
-// 🌟 統一監聽整台 App 的所有變動，自動打包並同步到 Supabase 雲端
-watch([events, customTitle, themeColor], () => {
-    // 1. 本地備份
-    localStorage.setItem('idolEvents', JSON.stringify(events.value));
-    localStorage.setItem('appTitle', customTitle.value);
-    localStorage.setItem('idolTheme', themeColor.value);
-    
-    // 2. 打包整包完整資料上傳到雲端
-    const fullAppData = {
-        events: events.value,
-        customTitle: customTitle.value,
-        themeColor: themeColor.value,
-        // 如果有預算變數，也可以在此加上：budget: budget.value
-    };
-    
-    syncToCloud(fullAppData);
-}, { deep: true });
+                watch(customTitle, (newVal) => localStorage.setItem('appTitle', newVal));
+                watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
+                watch(themeColor, (newVal) => localStorage.setItem('idolTheme', newVal));
                 
 watch(customTitle, (newVal) => localStorage.setItem('appTitle', newVal));
 watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
