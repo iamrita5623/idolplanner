@@ -1635,20 +1635,19 @@ watch(events, (newVal) => {
                     if (savedTheme) themeColor.value = savedTheme;
                 });
                 
-                // 統一監聽所有可能變動的資料（包含行程、標題、主題色、以及你的預算變數）
-// 請把 budget 換成你程式碼中實際儲存預算金額的變數名稱
+// 🌟 統一監聽整台 App 的所有變動，自動打包並同步到 Supabase 雲端
 watch([events, customTitle, themeColor], () => {
-    // 1. 各自保留原本的 localStorage 儲存
+    // 1. 本地備份
     localStorage.setItem('idolEvents', JSON.stringify(events.value));
     localStorage.setItem('appTitle', customTitle.value);
     localStorage.setItem('idolTheme', themeColor.value);
     
-    // 2. 打包整包完整資料上傳到雲端 Supabase
+    // 2. 打包整包完整資料上傳到雲端
     const fullAppData = {
         events: events.value,
         customTitle: customTitle.value,
         themeColor: themeColor.value,
-        // budget: 你的預算變數.value (如果有獨立變數可加在這)
+        // 如果有預算變數，也可以在此加上：budget: budget.value
     };
     
     syncToCloud(fullAppData);
