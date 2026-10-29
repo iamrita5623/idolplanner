@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>我的追星日記 🌟 |
@@ -1436,6 +1437,30 @@ const totalDistance = computed(() => {
                         saveFandoms();
                     }
                 };
+                // 初始化 Supabase 客戶端
+const supabaseUrl = 'https://glnucmilbncytgvrrjqo.supabase.co';
+const supabaseKey = 'sb_publishable__MO1vZsdaOEP69qyaLbloA_D2Oal_Cr';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
+// 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
+const syncToCloud = async (currentEvents) => {
+    // 我們用一個固定的裝置備份 ID，或者你可以存成陣列
+    const { data, error } = await supabase
+        .from('idol_events')
+        .upsert({ 
+            id: 1, // 如果以後想要多使用者，這裡可以改成對應的 uuid
+            event_data: currentEvents 
+        }, { onConflict: 'id' });
+    
+    if (error) console.error("雲端自動備份失敗:", error);
+};
+
+// 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
+watch(events, (newVal) => {
+    localStorage.setItem('idolEvents', JSON.stringify(newVal)); // 保留你原本的
+    syncToCloud(newVal); // 默默在背景自動上傳雲端備份！
+}, { deep: true });
                 onMounted(() => {
                     const savedEvents = localStorage.getItem('idolEvents');
                     if (savedEvents) {
