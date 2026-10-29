@@ -937,6 +937,10 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <div class="flex items-center justify-center gap-2">
                         <template v-if="currentUser">
                             <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+<!-- 在設定選單的已登入區塊附近加入這行 -->
+<div class="sync-status-indicator" style="font-size: 13px; color: #666; margin: 8px 0;">
+    {{ syncStatusText }}
+</div>
                             <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
                         </template>
                         <template v-else>
@@ -1550,45 +1554,35 @@ const syncToCloud = async (dataToSync) => {
     if (!currentUser.value) return;
     
     try {
+        syncStatusText.value = "⏳ 雲端同步中..."; // 開始同步時顯示
+        
         const { data: existing, error: selectError } = await supabase
             .from('idol_events')
             .select('id')
             .eq('user_id', currentUser.value.id);
 
         if (existing && existing.length > 0) {
-            const { error: updateError } = await supabase
+            await supabase
                 .from('idol_events')
                 .update({ event_data: dataToSync })
                 .eq('user_id', currentUser.value.id);
-                
-            if (updateError) {
-                console.error("更新雲端失敗:", updateError.message);
-                alert("雲端同步失敗：" + updateError.message);
-            } else {
-                console.log("雲端資料更新成功！");
-                alert("☁️ 雲端同步成功！"); // 🌟 成功提示
-            }
         } else {
-            const { error: insertError } = await supabase
+            await supabase
                 .from('idol_events')
                 .insert({ 
                     user_id: currentUser.value.id, 
                     event_data: dataToSync 
                 });
-                
-            if (insertError) {
-                console.error("新增至雲端失敗:", insertError.message);
-                alert("雲端同步失敗：" + insertError.message);
-            } else {
-                console.log("雲端資料新增成功！");
-                alert("☁️ 雲端同步成功！"); // 🌟 成功提示
-            }
         }
+        
+        console.log("☁️ 雲端背景同步成功");
+        syncStatusText.value = "✅ 雲端同步成功"; // 成功後更新文字
     } catch (err) {
         console.error("同步發生異常:", err);
-        alert("同步發生異常，請檢查網路連線");
+        syncStatusText.value = "❌ 雲端同步失敗"; // 失敗時顯示
     }
 };
+
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
