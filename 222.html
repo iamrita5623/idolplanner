@@ -1561,13 +1561,8 @@ const syncToCloud = async (dataToSync) => {
                 .update({ event_data: dataToSync })
                 .eq('user_id', currentUser.value.id);
                 
-            if (updateError) {
-                console.error("更新雲端失敗:", updateError.message);
-                alert("雲端同步失敗：" + updateError.message);
-            } else {
-                console.log("雲端資料更新成功！");
-                alert("☁️ 雲端同步成功！"); // 🌟 成功提示
-            }
+            if (updateError) console.error("更新雲端失敗:", updateError.message);
+            else console.log("雲端資料更新成功！");
         } else {
             const { error: insertError } = await supabase
                 .from('idol_events')
@@ -1576,17 +1571,11 @@ const syncToCloud = async (dataToSync) => {
                     event_data: dataToSync 
                 });
                 
-            if (insertError) {
-                console.error("新增至雲端失敗:", insertError.message);
-                alert("雲端同步失敗：" + insertError.message);
-            } else {
-                console.log("雲端資料新增成功！");
-                alert("☁️ 雲端同步成功！"); // 🌟 成功提示
-            }
+            if (insertError) console.error("新增至雲端失敗:", insertError.message);
+            else console.log("雲端資料新增成功！");
         }
     } catch (err) {
         console.error("同步發生異常:", err);
-        alert("同步發生異常，請檢查網路連線");
     }
 };
 
