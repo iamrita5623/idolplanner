@@ -914,7 +914,17 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
             </div>
         </transition>
-<!-- Supabase 登入狀態與按鈕區塊 -->
+
+<div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
+    <div class="bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
+        
+        <div class="flex justify-between items-center p-6 pb-4 shrink-0">
+            <h3 class="font-bold text-lg text-slate-700">系統與主題設定 ⚙️</h3>
+            <button @click="showSettingsModal = false" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200 transition-colors">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+<!-- 雲端同步帳號 -->
 <div class="border-b border-slate-100 pb-4 mb-4">
     <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
     <div class="flex items-center justify-center gap-2">
@@ -925,22 +935,12 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </button>
         </template>
         <template v-else>
-            <button @click="loginWithGoogle" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-1.5">
+            <button @click="loginWithGoogle" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-1.5 mx-auto">
                 <i class="ph ph-google-logo text-sm"></i> Google 快速登入
             </button>
         </template>
     </div>
 </div>
-<div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
-    <div class="bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
-        
-        <div class="flex justify-between items-center p-6 pb-4 shrink-0">
-            <h3 class="font-bold text-lg text-slate-700">系統與主題設定 ⚙️</h3>
-            <button @click="showSettingsModal = false" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200 transition-colors">
-                <i class="ph ph-x"></i>
-            </button>
-        </div>
-
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
                                     <!-- 放在頂端導覽列或設定選單中 -->
