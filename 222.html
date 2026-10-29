@@ -1369,7 +1369,7 @@ const filteredMapEventsCount = computed(() => {
 // 更新：totalDistance 也要隨著年份變動
 const totalDistance = computed(() => {
     // 根據統計頁面選擇的年份過濾
-    const targetYear = selectedYear.value;
+    const targetYear = selectedmapYear.value;
     const baseEvents = targetYear === 'ALL' 
         ? events.value 
         : events.value.filter(e => e.date && e.date.startsWith(targetYear));
@@ -1911,8 +1911,8 @@ const availableYears = computed(() => {
                 const statsData = computed(() => {
                     let targetEvents = events.value;
       
-                    if (selectedYear.value !== 'ALL') {
-                        targetEvents = events.value.filter(e => e.date.match(new RegExp(`^${selectedYear.value}`)));
+                    if (selectedmapYear.value !== 'ALL') {
+                        targetEvents = events.value.filter(e => e.date.match(new RegExp(`^${selectedmapYear.value}`)));
                     }
                     const count = targetEvents.length;
           
