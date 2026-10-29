@@ -579,7 +579,7 @@
             
             <div class="flex items-center gap-2">
                 <div class="relative shrink-0">
-                    <select v-model="selectedMapYear" @change="initMap" 
+                    <select v-model="mapYear" @change="initMap" 
                             class="appearance-none bg-slate-100 border-none text-slate-700 py-1 px-2 pr-6 rounded-lg text-[10px] font-bold focus:ring-1 focus:ring-primary">
                         <option value="ALL">全部年度</option>
                         <option v-for="year in availableYears" :key="year" :value="year">{{ year }} 年</option>
@@ -1282,7 +1282,7 @@ onMounted(() => {
 });
 
                 const events = ref([]);
-                const selectedMapYear = ref('ALL');
+                const mapYear = ref('ALL');
                 const activeTab = ref('home');
                 const viewMode = ref('upcoming');
                 const themeColor = ref('#63b3b0'); 
@@ -1347,9 +1347,9 @@ const calculateKm = (lat1, lon1, lat2, lon2) => {
 // 新增：根據年份計算過濾後的點位數量
 const filteredMapEventsCount = computed(() => {
     // 1. 先根據年度過濾資料
-    const target = selectedMapYear.value === 'ALL' 
+    const target = mapYear.value === 'ALL' 
         ? events.value 
-        : events.value.filter(e => e.date && e.date.startsWith(selectedMapYear.value));
+        : events.value.filter(e => e.date && e.date.startsWith(mapYear.value));
 
     // 2. 建立一個 Set 來儲存唯一的經緯度組合字串
     const uniqueLocations = new Set();
@@ -1637,7 +1637,7 @@ watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newV
 watch(themeColor, (newVal) => localStorage.setItem('idolTheme', newVal));
 
 // 新增此段落：監聽地圖年份篩選
-watch(selectedMapYear, () => {
+watch(mapYear, () => {
     if (activeTab.value === 'map') {
         nextTick(() => { initMap(); });
     }
@@ -2261,9 +2261,9 @@ const initMap = () => {
     markers = [];
 
     // 根據選定年度過濾
-    const baseEvents = selectedMapYear.value === 'ALL' 
+    const baseEvents = mapYear.value === 'ALL' 
         ? events.value 
-        : events.value.filter(e => e.date && e.date.startsWith(selectedMapYear.value));
+        : events.value.filter(e => e.date && e.date.startsWith(mapYear.value));
 
     const sortedEvents = [...baseEvents]
         .filter(e => e.lat && e.lng)
@@ -2546,7 +2546,7 @@ const generateShareImage = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, 
+mapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, 
 
                 };
             }
