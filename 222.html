@@ -1222,6 +1222,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
                 // 追蹤當前登入使用者狀態
 const currentUser = ref(null);
+const syncStatusText = ref("✅ 已與雲端同步");
 
 // 1. Email 免密碼一鍵登入 (Magic Link)
 const loginEmail = ref('');
