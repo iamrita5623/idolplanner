@@ -152,6 +152,7 @@
                     'bg-black/10 hover:bg-black/20 text-slate-700' : 'bg-white/20 hover:bg-white/30 text-white'" 
                      class="p-2 rounded-full backdrop-blur-sm cursor-pointer transition-colors" @click="toggleSettingsModal">
                     <i class="ph ph-gear text-lg"></i>
+
                 </div>
             </div>
             
@@ -913,7 +914,23 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
             </div>
         </transition>
-
+<!-- Supabase 登入狀態與按鈕區塊 -->
+<div class="border-b border-slate-100 pb-4 mb-4">
+    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
+    <div class="flex items-center justify-center gap-2">
+        <template v-if="currentUser">
+            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+            <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">
+                登出
+            </button>
+        </template>
+        <template v-else>
+            <button @click="loginWithGoogle" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-1.5">
+                <i class="ph ph-google-logo text-sm"></i> Google 快速登入
+            </button>
+        </template>
+    </div>
+</div>
 <div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
     <div class="bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
         
@@ -926,6 +943,18 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
+                                    <!-- 放在頂端導覽列或設定選單中 -->
+<div class="flex items-center gap-2">
+    <template v-if="currentUser">
+        <span class="text-xs text-white/90">👤 已登入</span>
+        <button @click="logout" class="text-xs bg-white/20 px-2 py-1 rounded text-white">登出</button>
+    </template>
+    <template v-else>
+        <button @click="loginWithGoogle" class="text-xs bg-white text-slate-800 px-3 py-1 rounded-full font-bold shadow-sm">
+            Google 快速登入
+        </button>
+    </template>
+</div>
                 <div class="border-b border-slate-100 pb-4">
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
                     <input type="text" v-model="customTitle" @change="updateAppTitle" placeholder="追星日記 ✨"
@@ -1185,6 +1214,48 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         createApp({
             setup() {
 
+                // 追蹤當前登入使用者狀態
+const currentUser = ref(null);
+
+// 1. Google 一鍵登入
+const loginWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google'
+    });
+    if (error) alert("登入失敗: " + error.message);
+};
+
+// 2. 登出
+const logout = async () => {
+    await supabase.auth.signOut();
+    currentUser.value = null;
+    events.value = []; // 清空畫面
+    alert('已成功登入');
+};
+
+// 3. 檢查目前是否已經登入，並自動把雲端資料抓下來
+const checkUserAndFetchData = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        currentUser.value = user;
+        
+        // 從雲端抓取屬於這個使用者的行程資料
+        const { data, error } = await supabase
+            .from('idol_events')
+            .select('*')
+            .eq('user_id', user.id);
+            
+        if (data && data.length > 0 && data[0].event_data) {
+            events.value = data[0].event_data; // 將雲端資料還原到畫面上
+        }
+    }
+};
+
+// 網頁一開機時先檢查登入狀態
+onMounted(() => {
+    // ... (你原本寫的 localStorage 讀取可以保留作為離線備份) ...
+    checkUserAndFetchData();
+});
 
                 const events = ref([]);
                 const selectedMapYear = ref('ALL');
@@ -1445,15 +1516,16 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
 const syncToCloud = async (currentEvents) => {
-    // 我們用一個固定的裝置備份 ID，或者你可以存成陣列
-    const { data, error } = await supabase
+    if (!currentUser.value) return; // 沒登入就不自動同步到雲端
+
+    const { error } = await supabase
         .from('idol_events')
         .upsert({ 
-            id: 1, // 如果以後想要多使用者，這裡可以改成對應的 uuid
+            user_id: currentUser.value.id, // 綁定當前登入的使用者 ID
             event_data: currentEvents 
-        }, { onConflict: 'id' });
+        }, { onConflict: 'user_id' }); // 確保每個使用者只有一筆主要的資料包
     
-    if (error) console.error("雲端自動備份失敗:", error);
+    if (error) console.error("雲端自動同步失敗:", error);
 };
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
@@ -2412,7 +2484,7 @@ const generateShareImage = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, 
+selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginWithGoogle, logout, 
 
                 };
             }
