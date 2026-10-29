@@ -1374,7 +1374,7 @@ const totalDistance = computed(() => {
                 const form = ref({ ...defaultForm });
                 const presetColors = ['#63b3b0', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#1dd1a1'];
                 const customTitle = ref(localStorage.getItem('appTitle') || '追星日記 ✨');
-                const appVersion = ref('v1.0.5'); // 更新版本號
+                const appVersion = ref('v1.0.6'); // 更新版本號
                 
                 // --- FANDOM STATES ---
                 const fandoms = ref(JSON.parse(localStorage.getItem('fandomFandoms') || '[]'));
@@ -1393,7 +1393,13 @@ const totalDistance = computed(() => {
                 // --- END FANDOM STATES ---
 
                 const changelogContent = ref([ 
-
+{ 
+        version: 'v1.0.6', // 這裡改成你的新版本號
+        date: '2026/06/07', // 填入日期
+        items: [
+            '在這裡寫下這個版本新增或修改的功能項目說明。',
+        ] 
+    },
 { 
     version: 'v1.0.5', 
     date: '2025/12/31', 
