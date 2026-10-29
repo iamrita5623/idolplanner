@@ -936,13 +936,12 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
                     <div class="flex items-center justify-center gap-2">
                         <template v-if="currentUser">
-                            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-<!-- 在設定選單的已登入區塊附近加入這行 -->
-<div class="sync-status-indicator" style="font-size: 13px; color: #666; margin: 8px 0;">
-    {{ syncStatusText }}
-</div>
-                            <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
-                        </template>
+    <div class="flex flex-col items-center justify-center my-2">
+        <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+        <span style="font-size: 11px; color: #666; margin-top: 2px;">{{ syncStatusText }}</span>
+    </div>
+    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+</template>
                         <template v-else>
                             <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
                                 <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
