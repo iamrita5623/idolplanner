@@ -1221,12 +1221,14 @@ const loginWithEmail = async () => {
     const { error } = await supabase.auth.signInWithOtp({
         email: loginEmail.value,
         options: {
-            emailRedirectTo: window.location.href,
+            // 請將這裡換成你目前實際開啟網頁的網址，例如 'https://iamrita5623.github.io/idolplanner/222'
+            emailRedirectTo: window.location.origin + window.location.pathname, 
         }
     });
     if (error) alert("發送失敗: " + error.message);
     else alert("登入連結已發送到您的信箱，請至信箱點擊連結完成登入！");
 };
+
 
 // 2. 登出
 const logout = async () => {
