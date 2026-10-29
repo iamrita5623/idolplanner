@@ -927,33 +927,22 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <!-- 雲端同步帳號 -->
 <div class="border-b border-slate-100 pb-4 mb-4">
     <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
-    <div class="flex items-center justify-center gap-2">
+    <div class="flex flex-col items-center gap-2">
         <template v-if="currentUser">
-            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+            <span class="text-xs text-slate-700 font-bold">👤 已登入: {{ currentUser.email }}</span>
             <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">
                 登出
             </button>
         </template>
         <template v-else>
-            <button @click="loginWithGoogle" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-1.5 mx-auto">
-                <i class="ph ph-google-logo text-sm"></i> Google 快速登入
-            </button>
+            <div class="flex gap-2 w-full px-4">
+                <input v-model="loginEmail" type="email" placeholder="輸入你的 Email..." class="flex-1 bg-slate-100 border rounded-lg px-3 py-1.5 text-xs">
+                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-3 py-1.5 rounded-lg font-bold shadow-sm hover:opacity-90">
+                    發送登入連結
+                </button>
+            </div>
         </template>
     </div>
-</div>
-        <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
-            <div class="space-y-6 text-center">
-                                    <!-- 放在頂端導覽列或設定選單中 -->
-<div class="flex items-center gap-2">
-    <template v-if="currentUser">
-        <span class="text-xs text-white/90">👤 已登入</span>
-        <button @click="logout" class="text-xs bg-white/20 px-2 py-1 rounded text-white">登出</button>
-    </template>
-    <template v-else>
-        <button @click="loginWithGoogle" class="text-xs bg-white text-slate-800 px-3 py-1 rounded-full font-bold shadow-sm">
-            Google 快速登入
-        </button>
-    </template>
 </div>
                 <div class="border-b border-slate-100 pb-4">
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
@@ -1217,12 +1206,21 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 // 追蹤當前登入使用者狀態
 const currentUser = ref(null);
 
-// 1. Google 一鍵登入
-const loginWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google'
+// 3. Email 快速登入 (Magic Link)
+const loginEmail = ref('');
+const loginWithEmail = async () => {
+    if (!loginEmail.value) return alert('請先輸入 Email！');
+    const { error } = await supabase.auth.signInWithOtp({
+        email: loginEmail.value,
+        options: {
+            emailRedirectTo: window.location.href
+        }
     });
-    if (error) alert("登入失敗: " + error.message);
+    if (error) {
+        alert("發送失敗: " + error.message);
+    } else {
+        alert("登入信件已發送！請去你的 Email 收信，點擊信中的連結即可完成登入同步。");
+    }
 };
 
 // 2. 登出
@@ -1230,7 +1228,7 @@ const logout = async () => {
     await supabase.auth.signOut();
     currentUser.value = null;
     events.value = []; // 清空畫面
-    alert('已成功登入');
+    alert('已登出');
 };
 
 // 3. 檢查目前是否已經登入，並自動把雲端資料抓下來
@@ -2490,7 +2488,7 @@ const generateShareImage = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginWithGoogle, logout, 
+selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginWithEmail, logout, 
 
                 };
             }
