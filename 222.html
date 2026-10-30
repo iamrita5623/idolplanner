@@ -1547,16 +1547,9 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
 const syncToCloud = async (dataToSync) => {
-    // 1. 檢查有沒有抓到使用者
-    if (!currentUser.value) {
-        alert("⚠️ 攔截：目前 currentUser 是空的，所以沒同步！");
-        return;
-    }
+    if (!currentUser.value) return;
     
-    alert("✅ 開始同步，使用者 ID：" + currentUser.value.id);
-
     try {
-        // 2. 執行 upsert
         const { error } = await supabase
             .from('idol_events')
             .upsert({ 
@@ -1567,14 +1560,12 @@ const syncToCloud = async (dataToSync) => {
             });
 
         if (error) {
-            // 3. 如果資料庫報錯，把錯誤秀出來
-            alert("❌ Supabase 寫入失敗錯誤：" + error.message);
+            console.error("雲端同步失敗:", error.message);
         } else {
-            // 4. 成功寫入
-            alert("🎉 真的成功寫入 Supabase 囉！");
+            console.log("☁️ 雲端同步成功！");
         }
     } catch (err) {
-        alert("💥 發生重大異常：" + err.message);
+        console.error("同步發生異常:", err);
     }
 };
 
