@@ -1547,37 +1547,37 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
 const syncToCloud = async (dataToSync) => {
-    if (!currentUser.value) return;
+    // 1. 檢查有沒有抓到使用者
+    if (!currentUser.value) {
+        alert("⚠️ 攔截：目前 currentUser 是空的，所以沒同步！");
+        return;
+    }
     
-    try {
-        const { data: existing, error: selectError } = await supabase
-            .from('idol_events')
-            .select('id')
-            .eq('user_id', currentUser.value.id);
+    alert("✅ 開始同步，使用者 ID：" + currentUser.value.id);
 
-        if (existing && existing.length > 0) {
-            const { error: updateError } = await supabase
-                .from('idol_events')
-                .update({ event_data: dataToSync })
-                .eq('user_id', currentUser.value.id);
-                
-            if (updateError) console.error("更新雲端失敗:", updateError.message);
-            else console.log("雲端資料更新成功！");
+    try {
+        // 2. 執行 upsert
+        const { error } = await supabase
+            .from('idol_events')
+            .upsert({ 
+                user_id: currentUser.value.id, 
+                event_data: dataToSync 
+            }, { 
+                onConflict: 'user_id' 
+            });
+
+        if (error) {
+            // 3. 如果資料庫報錯，把錯誤秀出來
+            alert("❌ Supabase 寫入失敗錯誤：" + error.message);
         } else {
-            const { error: insertError } = await supabase
-                .from('idol_events')
-                .insert({ 
-                    user_id: currentUser.value.id, 
-                    event_data: dataToSync 
-                });
-                
-            if (insertError) console.error("新增至雲端失敗:", insertError.message);
-            else console.log("雲端資料新增成功！");
+            // 4. 成功寫入
+            alert("🎉 真的成功寫入 Supabase 囉！");
         }
     } catch (err) {
-        console.error("同步發生異常:", err);
+        alert("💥 發生重大異常：" + err.message);
     }
 };
+
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
@@ -2543,6 +2543,8 @@ selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEvent
     </script>
 </body>
 </html>
+
+
 
 
 
