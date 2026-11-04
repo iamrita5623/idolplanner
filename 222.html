@@ -1570,21 +1570,6 @@ const syncToCloud = async (dataToSync) => {
     }
 };
 
-// 🌟 監聽全域設定變動（名稱、總預算、主題顏色等）
-watch(userSettings, (newVal) => {
-    if (isInitializing.value) return; // 如果正在開機初始化，直接跳過不備份！
-    
-    localStorage.setItem('idolUserSettings', JSON.stringify(newVal));
-    
-    // 同步到 Supabase 雲端，並帶上最新的時間戳記
-    syncToCloud({
-        events: events.value,
-        fandoms: fandoms.value,
-        settings: newVal,
-        updated_at: new Date().toISOString()
-    });
-}, { deep: true });
-
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
     localStorage.setItem('idolEvents', JSON.stringify(newVal)); // 保留你原本的
