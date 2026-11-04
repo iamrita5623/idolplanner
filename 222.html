@@ -1202,7 +1202,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 <div class="bg-slate-50 p-3 rounded-xl mb-3 text-xs text-slate-500 leading-relaxed border border-slate-100">
                     <p class="font-bold mb-1 text-slate-700">💡 如何使用：</p>
                     
-                    請貼上標準的 <b>JSON 陣列</b>。務必包含**日期**、**歌手**和**活動名稱**。
+                    請貼上行程用的 <b>JSON 陣列</b>；完整備份 JSON 請到「設定 → 還原資料」使用。務必包含**日期**、**歌手**和**活動名稱**。
            
                     <ul class="list-disc list-inside mt-1 ml-1">
                         <li>**日期**：支援 `YYYY-MM-DD` 或六位數簡寫 `YYMMDD` (如 240101)。</li>
@@ -2684,6 +2684,85 @@ const initMap = () => {
                     }
                 };
                 
+                const processImportSafe = () => {
+                    if (!cloudReady.value) {
+                        alert('雲端資料尚未載入完成，請稍後再匯入。');
+                        return;
+                    }
+                    try {
+                        let source = importJson.value.trim();
+                        if (!source) { alert('請先貼上 JSON 行程資料。'); return; }
+                        if (source.startsWith('```')) {
+                            source = source.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+                        }
+                        const parsed = JSON.parse(source);
+                        if (parsed && parsed.backupFormat === 'idol-tracker-full') {
+                            alert('這是完整備份檔。請使用「設定 → 還原資料」選取檔案；儀表板的匯入只新增行程。');
+                            return;
+                        }
+                        const data = Array.isArray(parsed) ? parsed :
+                            (parsed && Array.isArray(parsed.events) ? parsed.events : null);
+                        if (!data) { alert('請貼上 JSON 行程陣列，或含 events 陣列的物件。'); return; }
+                        if (!data.length) { alert('沒有可匯入的行程；原資料不變。'); return; }
+                        if (!data.every(d => d && typeof d === 'object' && !Array.isArray(d))) {
+                            alert('JSON 行程項目必須是物件。'); return;
+                        }
+                        const formatDate = raw => {
+                            const s = String(raw || '').trim();
+                            let value = s;
+                            if (/^\d{6}$/.test(s)) value = '20' + s.slice(0,2) + '-' + s.slice(2,4) + '-' + s.slice(4,6);
+                            else if (/^\d{8}$/.test(s)) value = s.slice(0,4) + '-' + s.slice(4,6) + '-' + s.slice(6,8);
+                            else value = s.replace(/\//g, '-');
+                            if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+                            const d = new Date(value + 'T12:00:00');
+                            return !Number.isNaN(d.getTime()) && d.toLocaleDateString('sv-SE') === value ? value : null;
+                        };
+                        const invalid = data.findIndex(d =>
+                            !formatDate(d.date ?? d['日期']) ||
+                            !String(d.title ?? d['活動名稱'] ?? '').trim());
+                        if (invalid !== -1) {
+                            alert('第 ' + (invalid + 1) + ' 筆行程的日期或活動名稱不正確，已取消整批匯入。');
+                            return;
+                        }
+                        const incoming = data.map(d => {
+                            const expenses = Array.isArray(d.expenses)
+                                ? d.expenses.map(e => ({item:e.item || e['項目'] || '未分類',
+                                    amount:Number(e.amount ?? e['金額'] ?? 0)}))
+                                    .filter(e => Number.isFinite(e.amount) && e.amount > 0)
+                                : (() => {
+                                    const amount = Number(d.price ?? d['票價'] ?? d['金額'] ?? 0);
+                                    return Number.isFinite(amount) && amount > 0 ? [{item:'門票',amount}] : [];
+                                  })();
+                            return {
+                                id: Date.now() + Math.random(),
+                                title: String(d.title ?? d['活動名稱']).trim(),
+                                artist: String(d.artist ?? d['歌手'] ?? '').trim(),
+                                date: formatDate(d.date ?? d['日期']),
+                                time: d.time || d['時間'] || '00:00',
+                                location: d.location || d['地點'] || '',
+                                color: d.color || d['應援色'] || '',
+                                expenses,
+                                seat: d.seat || d['座位'] || '',
+                                memo: d.memo || d['心得'] || '',
+                                checklist: Array.isArray(d.checklist) ? d.checklist : [],
+                                lat: d.lat == null ? null : Number(d.lat),
+                                lng: d.lng == null ? null : Number(d.lng),
+                                coverUrl: d.coverUrl || '',
+                                sticker: d.sticker || ''
+                            };
+                        });
+                        if (!confirm('新增 ' + incoming.length +
+                            ' 筆行程？不會刪除原資料，但若重複匯入可能產生重複行程。')) return;
+                        events.value = [...events.value, ...incoming];
+                        importJson.value = '';
+                        showImportModal.value = false;
+                        alert('已匯入 ' + incoming.length + ' 筆行程！');
+                    } catch (error) {
+                        console.error('JSON 匯入失敗:', error);
+                        alert('JSON 格式有誤，請檢查引號、逗號、括號。沒有修改資料。');
+                    }
+                };
+
                 // Base64 檔案上傳處理函數
                 const handleFileUpload = (event, type) => {
                     const file = event.target.files[0];
@@ -2785,7 +2864,7 @@ const generateShareImage = () => {
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
-                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport, showChangelog, generateShareImage, 
+                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport: processImportSafe, showChangelog, generateShareImage, 
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
