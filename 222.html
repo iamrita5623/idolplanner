@@ -1006,7 +1006,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <p class="text-xs text-slate-500 mb-2">資料備份與轉移</p>
                     <div class="flex flex-col gap-2">
                         <button @click="downloadBackup" class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200">
-                            <i class="ph ph-download-simple text-lg"></i> 備份資料
+                            <i class="ph ph-download-simple text-lg"></i> 下載完整備份 JSON
                         </button>
                         <label class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200 cursor-pointer">
                             <i class="ph ph-upload-simple text-lg"></i> 還原資料
@@ -2540,34 +2540,95 @@ const initMap = () => {
                 }
 
                 const downloadBackup = () => {
-                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(events.value));
-                    const downloadAnchorNode = document.createElement('a');
-                    downloadAnchorNode.setAttribute("href", dataStr);
-                    downloadAnchorNode.setAttribute("download", "idol_tracker_backup_" + new Date().toLocaleDateString('sv-SE') + ".json");
-                    document.body.appendChild(downloadAnchorNode);
-                    downloadAnchorNode.click();
-                    downloadAnchorNode.remove();
+                    // 外部完整備份，不接觸資料庫寫入。
+                    try {
+                        const snapshot = {
+                            backupFormat: 'idol-tracker-full',
+                            backupVersion: 1,
+                            exportedAt: new Date().toISOString(),
+                            data: {
+                                events: JSON.parse(JSON.stringify(events.value)),
+                                fandoms: JSON.parse(JSON.stringify(fandoms.value)),
+                                customTitle: customTitle.value,
+                                themeColor: themeColor.value,
+                                yearlyBudget: yearlyBudget.value
+                            }
+                        };
+                        const json = JSON.stringify(snapshot, null, 2);
+                        const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+                        const objectUrl = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = objectUrl;
+                        link.download = 'idol_tracker_full_backup_' +
+                            new Date().toLocaleDateString('sv-SE') + '_' +
+                            new Date().toTimeString().slice(0, 8).replace(/:/g, '-') + '.json';
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+                    } catch (error) {
+                        console.error('完整備份匯出失敗:', error);
+                        alert('備份匯出失敗，請勿清除瀏覽器資料。');
+                    }
                 };
                 const restoreBackup = (event) => {
-                    const file = event.target.files[0];
+                    const file = event.target.files && event.target.files[0];
                     if (!file) return;
+                    // 還原前必須先驗證格式；絕不把不認識的 JSON 當成空資料。
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         try {
                             const parsed = JSON.parse(e.target.result);
-                            if (Array.isArray(parsed)) {
-                                if(confirm('確定要還原備份嗎？')) {
-                                    events.value = parsed;
-                                    alert('還原成功！');
-                                    showSettingsModal.value = false;
-                                }
-                            } else {
-                                alert('檔案格式錯誤');
+                            const isLegacy = Array.isArray(parsed);
+                            const isFull = parsed &&
+                                parsed.backupFormat === 'idol-tracker-full' &&
+                                parsed.backupVersion === 1 &&
+                                parsed.data && Array.isArray(parsed.data.events) &&
+                                Array.isArray(parsed.data.fandoms);
+                            if (!isLegacy && !isFull) {
+                                alert('不支援的備份格式，沒有變更任何資料。');
+                                return;
                             }
-                        } catch (err) {
-                            alert('無法讀取檔案，請確認是否為有效的備份檔');
+                            const restoreData = isLegacy ? { events: parsed } : parsed.data;
+                            if (!restoreData.events.every(item => item && typeof item === 'object')) {
+                                alert('行程資料格式異常，已取消還原。');
+                                return;
+                            }
+                            const summary = '這份備份包含 ' + restoreData.events.length +
+                                ' 筆行程' + (isFull ? '、' + restoreData.fandoms.length +
+                                ' 筆紀念日與個人設定' : '（舊版格式，僅還原行程）') +
+                                '。\n還原後會取代目前對應的資料並同步到雲端。\n確定繼續嗎？';
+                            if (!confirm(summary)) return;
+                            // 將還原前狀態先留在本機，方便意外時找回。
+                            localStorage.setItem('idolPreRestoreBackup', JSON.stringify({
+                                events: events.value,
+                                fandoms: fandoms.value,
+                                customTitle: customTitle.value,
+                                themeColor: themeColor.value,
+                                yearlyBudget: yearlyBudget.value,
+                                savedAt: new Date().toISOString()
+                            }));
+                            events.value = restoreData.events;
+                            if (isFull) {
+                                fandoms.value = restoreData.fandoms;
+                                if (typeof restoreData.customTitle === 'string') customTitle.value = restoreData.customTitle;
+                                if (typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor)) {
+                                    themeColor.value = restoreData.themeColor;
+                                }
+                                if (Number.isFinite(Number(restoreData.yearlyBudget)) && Number(restoreData.yearlyBudget) > 0) {
+                                    yearlyBudget.value = Number(restoreData.yearlyBudget);
+                                }
+                            }
+                            showSettingsModal.value = false;
+                            alert('備份已載入。若已登入且同步正常，系統會自動儲存至雲端。');
+                        } catch (error) {
+                            console.error('備份還原失敗:', error);
+                            alert('備份讀取失敗，原有資料未變更。');
+                        } finally {
+                            event.target.value = '';
                         }
                     };
+                    reader.onerror = () => alert('檔案讀取失敗，沒有變更資料。');
                     reader.readAsText(file);
                 };
 
