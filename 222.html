@@ -1256,6 +1256,7 @@ const logout = async () => {
 };
 
 // 3. 檢查目前是否已經登入，並自動把雲端資料抓下來或主動備份
+/* 舊版讀取邏輯，已停用
 const checkUserAndFetchData = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -1294,14 +1295,51 @@ const checkUserAndFetchData = async () => {
 };
 
 
+*/
+const checkUserAndFetchData = async () => {
+    try {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError) throw authError;
+        if (!user) return { status: 'signed_out' };
+        currentUser.value = user;
+        const { data, error } = await supabase.from('idol_events')
+            .select('event_data').eq('user_id', user.id).maybeSingle();
+        if (error) throw error;
+        if (!data || data.event_data == null) {
+            cloudReady.value = true;
+            return { status: 'empty' };
+        }
+        const raw = data.event_data;
+        let parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        for (let i = 0; i < 8 && parsed && !Array.isArray(parsed); i++) {
+            if (typeof parsed !== 'object') break;
+            if (Object.prototype.hasOwnProperty.call(parsed, 'events')) parsed = parsed.events;
+            else if (Object.prototype.hasOwnProperty.call(parsed, 'event_data')) parsed = parsed.event_data;
+            else break;
+        }
+        if (!Array.isArray(parsed)) throw new Error('雲端 event_data 格式無法辨識');
+        events.value = parsed;
+        if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+            if (Array.isArray(raw.fandoms)) fandoms.value = raw.fandoms;
+            if (typeof raw.customTitle === 'string') customTitle.value = raw.customTitle;
+            if (typeof raw.themeColor === 'string') themeColor.value = raw.themeColor;
+            if (Number(raw.yearlyBudget) > 0) yearlyBudget.value = Number(raw.yearlyBudget);
+        }
+        cloudReady.value = true;
+        return { status: 'loaded' };
+    } catch (error) {
+        cloudReady.value = false;
+        console.error('雲端讀取失敗，停止自動寫入:', error);
+        alert('雲端資料讀取失敗，已暫停雲端同步，請勿清除本機資料。');
+        return { status: 'error' };
+    }
+};
 // 網頁一開機時先檢查登入狀態
-onMounted(() => {
-    // ... (你原本寫的 localStorage 讀取可以保留作為離線備份) ...
-    checkUserAndFetchData();
-});
+// 初始化由下方唯一的 onMounted 負責，避免重複抓取雲端資料。
 
                 const events = ref([]);
-const isInitializing = ref(true); // 🌟 開機防護：剛開機時禁止自動上傳覆蓋
+const isInitializing = ref(true);
+const cloudReady = ref(false); // 🌟 開機防護：剛開機時禁止自動上傳覆蓋
                 const selectedMapYear = ref('ALL');
                 const activeTab = ref('home');
                 const viewMode = ref('upcoming');
@@ -1566,10 +1604,10 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
-import { ref } from 'vue';
 
 const lastSyncTime = ref(''); // 宣告時間變數
 
+/* 舊版同步邏輯，已停用
 const syncToCloud = async (dataToSync) => {
     if (!currentUser.value) return;
     
@@ -1598,6 +1636,39 @@ const syncToCloud = async (dataToSync) => {
 };
 
 
+*/
+let cloudSyncTimer = null;
+let cloudWriteQueue = Promise.resolve();
+const syncToCloud = () => {
+    if (isInitializing.value || !cloudReady.value || !currentUser.value) return;
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(() => {
+        if (isInitializing.value || !cloudReady.value || !currentUser.value) return;
+        const userId = currentUser.value.id;
+        const snapshot = {
+            schemaVersion: 2,
+            events: JSON.parse(JSON.stringify(events.value)),
+            fandoms: JSON.parse(JSON.stringify(fandoms.value)),
+            customTitle: customTitle.value,
+            themeColor: themeColor.value,
+            yearlyBudget: yearlyBudget.value
+        };
+        cloudWriteQueue = cloudWriteQueue.catch(console.error).then(async () => {
+            if (!cloudReady.value || !currentUser.value || currentUser.value.id !== userId) return;
+            const now = new Date().toISOString();
+            const { error } = await supabase.from('idol_events').upsert({
+                user_id: userId, event_data: snapshot, updated_at: now
+            }, { onConflict: 'user_id' });
+            if (error) {
+                console.error('雲端同步失敗:', error);
+                alert('雲端儲存失敗，請先保留本機資料。');
+            } else {
+                lastSyncTime.value = new Date(now).toLocaleString('zh-TW');
+            }
+        });
+    }, 1200);
+};
+/* 舊版重複監聽，已停用
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
     localStorage.setItem('idolEvents', JSON.stringify(newVal)); // 保留你原本的
@@ -1676,6 +1747,40 @@ watch(yearlyBudget, (newVal) => {
 });
 
 
+*/
+onMounted(async () => {
+    const result = await checkUserAndFetchData();
+    if (result.status !== 'loaded') {
+        try {
+            const saved = JSON.parse(localStorage.getItem('idolEvents') || '[]');
+            if (Array.isArray(saved)) events.value = saved;
+        } catch (error) {
+            console.error('本機資料無法解析:', error);
+        }
+    }
+    await nextTick();
+    isInitializing.value = false;
+});
+watch(events, (value) => {
+    localStorage.setItem('idolEvents', JSON.stringify(value));
+    syncToCloud();
+}, { deep: true });
+watch(fandoms, (value) => {
+    localStorage.setItem('fandomFandoms', JSON.stringify(value));
+    syncToCloud();
+}, { deep: true });
+watch(customTitle, (value) => {
+    localStorage.setItem('appTitle', value);
+    syncToCloud();
+});
+watch(themeColor, (value) => {
+    localStorage.setItem('idolTheme', value);
+    syncToCloud();
+});
+watch(yearlyBudget, (value) => {
+    localStorage.setItem('idolYearlyBudget', value);
+    syncToCloud();
+});
 // 新增此段落：監聽地圖年份篩選
 watch(selectedMapYear, () => {
     if (activeTab.value === 'map') {
@@ -2586,7 +2691,7 @@ const generateShareImage = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, 
+selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, 
 
                 };
             }
