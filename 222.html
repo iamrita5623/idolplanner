@@ -1560,23 +1560,28 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 const syncToCloud = async (dataToSync) => {
     if (!currentUser.value) return;
     
+    const nowTime = new Date().toLocaleTimeString();
+    console.log("準備同步時間:", nowTime);
+    
     try {
         const { error } = await supabase
             .from('idol_events')
             .upsert({ 
                 user_id: currentUser.value.id, 
-                event_data: dataToSync 
+                event_data: dataToSync,
+                updated_at: new Date().toISOString()
             }, { 
                 onConflict: 'user_id' 
             });
 
         if (error) {
-            console.error("雲端同步失敗:", error.message);
+            alert("❌ 同步失敗: " + error.message);
         } else {
-            console.log("☁️ 雲端同步成功！");
+            // 彈出提示，順便印出當前時間，證明程式碼有跑過
+            alert("☁️ 雲端同步成功！時間: " + nowTime);
         }
     } catch (err) {
-        console.error("同步發生異常:", err);
+        alert("💥 異常: " + err.message);
     }
 };
 
