@@ -624,7 +624,7 @@
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
 <div class="flex gap-2">
-    <button onclick="window.alert('原生按鈕點擊成功')" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button @click="showShareModal = true" onclick="window.alert('Vue 測試：請關閉提示後查看分享視窗')" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
     </button>
     <button @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
