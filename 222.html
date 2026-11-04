@@ -1259,17 +1259,26 @@ const checkUserAndFetchData = async () => {
             .eq('user_id', user.id);
             
         if (data && data.length > 0 && data[0].event_data) {
-            let cloudData = data[0].event_data;
+            let rawData = data[0].event_data;
             
-            // 🌟 自動解開被包多層的結構，確保能正確拿到陣列資料！
-            while (cloudData && cloudData.events) {
-                cloudData = cloudData.events;
+            // 🌟 自動解開被包多層的物件（例如 {"events": {"events": ...}}），直到找到陣列為止
+            let parsedData = rawData;
+            while (parsedData && typeof parsedData === 'object' && !Array.isArray(parsedData)) {
+                if (parsedData.events) {
+                    parsedData = parsedData.events;
+                } else if (parsedData.event_data) {
+                    parsedData = parsedData.event_data;
+                } else {
+                    break;
+                }
             }
             
-            if (Array.isArray(cloudData)) {
-                events.value = cloudData; // 成功把正確的行程陣列還原到畫面上！
-            } else if (Array.isArray(cloudData.events)) {
-                events.value = cloudData.events;
+            // 如果成功解開成陣列，就放回畫面上
+            if (Array.isArray(parsedData)) {
+                events.value = parsedData;
+                console.log("成功從雲端解析並還原行程資料！", events.value);
+            } else {
+                console.error("無法解析的雲端資料結構", rawData);
             }
         }
     }
