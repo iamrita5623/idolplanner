@@ -624,7 +624,7 @@
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
 <div class="flex gap-2">
-    <button @click="generateShareImage" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button @click="openSharePreview" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
     </button>
     <button @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
@@ -632,7 +632,7 @@
     </button>
 </div>
 
-<div id="share-template" style="position: fixed;
+<div id="share-template-legacy" style="position: fixed;
 top: -9999px; left: 0; width: 375px; padding: 30px; border-radius: 0px;
 z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8fafc' }">
 
@@ -1194,7 +1194,11 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </div>
         </transition>
 
-        <div v-if="showImportModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+        <div v-if="showShareModal" class="fixed inset-0 z-[80] bg-black/70 overflow-y-auto p-4 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div id="share-template" class="bg-[#faf5fa] p-6 flex flex-col gap-4 overflow-hidden" style="width:min(360px, calc(100vw - 32px));aspect-ratio:9/16"><p class="text-center text-xs tracking-widest">MY IDOL DIARY</p><h2 class="font-black text-xl text-center">{{ selectedYear === 'ALL' ? '追星全紀錄回顧' : selectedYear + ' 年度回顧' }}</h2><div class="p-4 rounded-xl text-white text-xs text-center whitespace-pre-line" :style="{backgroundColor:themeColor}">{{ emotionalSummary }}</div>
+<div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">🎫 追星活動</p><p class="text-3xl font-black" :style="{color:themeColor}">{{ statsData.count }}</p><p class="text-xs">場回憶</p></div><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">📍 追星距離</p><p class="text-2xl font-black" :style="{color:themeColor}">{{ shareDistanceLabel }}</p><p class="text-xs">{{ shareDistanceAvailable ? '公里（已定位足跡）' : '尚無足夠定位資料' }}</p></div></div>
+<div class="bg-white rounded-xl p-4"><h3 class="font-black text-sm mb-3">🏆 本命排行榜 TOP 3</h3><p v-if="!statsData.topArtists.length" class="text-xs text-slate-400">尚無排行資料</p><div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" class="mb-3"><div class="flex justify-between gap-2 text-xs"><span class="font-bold truncate">{{ ['🥇','🥈','🥉'][i] }} {{ a.name }}</span><span>{{ a.count }} 次見面</span></div><div class="h-1.5 bg-slate-100 rounded-full mt-1"><div class="h-1.5 rounded-full" :style="{backgroundColor:themeColor,width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div></div></div>
+<p class="mt-auto text-center text-xs text-slate-500">珍藏每一次奔赴 ♡ · IDOL PLANNER</p></div>
+<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div><div v-if="showImportModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
                 <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3>
@@ -1376,6 +1380,12 @@ const loadError = ref(false); // 🌟 開機防護：剛開機時禁止自動上
                 const showSettingsModal = ref(false); 
                 
                 const showImportModal = ref(false);
+                const showShareModal = ref(false);
+                const shareBusy = ref(false);
+                const shareError = ref('');
+                const openSharePreview = () => { shareError.value = ''; selectedMapYear.value = selectedYear.value; showShareModal.value = true; };
+                const shareDistanceAvailable = computed(() => events.value.filter(e => (selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))) && e.lat != null && e.lng != null).length >= 2);
+                const shareDistanceLabel = computed(() => shareDistanceAvailable.value ? String(totalDistance.value) : '—'); 
                 const showTicketModal = ref(false);
                 const showCalendarModal = ref(false); 
                 const showChangelogModal = ref(false); 
@@ -2800,7 +2810,7 @@ const initMap = () => {
                 const getDaysDiff = (d) => Math.ceil((new Date(d).setHours(0,0,0,0) - new Date().setHours(0,0,0,0))/(1000*60*60*24));
 
 
-const generateShareImage = () => {
+const generateShareImageLegacy = () => {
     const element = document.getElementById('share-template');
     if (!element) return;
 
@@ -2855,6 +2865,56 @@ const generateShareImage = () => {
 
 
 
+                const generateShareImage = async (mode = 'download') => {
+                    if (shareBusy.value) return;
+                    shareBusy.value = true;
+                    shareError.value = '';
+                    try {
+                        const element = document.getElementById('share-template');
+                        if (!element || !window.html2canvas) throw new Error('分享模板或截圖工具尚未載入');
+                        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+                        await nextTick();
+                        const width = element.getBoundingClientRect().width;
+                        const canvas = await html2canvas(element, {
+                            useCORS: true,
+                            backgroundColor: '#faf5fa',
+                            scale: 1080 / width,
+                            width,
+                            height: width * 16 / 9,
+                            scrollX: 0,
+                            scrollY: 0
+                        });
+                        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                        if (!blob) throw new Error('圖片產生失敗');
+                        const label = selectedYear.value === 'ALL' ? '全部' : String(selectedYear.value);
+                        const filename = label + '_追星回顧_限時動態.png';
+                        if (mode === 'share' && navigator.share && navigator.canShare) {
+                            const file = new File([blob], filename, {type:'image/png'});
+                            if (navigator.canShare({files:[file]})) {
+                                try {
+                                    await navigator.share({files:[file], title:'我的追星回顧'});
+                                    return;
+                                } catch (err) {
+                                    if (err.name === 'AbortError') return;
+                                }
+                            }
+                        }
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        setTimeout(() => URL.revokeObjectURL(url), 60000);
+                    } catch (err) {
+                        console.error('分享圖片產生失敗', err);
+                        shareError.value = '圖片製作失敗，請重試或改用其他瀏覽器。';
+                    } finally {
+                        shareBusy.value = false;
+                    }
+                };
+
                 const getMapLink = (l) => l ?
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
@@ -2864,7 +2924,7 @@ const generateShareImage = () => {
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
-                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport: processImportSafe, showChangelog, generateShareImage, 
+                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport: processImportSafe, showChangelog, generateShareImage, openSharePreview, showShareModal, shareBusy, shareError, shareDistanceAvailable, shareDistanceLabel, 
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
