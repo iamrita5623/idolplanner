@@ -4,8 +4,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>追星日記 🌟 |
-追星行程管理、紀念日、費用紀錄與地圖足跡</title>
+    <title>我的追星日記 🌟 |
+追星行程管理、費用紀錄與地圖足跡</title>
     
     <meta name="description" content="專為追星族設計的日記App。輕鬆紀錄偶像活動行程、演唱會費用、追星足跡地圖，並管理出發前必帶清單。讓每一份愛意都被珍藏！">
     <meta property="og:title" content="我的追星日記 🌟 - 行程費用管理 App">
@@ -1282,12 +1282,6 @@ onMounted(() => {
 });
 
                 const events = ref([]);
-// 🌟 統合你的全域設定與偏好（名稱、顏色、預算等）
-const userSettings = ref({
-    appName: '追星日記 ✨', 
-    themeColor: '#63b3b0',     
-    yearlyBudget: 10000        
-});
                 const selectedMapYear = ref('ALL');
                 const activeTab = ref('home');
                 const viewMode = ref('upcoming');
@@ -1425,7 +1419,7 @@ const totalDistance = computed(() => {
                 const changelogContent = ref([ 
 { 
     version: 'v1.0.6',
-    date: '2026/06/07',
+    date: '2026/11/02',
     items: [
         '新增 Supabase 雲端自動同步功能，支援多裝置資料備份。',
         '登入機制升級：改用 Email 免密碼快速登入 (Magic Link)。',
@@ -1552,33 +1546,23 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
-const syncToCloud = async (dataPayload) => {
+const syncToCloud = async (dataToSync) => {
     if (!currentUser.value) return;
     
     try {
-        const { data: existing } = await supabase
+        const { error } = await supabase
             .from('idol_events')
-            .select('id')
-            .eq('user_id', currentUser.value.id);
+            .upsert({ 
+                user_id: currentUser.value.id, 
+                event_data: dataToSync 
+            }, { 
+                onConflict: 'user_id' 
+            });
 
-        // 整理要上傳的資料包（包含行程、紀念日與最後更新時間）
-        const payload = {
-            user_id: currentUser.value.id,
-            event_data: dataPayload,
-            updated_at: new Date() // 🌟 每次更新時寫入最新的時間
-        };
-
-        if (existing && existing.length > 0) {
-            await supabase
-                .from('idol_events')
-                .update(payload)
-                .eq('user_id', currentUser.value.id);
-            console.log("☁️ 雲端同步與更新時間成功！");
+        if (error) {
+            console.error("雲端同步失敗:", error.message);
         } else {
-            await supabase
-                .from('idol_events')
-                .insert(payload);
-            console.log("☁️ 雲端資料新增成功！");
+            console.log("☁️ 雲端同步成功！");
         }
     } catch (err) {
         console.error("同步發生異常:", err);
@@ -1587,37 +1571,10 @@ const syncToCloud = async (dataPayload) => {
 
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
-// 1️⃣ 監聽行程變動
 watch(events, (newVal) => {
-    localStorage.setItem('idolEvents', JSON.stringify(newVal));
-    syncToCloud({
-        events: newVal,
-        fandoms: fandoms.value,
-        settings: userSettings.value
-    });
+    localStorage.setItem('idolEvents', JSON.stringify(newVal)); // 保留你原本的
+    syncToCloud(newVal); // 默默在背景自動上傳雲端備份！
 }, { deep: true });
-
-// 2️⃣ 監聽紀念日變動
-watch(fandoms, (newVal) => {
-    localStorage.setItem('idolFandoms', JSON.stringify(newVal));
-    syncToCloud({
-        events: events.value,
-        fandoms: newVal,
-        settings: userSettings.value
-    });
-}, { deep: true });
-
-// 3️⃣ 監聽全域設定變動（名稱、預算、顏色等）
-watch(userSettings, (newVal) => {
-    localStorage.setItem('idolUserSettings', JSON.stringify(newVal));
-    syncToCloud({
-        events: events.value,
-        fandoms: fandoms.value,
-        settings: newVal
-    });
-}, { deep: true });
-
-
                 onMounted(() => {
                     const savedEvents = localStorage.getItem('idolEvents');
                     if (savedEvents) {
@@ -2577,9 +2534,6 @@ selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEvent
     </script>
 </body>
 </html>
-
-
-
 
 
 
