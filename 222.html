@@ -1229,7 +1229,7 @@ const loginWithEmail = async () => {
     const { error } = await supabase.auth.signInWithOtp({
         email: loginEmail.value,
         options: {
-            // 請將這裡換成你目前實際開啟網頁的網址，例如 'https://iamrita5623.github.io/idolplanner/222'
+            // 請將這裡換成你目前實際開啟網頁的網址，例如 'https://iamrita5623.github.io/idolplanner'
             emailRedirectTo: window.location.origin + window.location.pathname, 
         }
     });
@@ -1282,6 +1282,7 @@ onMounted(() => {
 });
 
                 const events = ref([]);
+const isInitializing = ref(true); // 🌟 開機防護：剛開機時禁止自動上傳覆蓋
                 const selectedMapYear = ref('ALL');
                 const activeTab = ref('home');
                 const viewMode = ref('upcoming');
@@ -1569,44 +1570,48 @@ const syncToCloud = async (dataToSync) => {
     }
 };
 
+// 🌟 監聽全域設定變動（名稱、總預算、主題顏色等）
+watch(userSettings, (newVal) => {
+    if (isInitializing.value) return; // 如果正在開機初始化，直接跳過不備份！
+    
+    localStorage.setItem('idolUserSettings', JSON.stringify(newVal));
+    
+    // 同步到 Supabase 雲端，並帶上最新的時間戳記
+    syncToCloud({
+        events: events.value,
+        fandoms: fandoms.value,
+        settings: newVal,
+        updated_at: new Date().toISOString()
+    });
+}, { deep: true });
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
     localStorage.setItem('idolEvents', JSON.stringify(newVal)); // 保留你原本的
     syncToCloud(newVal); // 默默在背景自動上傳雲端備份！
 }, { deep: true });
-                onMounted(() => {
-                    const savedEvents = localStorage.getItem('idolEvents');
-                    if (savedEvents) {
-                        try {
-                            
- 
-                            const parsed = JSON.parse(savedEvents);
-                            if (Array.isArray(parsed)) {
-                                events.value = parsed.map(e => {
-   
-                             
-                                    if(!e.expenses) e.expenses = (e.price > 0) ? [{item:'門票(舊)', amount:e.price}] : [];
-                          
-                                    if(!e.checklist) e.checklist = [];
-                                    if(!e.memo) e.memo = '';
-       
-                                    if(!e.seat) e.seat = '';
-  
-                                    if(!e.color) e.color = themeColor.value; 
-                            
-                                  
-                                    if(!e.coverUrl) e.coverUrl = '';
-                                    if(!e.sticker) e.sticker = '';
-                                    return e;
-                                });
-                            } else { events.value = []; }
-                        } catch(e) { events.value = [];
-                        }
-                    }
-                    const savedTheme = localStorage.getItem('idolTheme');
-                    if (savedTheme) themeColor.value = savedTheme;
-                });
+  // 🌟 整合唯一的 onMounted，確保開機時正確讀取資料並關閉防護
+onMounted(async () => {
+    // 1. 先檢查登入狀態並嘗試從 Supabase 雲端抓取資料
+    await checkUserAndFetchData();
+    
+    // 2. 如果雲端沒有資料，才退回讀取手機本機的 localStorage 作為備份
+    if (!events.value || events.value.length === 0) {
+        const savedEvents = localStorage.getItem('idolEvents');
+        if (savedEvents) {
+            try {
+                events.value = JSON.parse(savedEvents);
+            } catch (e) {
+                console.error("解析本機資料失敗", e);
+            }
+        }
+    }
+
+    // 3. 🌟 關鍵：資料載入完成後，等待 0.5 秒再解除防護，防止自動覆蓋！
+    setTimeout(() => {
+        isInitializing.value = false;
+    }, 500);
+});
                 
                 watch(customTitle, (newVal) => localStorage.setItem('appTitle', newVal));
                 watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
@@ -2534,6 +2539,8 @@ selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEvent
     </script>
 </body>
 </html>
+
+
 
 
 
