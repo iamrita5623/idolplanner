@@ -1602,9 +1602,51 @@ onMounted(async () => {
                 watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
                 watch(themeColor, (newVal) => localStorage.setItem('idolTheme', newVal));
                 
-watch(customTitle, (newVal) => localStorage.setItem('appTitle', newVal));
-watch(events, (newVal) => localStorage.setItem('idolEvents', JSON.stringify(newVal)), { deep: true });
-watch(themeColor, (newVal) => localStorage.setItem('idolTheme', newVal));
+// 🌟 讓修改 App 標題時，同時存本機並備份到雲端
+watch(customTitle, (newVal) => {
+    localStorage.setItem('appTitle', newVal);
+    syncToCloud({
+        events: events.value,
+        fandoms: fandoms.value,
+        customTitle: newVal,
+        yearlyBudget: yearlyBudget.value,
+        themeColor: themeColor.value,
+        updated_at: new Date().toISOString()
+    });
+});
+
+// 行程原本的 watch（保留並加上雲端備份）
+watch(events, (newVal) => {
+    localStorage.setItem('idolEvents', JSON.stringify(newVal));
+    syncToCloud(events.value); 
+}, { deep: true });
+
+// 🌟 讓修改主題顏色時，同時存本機並備份到雲端
+watch(themeColor, (newVal) => {
+    localStorage.setItem('idolTheme', newVal);
+    syncToCloud({
+        events: events.value,
+        fandoms: fandoms.value,
+        customTitle: customTitle.value,
+        yearlyBudget: yearlyBudget.value,
+        themeColor: newVal,
+        updated_at: new Date().toISOString()
+    });
+});
+
+// 🌟 讓修改年度預算時，同時存本機並備份到雲端
+watch(yearlyBudget, (newVal) => {
+    localStorage.setItem('idolYearlyBudget', newVal);
+    syncToCloud({
+        events: events.value,
+        fandoms: fandoms.value,
+        customTitle: customTitle.value,
+        yearlyBudget: newVal,
+        themeColor: themeColor.value,
+        updated_at: new Date().toISOString()
+    });
+});
+
 
 // 新增此段落：監聽地圖年份篩選
 watch(selectedMapYear, () => {
