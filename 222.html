@@ -930,25 +930,34 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
 
-                <!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
-                <div class="border-b border-slate-100 pb-4">
-                    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
-                    <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
-                    <div class="flex items-center justify-center gap-2">
-                        <template v-if="currentUser">
-                            <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-                            <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
-                        </template>
-                        <template v-else>
-                            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
-                                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
-                                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
-                                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
-                                </button>
-                            </div>
-                        </template>
-                    </div>
+<!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
+<div class="border-b border-slate-100 pb-4">
+    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
+    <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
+    <div class="flex items-center justify-center gap-2">
+        <template v-if="currentUser">
+            <!-- 已登入區塊：改用 flex-col 讓結構垂直排列，包含備份時間 -->
+            <div class="flex flex-col items-center gap-1 w-full">
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+                    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
                 </div>
+                <!-- 📍 新增：顯示最後備份時間 -->
+                <p v-if="lastSyncTime" class="text-[10px] text-slate-400 mt-1">
+                    ☁️ 最後備份：{{ lastSyncTime }}
+                </p>
+            </div>
+        </template>
+        <template v-else>
+            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
+                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
+                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
+                </button>
+            </div>
+        </template>
+    </div>
+</div>
 
                 <div class="border-b border-slate-100 pb-4">
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
@@ -1557,33 +1566,37 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // 範例：雲端同步開關（可以做個按鈕切換，或預設自動背景同步）
 // 當畫面有異動時，除了原本的 localStorage，也能自動備份到 Supabase
+import { ref } from 'vue';
+
+const lastSyncTime = ref(''); // 宣告時間變數
+
 const syncToCloud = async (dataToSync) => {
     if (!currentUser.value) return;
     
-    const nowTime = new Date().toLocaleTimeString();
-    console.log("準備同步時間:", nowTime);
-    
     try {
+        const currentTimeISO = new Date().toISOString();
+        
         const { error } = await supabase
             .from('idol_events')
             .upsert({ 
                 user_id: currentUser.value.id, 
                 event_data: dataToSync,
-                updated_at: new Date().toISOString()
+                updated_at: currentTimeISO
             }, { 
                 onConflict: 'user_id' 
             });
 
-        if (error) {
-            alert("❌ 同步失敗: " + error.message);
+        if (!error) {
+            // 成功同步後，把時間轉成好看的格式顯示在畫面上
+            lastSyncTime.value = new Date(currentTimeISO).toLocaleTimeString();
         } else {
-            // 彈出提示，順便印出當前時間，證明程式碼有跑過
-            alert("☁️ 雲端同步成功！時間: " + nowTime);
+            console.error("雲端同步失敗:", error.message);
         }
     } catch (err) {
-        alert("💥 異常: " + err.message);
+        console.error("同步發生異常:", err);
     }
 };
+
 
 // 讓原本的 watch 多執行一個雲端備份（或保留 localStorage 不變）
 watch(events, (newVal) => {
