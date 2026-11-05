@@ -1219,7 +1219,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </ul>
                 </div>
 
-                <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期、歌手、活動名稱、地點），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期、歌手、活動名稱、地點（請貼上含標題列的表格資料）' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : '貼上 JSON 陣列，例如包含日期、歌手、活動名稱及地點的物件'"></textarea>
+                <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期,歌手,活動名稱,地點），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期,歌手,活動名稱,地點\n2026-11-22,BTS, BTS WORLD TOUR ’ARIRANG’,高雄國家體育場' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : 'JSON 範例：\n[\n  { &quot;日期&quot;: &quot;2026-11-22&quot;, &quot;歌手&quot;: &quot;BTS&quot;, &quot;活動名稱&quot;: &quot;BTS WORLD TOUR ’ARIRANG’&quot;, &quot;地點&quot;: &quot;高雄國家體育場&quot; }\n]'"></textarea>
                 <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
