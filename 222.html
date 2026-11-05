@@ -1219,7 +1219,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </ul>
                 </div>
 
-                <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">從試算表複製含標題列的資料貼上（日期、歌手、活動名稱、地點）。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期、歌手、活動名稱、地點（請貼上含標題列的表格資料）' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : '貼上 JSON 陣列，例如包含日期、歌手、活動名稱及地點的物件'"></textarea>
+                <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期、歌手、活動名稱、地點），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期、歌手、活動名稱、地點（請貼上含標題列的表格資料）' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : '貼上 JSON 陣列，例如包含日期、歌手、活動名稱及地點的物件'"></textarea>
                 <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
@@ -1487,7 +1487,7 @@ const totalDistance = computed(() => {
                 const form = ref({ ...defaultForm });
                 const presetColors = ['#63b3b0', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#1dd1a1'];
                 const customTitle = ref(localStorage.getItem('appTitle') || '追星日記 ✨');
-                const appVersion = ref('v1.0.6'); // 更新版本號
+                const appVersion = ref('v1.0.7'); // 更新版本號
                 
                 // --- FANDOM STATES ---
                 const fandoms = ref(JSON.parse(localStorage.getItem('fandomFandoms') || '[]'));
@@ -2751,7 +2751,7 @@ const initMap = () => {
                     }
                     try {
                         let source = importJson.value.trim();
-                        if (!source) { alert('請先貼上 JSON 行程資料。'); return; }
+                        if (!source) { alert(importMode.value === 'json' ? '請先貼上 JSON 行程資料。' : '請先貼上含標題列的表格資料。'); return; }
                         if (source.startsWith('```')) {
                             source = source.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
                         }
@@ -2828,7 +2828,7 @@ const initMap = () => {
                         alert('已匯入 ' + additions.length + ' 筆行程，略過 ' + duplicates + ' 筆重複行程。');
                     } catch (error) {
                         console.error('JSON 匯入失敗:', error);
-                        alert('JSON 格式有誤，請檢查引號、逗號、括號。沒有修改資料。');
+                        alert(importMode.value === 'json' ? 'JSON 格式有誤，請檢查引號、逗號、括號。沒有修改資料。' : '表格格式有誤：' + (error.message || '請確認標題列及分隔格式') + '。沒有修改資料。');
                     }
                 };
 
