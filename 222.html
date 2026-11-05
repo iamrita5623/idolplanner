@@ -1198,12 +1198,12 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">🎫 追星活動</p><p class="text-3xl font-black" :style="{color:themeColor}">{{ statsData.count }}</p><p class="text-xs">場回憶</p></div><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">📍 追星距離</p><p class="text-2xl font-black" :style="{color:themeColor}">{{ shareDistanceLabel }}</p><p class="text-xs">{{ shareDistanceAvailable ? '公里（已定位足跡）' : '尚無足夠定位資料' }}</p></div></div>
 <div class="bg-white rounded-xl p-4"><h3 class="font-black text-sm mb-3">🏆 本命排行榜 TOP 3</h3><p v-if="!statsData.topArtists.length" class="text-xs text-slate-400">尚無排行資料</p><div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" class="mb-3"><div class="flex justify-between gap-2 text-xs"><span class="font-bold truncate">{{ ['🥇','🥈','🥉'][i] }} {{ a.name }}</span><span>{{ a.count }} 次見面</span></div><div class="h-1.5 bg-slate-100 rounded-full mt-1"><div class="h-1.5 rounded-full" :style="{backgroundColor:themeColor,width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div></div></div>
 <p class="mt-auto text-center text-xs text-slate-500">珍藏每一次奔赴 ♡ · IDOL PLANNER</p></div>
-<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div></teleport><div v-if="showImportModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div></teleport><div v-if="showImportModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
-                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3>
+                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
                 
-                <div class="bg-slate-50 p-3 rounded-xl mb-3 text-xs text-slate-500 leading-relaxed border border-slate-100">
+                <div v-if="importMode === 'json'" class="bg-slate-50 p-3 rounded-xl mb-3 text-xs text-slate-500 leading-relaxed border border-slate-100">
                     <p class="font-bold mb-1 text-slate-700">💡 如何使用：</p>
                     
                     請貼上行程用的 <b>JSON 陣列</b>；完整備份 JSON 請到「設定 → 還原資料」使用。務必包含**日期**、**歌手**和**活動名稱**。
@@ -1217,7 +1217,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </ul>
                 </div>
 
-                <textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" placeholder='貼上 JSON 陣列，例如：
+                <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">從試算表複製含標題列的資料貼上（日期、歌手、活動名稱、地點）。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" placeholder='貼上 JSON 陣列，例如：
 [
   {
     "日期": "230422", 
@@ -1232,7 +1232,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   }
 ]
 '></textarea>
-                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">匯入</button></div>
+                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
 
@@ -2694,8 +2694,43 @@ const initMap = () => {
                     }
                 };
                 
+                const importMode = ref('table');
+                const readImportFile = async event => {
+                    const file = event.target.files && event.target.files[0];
+                    if (!file) return;
+                    if (file.size > 1024 * 1024) { alert('檔案請小於 1MB'); return; }
+                    try {
+                        importJson.value = await file.text();
+                        importMode.value = file.name.toLowerCase().endsWith('.json') ? 'json' : 'file';
+                    } catch(e) { alert('無法讀取檔案'); }
+                };
+                const parseImportTable = source => {
+                    const lines = source.trim().split(/\r?\n/).filter(x => x.trim());
+                    const delimiter = lines[0].includes('\t') ? '\t' : ',';
+                    const splitLine = line => {
+                        const cells = []; let cell = '', quoted = false;
+                        for (let i = 0; i < line.length; i++) {
+                            const ch = line[i];
+                            if (ch === '"') {
+                                if (quoted && line[i+1] === '"') { cell += '"'; i++; }
+                                else quoted = !quoted;
+                            } else if (ch === delimiter && !quoted) { cells.push(cell.trim()); cell = ''; }
+                            else cell += ch;
+                        }
+                        cells.push(cell.trim()); return cells;
+                    };
+                    const headers = splitLine(lines.shift()).map(x => x.replace(/^\uFEFF/, '').trim());
+                    if (!headers.some(x => ['日期','date'].includes(x.toLowerCase())) ||
+                        !headers.some(x => ['活動名稱','title'].includes(x.toLowerCase()))) {
+                        throw new Error('表格第一列需要「日期」和「活動名稱」欄位');
+                    }
+                    return lines.map(line => {
+                        const values = splitLine(line); const row = {};
+                        headers.forEach((h,i) => { row[h] = values[i] || ''; }); return row;
+                    });
+                };
                 const processImportSafe = () => {
-                    if (!cloudReady.value) {
+                    if (currentUser.value && !cloudReady.value) {
                         alert('雲端資料尚未載入完成，請稍後再匯入。');
                         return;
                     }
@@ -2705,7 +2740,7 @@ const initMap = () => {
                         if (source.startsWith('```')) {
                             source = source.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
                         }
-                        const parsed = JSON.parse(source);
+                        const parsed = (importMode.value === 'json' || source.startsWith('[') || source.startsWith('{')) ? JSON.parse(source) : parseImportTable(source);
                         if (parsed && parsed.backupFormat === 'idol-tracker-full') {
                             alert('這是完整備份檔。請使用「設定 → 還原資料」選取檔案；儀表板的匯入只新增行程。');
                             return;
@@ -2729,7 +2764,8 @@ const initMap = () => {
                         };
                         const invalid = data.findIndex(d =>
                             !formatDate(d.date ?? d['日期']) ||
-                            !String(d.title ?? d['活動名稱'] ?? '').trim());
+                            !String(d.title ?? d['活動名稱'] ?? '').trim() ||
+                            !String(d.artist ?? d['歌手'] ?? '').trim());
                         if (invalid !== -1) {
                             alert('第 ' + (invalid + 1) + ' 筆行程的日期或活動名稱不正確，已取消整批匯入。');
                             return;
@@ -2761,12 +2797,20 @@ const initMap = () => {
                                 sticker: d.sticker || ''
                             };
                         });
-                        if (!confirm('新增 ' + incoming.length +
-                            ' 筆行程？不會刪除原資料，但若重複匯入可能產生重複行程。')) return;
-                        events.value = [...events.value, ...incoming];
+                        const keyOf = e => [e.date, String(e.title || '').trim().toLowerCase(), String(e.artist || '').trim().toLowerCase()].join('|');
+                        const seen = new Set(events.value.map(keyOf));
+                        const additions = incoming.filter(e => {
+                            const key = keyOf(e);
+                            if (seen.has(key)) return false;
+                            seen.add(key); return true;
+                        });
+                        const duplicates = incoming.length - additions.length;
+                        if (!additions.length) { alert('全部 ' + duplicates + ' 筆均為重複行程，原資料未修改。'); return; }
+                        if (!confirm('匯入預覽：\n新增 ' + additions.length + ' 筆\n略過重複 ' + duplicates + ' 筆\n原有 ' + events.value.length + ' 筆保留不變。\n確定新增？')) return;
+                        events.value = [...events.value, ...additions];
                         importJson.value = '';
                         showImportModal.value = false;
-                        alert('已匯入 ' + incoming.length + ' 筆行程！');
+                        alert('已匯入 ' + additions.length + ' 筆行程，略過 ' + duplicates + ' 筆重複行程。');
                     } catch (error) {
                         console.error('JSON 匯入失敗:', error);
                         alert('JSON 格式有誤，請檢查引號、逗號、括號。沒有修改資料。');
@@ -2920,7 +2964,7 @@ const generateShareImageLegacy = () => {
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
                     showModal, showSettingsModal, showImportModal, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
-                    calendarEvent, ticketEvent, isEditing, form, importJson, searchQuery,
+                    calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
