@@ -627,7 +627,7 @@
     <button @click="openSharePreview" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
     </button>
-    <button @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button @click="openImportModal" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-download-simple text-lg"></i> 匯入
     </button>
 </div>
@@ -1381,6 +1381,7 @@ const loadError = ref(false); // 🌟 開機防護：剛開機時禁止自動上
                 const showSettingsModal = ref(false); 
                 
                 const showImportModal = ref(false);
+const openImportModal = () => { showImportModal.value = true; };
                 const showShareModal = ref(false);
                 const shareBusy = ref(false);
                 const shareError = ref('');
@@ -2964,7 +2965,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
-                    showModal, showSettingsModal, showImportModal, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
+                    showModal, showSettingsModal, showImportModal, openImportModal, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
