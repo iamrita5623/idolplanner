@@ -1199,7 +1199,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">🎫 追星活動</p><p class="text-3xl font-black" :style="{color:themeColor}">{{ statsData.count }}</p><p class="text-xs">場回憶</p></div><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">📍 追星距離</p><p class="text-2xl font-black" :style="{color:themeColor}">{{ shareDistanceLabel }}</p><p class="text-xs">{{ shareDistanceAvailable ? '公里（已定位足跡）' : '尚無足夠定位資料' }}</p></div></div>
 <div class="bg-white rounded-xl p-4"><h3 class="font-black text-sm mb-3">🏆 本命排行榜 TOP 3</h3><p v-if="!statsData.topArtists.length" class="text-xs text-slate-400">尚無排行資料</p><div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" class="mb-3"><div class="flex justify-between gap-2 text-xs"><span class="font-bold truncate">{{ ['🥇','🥈','🥉'][i] }} {{ a.name }}</span><span>{{ a.count }} 次見面</span></div><div class="h-1.5 bg-slate-100 rounded-full mt-1"><div class="h-1.5 rounded-full" :style="{backgroundColor:themeColor,width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div></div></div>
 <p class="mt-auto text-center text-xs text-slate-500">珍藏每一次奔赴 ♡ · IDOL PLANNER</p></div>
-<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div></teleport><teleport to="body"><div v-if="showImportModal" data-import-dialog="true" style="position:fixed;inset:0;z-index:2147483647;display:flex" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div></teleport><div v-if="showImportModal" data-import-dialog="true" style="position:fixed;inset:0;z-index:2147483647;display:flex" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
                 <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
@@ -1236,7 +1236,6 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
-</teleport>
 
     </div>
 
@@ -3006,6 +3005,12 @@ selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEvent
     </script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 
