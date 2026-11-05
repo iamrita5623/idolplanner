@@ -628,7 +628,7 @@
     <button @click="openSharePreview" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
     </button>
-    <button type="button" @click.stop="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button type="button" @click.stop="diagnoseImport" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-download-simple text-lg"></i> 匯入
     </button>
 </div>
@@ -1199,7 +1199,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <div class="grid grid-cols-2 gap-3"><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">🎫 追星活動</p><p class="text-3xl font-black" :style="{color:themeColor}">{{ statsData.count }}</p><p class="text-xs">場回憶</p></div><div class="bg-white rounded-xl p-4 text-center"><p class="text-xs">📍 追星距離</p><p class="text-2xl font-black" :style="{color:themeColor}">{{ shareDistanceLabel }}</p><p class="text-xs">{{ shareDistanceAvailable ? '公里（已定位足跡）' : '尚無足夠定位資料' }}</p></div></div>
 <div class="bg-white rounded-xl p-4"><h3 class="font-black text-sm mb-3">🏆 本命排行榜 TOP 3</h3><p v-if="!statsData.topArtists.length" class="text-xs text-slate-400">尚無排行資料</p><div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" class="mb-3"><div class="flex justify-between gap-2 text-xs"><span class="font-bold truncate">{{ ['🥇','🥈','🥉'][i] }} {{ a.name }}</span><span>{{ a.count }} 次見面</span></div><div class="h-1.5 bg-slate-100 rounded-full mt-1"><div class="h-1.5 rounded-full" :style="{backgroundColor:themeColor,width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div></div></div>
 <p class="mt-auto text-center text-xs text-slate-500">珍藏每一次奔赴 ♡ · IDOL PLANNER</p></div>
-<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div></teleport><teleport to="body"><div v-if="showImportModal" style="position:fixed;inset:0;z-index:2147483647;display:flex" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+<div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><div class="w-full max-w-sm flex gap-2"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div></teleport><teleport to="body"><div v-if="showImportModal" data-import-dialog="true" style="position:fixed;inset:0;z-index:2147483647;display:flex" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
                 <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
@@ -1383,6 +1383,23 @@ const loadError = ref(false); // 🌟 開機防護：剛開機時禁止自動上
                 
                 const showImportModal = ref(false);
 const openImportModal = () => { showImportModal.value = true; };
+                const diagnoseImport = async () => {
+                    try {
+                        showImportModal.value = true;
+                        await nextTick();
+                        const node = document.querySelector('[data-import-dialog="true"]');
+                        const visible = node ? getComputedStyle(node) : null;
+                        const details = [
+                            '匯入按鈕：事件已觸發',
+                            'Vue 狀態：' + showImportModal.value,
+                            '視窗 DOM：' + (node ? '存在' : '不存在'),
+                            'display：' + (visible ? visible.display : '無'),
+                            'visibility：' + (visible ? visible.visibility : '無'),
+                            '尺寸：' + (node ? Math.round(node.getBoundingClientRect().width) + '×' + Math.round(node.getBoundingClientRect().height) : '無')
+                        ].join('\\n');
+                        alert('匯入診斷\\n' + details);
+                    } catch(e) { alert('匯入診斷錯誤：' + (e && e.message ? e.message : String(e))); }
+                };
                 const showShareModal = ref(false);
                 const shareBusy = ref(false);
                 const shareError = ref('');
@@ -2966,7 +2983,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
-                    showModal, showSettingsModal, showImportModal, openImportModal, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
+                    showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
