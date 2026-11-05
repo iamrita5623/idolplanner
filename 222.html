@@ -2509,7 +2509,7 @@ const initMap = () => {
         const latest = eventsAtLoc[eventsAtLoc.length - 1];
         const color = getEventColor(latest);
         const marker = L.circleMarker([latest.lat, latest.lng], { radius: 7, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.8 }).addTo(map);
-        let popup = `<div style="min-width:210px;max-width:280px;display:flex;flex-direction:column;"><div style="flex:none;padding:4px 24px 10px 2px;margin-bottom:10px;border-bottom:1px solid #e5e7eb;font-size:12px;line-height:1.5;color:#64748b;">${eventsAtLoc.length} 場活動｜${selectedMapYear.value === 'ALL' ? '全部年度' : selectedMapYear.value + ' 年'}</div><div style="max-height:245px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-top:2px;">`;
+        let popup = `<div style="min-width:210px;max-width:280px;display:flex;flex-direction:column;"><div style="flex:none;padding:4px 24px 10px 2px;margin-bottom:10px;border-bottom:1px solid #e5e7eb;font-size:12px;line-height:1.5;color:#64748b;">${eventsAtLoc.length} 場活動｜${selectedMapYear.value === 'ALL' ? '全部年度' : selectedMapYear.value + ' 年'}</div><div style="max-height:min(42vh,320px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-top:2px;">`;
         [...eventsAtLoc].reverse().forEach(ev => {
             popup += `<div style="border-bottom:1px dashed #eee; margin-bottom:5px; padding-bottom:5px;">
                 <b style="color:${getEventColor(ev)}">${ev.artist}</b><br>
@@ -2518,7 +2518,7 @@ const initMap = () => {
             </div>`;
         });
         popup += `</div></div>`;
-        marker.bindPopup(popup, { maxWidth: 320, maxHeight: 330, autoPan: true, keepInView: true });
+        marker.bindPopup(popup, { maxWidth: 320, autoPan: true, keepInView: true, autoPanPaddingTopLeft: [12, 170], autoPanPaddingBottomRight: [12, 90] });
         marker.on('popupopen', (evt) => { const scroller = evt.popup.getElement()?.querySelector('[style*="overflow-y:auto"]'); if (scroller) { scroller.scrollTop = 0; L.DomEvent.disableScrollPropagation(scroller); L.DomEvent.disableClickPropagation(scroller); requestAnimationFrame(() => { scroller.scrollTop = 0; }); } });
         markers.push(marker);
     });
