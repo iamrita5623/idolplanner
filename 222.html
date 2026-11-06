@@ -1238,10 +1238,10 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div>
     <div style="position:absolute;left:0;right:0;bottom:0;height:20px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div>
   </div>
-  <p style="position:absolute;top:598px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0;color:#55465e">這一年，因為每一次相見而閃閃發亮。</p>
+  <p style="position:absolute;top:598px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0;color:#55465e">{{ recapQuote }}</p>
   <p style="position:absolute;top:620px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
 </div>
-<div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '顯示圖片・長按儲存' }}</button><div v-if="!shareImagePreview" class="w-full max-w-sm flex gap-2 shrink-0 pb-6"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+<button v-if="!shareImagePreview" @click="rerollRecapQuote" class="text-white/90 text-xs underline underline-offset-4">換一句年度回顧文字</button><div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button><div v-if="!shareImagePreview" class="w-full max-w-sm flex gap-2 shrink-0 pb-6"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
                 <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
@@ -1431,7 +1431,23 @@ const openImportModal = () => { showImportModal.value = true; };
                 const shareBusy = ref(false);
                 const shareError = ref('');
                 const shareImagePreview = ref('');
-                const openSharePreview = () => { shareImagePreview.value = ''; shareError.value = ''; showShareModal.value = true; };
+                const recapQuotes = [
+                    '這一年，因為每一次相見而閃閃發亮。',
+                    '每一場奔赴，都是寫給青春的情書。',
+                    '燈海熄滅以後，回憶依然發光。',
+                    '跨越城市，只為與喜歡的你相見。',
+                    '今年的每一次心動，都值得收藏。',
+                    '下一次見面之前，先把今天珍藏。',
+                    '那些一起合唱的夜晚，永遠不會散場。',
+                    '用一張張門票，收藏一整年的幸福。'
+                ];
+                const recapQuote = ref(recapQuotes[0]);
+                const rerollRecapQuote = () => {
+                    const choices = recapQuotes.filter(q => q !== recapQuote.value);
+                    recapQuote.value = choices[Math.floor(Math.random() * choices.length)];
+                    shareImagePreview.value = '';
+                };
+                const openSharePreview = () => { rerollRecapQuote(); shareError.value = ''; showShareModal.value = true; };
                 const shareDistanceAvailable = computed(() => events.value.filter(e => (selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))) && e.lat != null && e.lng != null).length >= 2);
                 const shareDistanceLabel = computed(() => shareDistanceAvailable.value ? String(totalDistance.value) : '—'); 
                 const showTicketModal = ref(false);
@@ -3012,6 +3028,10 @@ const generateShareImageLegacy = () => {
                         const element = document.getElementById('share-template');
                         if (!element || !window.html2canvas) throw new Error('分享模板或截圖工具尚未載入');
                         if (document.fonts && document.fonts.ready) await document.fonts.ready;
+                        // Capture the fixed 360×640 layout regardless of the phone's viewport.
+                        // Explicitly reset inherited typography inside the export tree.
+                        element.style.width = '360px';
+                        element.style.height = '640px';
                         await nextTick();
                         const width = element.getBoundingClientRect().width;
                         if (!Number.isFinite(width) || width <= 0) throw new Error('分享模板尚未完成排版，請稍後再試');
@@ -3020,7 +3040,9 @@ const generateShareImageLegacy = () => {
                             backgroundColor: '#faf5fa',
                             scale: 1080 / width,
                             width,
-                            height: width * 16 / 9,
+                            height: 640,
+                            windowWidth: 1200,
+                            windowHeight: 900,
                             scrollX: 0,
                             scrollY: 0
                         });
@@ -3065,7 +3087,7 @@ const generateShareImageLegacy = () => {
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
-                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport: processImportSafe, showChangelog, generateShareImage, openSharePreview, showShareModal, shareBusy, shareError, shareImagePreview, shareDistanceAvailable, shareDistanceLabel, 
+                    openModal, editEvent, closeModal, saveEvent, deleteEvent, toggleSettingsModal, setTheme, updateCustomTheme, processImport: processImportSafe, showChangelog, generateShareImage, openSharePreview, showShareModal, shareBusy, shareError, shareImagePreview, recapQuote, rerollRecapQuote, shareDistanceAvailable, shareDistanceLabel, 
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
