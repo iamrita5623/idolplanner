@@ -187,6 +187,15 @@ const openImportModal = () => { showImportModal.value = true; };
   
                 const ticketEvent = ref({});
                 const ticketImagePreview = ref('');
+                const ticketCoverOverride = ref('');
+                const loadTicketCover = (event) => {
+                    const file = event.target.files && event.target.files[0];
+                    if (!file) return;
+                    if (!file.type.startsWith('image/')) { ticketImageError.value = '請選擇圖片檔案'; return; }
+                    const reader = new FileReader();
+                    reader.onload = () => { ticketCoverOverride.value = reader.result; ticketImagePreview.value = ''; ticketImageError.value = ''; };
+                    reader.readAsDataURL(file);
+                };
                 const ticketImageBusy = ref(false);
                 const ticketImageError = ref('');
                 const generateTicketImage = async (mode = 'preview') => {
@@ -203,115 +212,82 @@ const openImportModal = () => { showImportModal.value = true; };
                             if (document.fonts && document.fonts.ready) await document.fonts.ready;
                             const element = document.getElementById('ticket-image-template');
                             if (!element || !window.htmlToImage || !window.htmlToImage.toCanvas) throw new Error('票券圖片工具尚未載入');
-                            const captureOptions = { pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: false };
-                            const cover = element.querySelector('img');
-                            let originalSrc = null;
-                            let embeddedCover = false;
-                            let embeddedCoverData = null;
-                            let coverAccessDenied = false;
-                            if (cover && cover.complete && cover.naturalWidth > 0) {
-                                originalSrc = cover.getAttribute('src');
-                                if (originalSrc && !originalSrc.startsWith('data:')) {
-                                    try {
-                                        const response = await fetch(originalSrc, { mode: 'cors', credentials: 'omit' });
-                                        if (!response.ok) throw new Error('封面讀取失敗');
-                                        const coverBlob = await response.blob();
-                                        const dataUrl = await new Promise((resolve, reject) => {
-                                            const reader = new FileReader();
-                                            reader.onload = () => resolve(reader.result);
-                                            reader.onerror = reject;
-                                            reader.readAsDataURL(coverBlob);
-                                        });
-                                        cover.setAttribute('src', dataUrl);
-                                        embeddedCoverData = dataUrl;
-                                        await new Promise((resolve, reject) => {
-                                            if (cover.complete && cover.naturalWidth) return resolve();
-                                            cover.onload = resolve; cover.onerror = reject;
-                                        });
-                                        embeddedCover = true;
-                                    } catch (error) {
-                                        coverAccessDenied = true;
-                                        console.warn('外部封面不允許匯出，仍嘗試保留圖片', error);
-                                    }
-                                }
-                            }
-                            let canvas;
-                            try {
-                                try {
-                                    canvas = await window.htmlToImage.toCanvas(element, captureOptions);
-                                } catch (firstError) {
-                                    // A second renderer can handle some fonts and images differently.
-                                    if (typeof html2canvas !== 'function') throw firstError;
-                                    canvas = await html2canvas(element, {
-                                        scale: 3, backgroundColor: '#ffffff', useCORS: true,
-                                        allowTaint: false, logging: false
-                                    });
-                                }
-                                // Ensure the result is exportable before accepting it.
-                                canvas.toDataURL('image/png');
-                            } catch (captureError) {
-                                console.warn('票券封面擷取失敗，使用無封面備援', captureError);
-                                canvas = await window.htmlToImage.toCanvas(element, {
-                                    ...captureOptions,
-                                    filter: node => !(node.tagName === 'IMG' && node.closest && node.closest('#ticket-image-template'))
-                                });
-                                ticketImageError.value = '封面來源限制圖片匯出；已保留票券文字與應援色，圖片中不含封面。';
-                            } finally {
-                                if (cover && originalSrc && embeddedCover) cover.setAttribute('src', originalSrc);
-                            }
-                            // Canvas exporters may omit CSS repeating gradients. Paint the barcode
-                            // as actual pixels so the PNG matches the on-screen ticket.
-                            const rootRect = element.getBoundingClientRect();
-                            const sx = canvas.width / rootRect.width;
-                            const sy = canvas.height / rootRect.height;
+                            // Draw the PNG directly. DOM screenshot libraries can silently omit
+                            // CSS barcode gradients and remote images on mobile Safari.
+                            const W = 900, H = 1250, canvas = document.createElement('canvas');
+                            canvas.width = W; canvas.height = H;
                             const ctx = canvas.getContext('2d');
-                            const barcode = element.querySelector('.ticket-barcode-graphic');
-                            if (barcode && ctx) {
-                                const rect = barcode.getBoundingClientRect();
-                                const x = (rect.left - rootRect.left) * sx;
-                                const y = (rect.top - rootRect.top) * sy;
-                                const w = rect.width * sx, h = rect.height * sy;
-                                ctx.fillStyle = '#f8fafc';
-                                ctx.fillRect(x, y, w, h);
-                                ctx.fillStyle = '#334155';
-                                const widths = [2,1,4,2,3,1,2,4,1,3,2,1,4,2,1,3,2,4,1,2,3,1,4,2,1,3,2,1,4,2,3,1,2,4,1,3,2,1,4,2,1,3,2,4];
-                                let cursor = 0, index = 0;
-                                while (cursor < rect.width) {
-                                    const width = widths[index % widths.length];
-                                    if (index % 2 === 0) ctx.fillRect(x + cursor * sx, y, Math.min(width * sx, w - cursor * sx), h);
-                                    cursor += width; index++;
+                            const evt = ticketEvent.value;
+                            const color = getEventColor(evt);
+                            const round = (x,y,w,h,r,fill) => {
+                                ctx.fillStyle = fill; ctx.beginPath();
+                                ctx.roundRect(x,y,w,h,r); ctx.fill();
+                            };
+                            const text = (value,x,y,size=30,color='#1e293b',align='left',weight='600') => {
+                                ctx.fillStyle=color; ctx.textAlign=align; ctx.textBaseline='middle';
+                                ctx.font=weight+' '+size+'px "Noto Sans TC", sans-serif';
+                                ctx.fillText(String(value||''),x,y);
+                            };
+                            const wrap = (value,maxWidth,size,weight='700') => {
+                                ctx.font=weight+' '+size+'px "Noto Sans TC", sans-serif';
+                                const lines=[''];
+                                for (const char of String(value||'')) {
+                                    let last=lines.length-1;
+                                    if (ctx.measureText(lines[last]+char).width>maxWidth && lines[last]) lines.push(char);
+                                    else lines[last]+=char;
                                 }
-                            }
-                            // If the renderer silently omitted a cover, restore its pixels
-                            // from an exportable CORS image, then repaint the artist title.
-                            if (cover && embeddedCoverData && ctx) {
+                                return lines;
+                            };
+                            ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
+                            ctx.fillStyle=color;ctx.fillRect(0,0,W,240);
+                            const sourceUrl = ticketCoverOverride.value || evt.coverUrl;
+                            if (sourceUrl) {
                                 try {
                                     const source = new Image();
-                                    source.src = embeddedCoverData;
+                                    if (!sourceUrl.startsWith('data:') && !sourceUrl.startsWith('blob:')) source.crossOrigin='anonymous';
+                                    source.src=sourceUrl;
                                     await source.decode();
-                                    const frame = cover.parentElement.getBoundingClientRect();
-                                    const x = (frame.left - rootRect.left) * sx, y = (frame.top - rootRect.top) * sy;
-                                    const w = frame.width * sx, h = frame.height * sy;
-                                    const ratio = Math.max(w / source.naturalWidth, h / source.naturalHeight);
-                                    const sw = w / ratio, sh = h / ratio;
-                                    ctx.save();
-                                    ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
-                                    ctx.globalAlpha = .95;
-                                    ctx.drawImage(source, (source.naturalWidth - sw) / 2, (source.naturalHeight - sh) / 2, sw, sh, x, y, w, h);
-                                    ctx.globalAlpha = 1;
-                                    const heading = frame && cover.parentElement.querySelector('h2');
-                                    if (heading) {
-                                        const style = getComputedStyle(heading);
-                                        ctx.fillStyle = style.color;
-                                        ctx.font = 'bold ' + (parseFloat(style.fontSize) * sy) + 'px sans-serif';
-                                        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                                        ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 3 * sy;
-                                        ctx.fillText(heading.textContent.trim(), x + w/2, y + h/2, w - 12 * sx);
-                                    }
+                                    const ratio=Math.max(W/source.naturalWidth,240/source.naturalHeight);
+                                    const sw=W/ratio,sh=240/ratio;
+                                    ctx.save();ctx.beginPath();ctx.rect(0,0,W,240);ctx.clip();
+                                    ctx.globalAlpha=.95;
+                                    ctx.drawImage(source,(source.naturalWidth-sw)/2,(source.naturalHeight-sh)/2,sw,sh,0,0,W,240);
                                     ctx.restore();
-                                } catch (error) { console.warn('封面像素補繪未完成', error); }
+                                } catch (error) {
+                                    ticketImageError.value='封面網站限制圖片匯出。可點「選擇封面照片」使用手機相簿中的同一張圖片。';
+                                }
                             }
-                            if (coverAccessDenied && !ticketImageError.value) ticketImageError.value = '封面網站可能限制圖片匯出；若 PNG 沒有封面，請改用可公開讀取的圖片網址或上傳圖片。';
+                            text(evt.artist,450,120,54,isColorLight(color)?'#1e293b':'#ffffff','center','700');
+                            text('EVENT',450,305,30,'#94a3b8','center','500');
+                            const titleLines=wrap(evt.title,780,51);
+                            titleLines.slice(0,3).forEach((line,i)=>text(line,450,375+i*61,51,'#1e293b','center','700'));
+                            const infoTop=Math.max(565,410+titleLines.slice(0,3).length*61);
+                            text('DATE / TIME',70,infoTop,26,'#94a3b8','left','500');
+                            text('LOCATION',830,infoTop,26,'#94a3b8','right','500');
+                            text(evt.date,70,infoTop+58,37);
+                            text(evt.time,70,infoTop+110,37);
+                            wrap(evt.location,370,34).slice(0,2).forEach((line,i)=>text(line,830,infoTop+58+i*44,34,'#1e293b','right'));
+                            const lineY=infoTop+170;
+                            ctx.strokeStyle='#e2e8f0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(70,lineY);ctx.lineTo(830,lineY);ctx.stroke();
+                            text('SEAT',70,lineY+70,26,'#94a3b8','left','500');
+                            text('TICKET PRICE',830,lineY+70,26,'#94a3b8','right','500');
+                            wrap(evt.seat||'無座席資訊',470,34).slice(0,2).forEach((line,i)=>text(line,70,lineY+132+i*43,34,color));
+                            text('$'+formatMoney(getTicketPrice(evt.expenses)),830,lineY+132,43,'#1e293b','right');
+                            const bottomY=Math.max(lineY+255,960);
+                            ctx.fillStyle='#f8fafc';ctx.fillRect(0,bottomY,W,H-bottomY);
+                            ctx.strokeStyle='#dbe3ee';ctx.setLineDash([15,11]);ctx.lineWidth=4;
+                            ctx.beginPath();ctx.moveTo(0,bottomY);ctx.lineTo(W,bottomY);ctx.stroke();ctx.setLineDash([]);
+                            const barsTop=bottomY+58,barH=125,barLeft=160,barRight=740;
+                            const widths=[3,1,2,2,4,1,2,1,3,2,1,2,4,1,3,1,2,3,1,2,4,1,2,1,3,2,1,4];
+                            ctx.fillStyle='#334155';
+                            let px=barLeft,index=0;
+                            while(px<barRight) {
+                                const width=widths[index%widths.length]*3;
+                                if(index%2===0)ctx.fillRect(px,barsTop,Math.min(width,barRight-px),barH);
+                                px+=width;index++;
+                            }
+                            text(evt.id?String(evt.id).slice(-8):'12345678',450,barsTop+170,28,'#475569','center','500');
+                            text('IDOL TRACKER EXCLUSIVE TICKET',450,barsTop+230,24,'#94a3b8','center','500');
                             const image = canvas.toDataURL('image/png');
                             ticketImagePreview.value = image;
                             blob = await (await fetch(image)).blob();
@@ -1574,6 +1550,7 @@ const initMap = (preserveView = false) => {
                 // Ticket Logic
                 const showTicket = (evt) => {
                     ticketEvent.value = evt;
+                    ticketCoverOverride.value = '';
                     ticketImagePreview.value = '';
                     ticketImageError.value = '';
                     showTicketModal.value = true;
@@ -2011,7 +1988,7 @@ const generateShareImageLegacy = () => {
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
-                    calendarEvent, ticketEvent, ticketImagePreview, ticketImageBusy, ticketImageError, generateTicketImage, isEditing, form, importJson, importMode, readImportFile, searchQuery,
+                    calendarEvent, ticketEvent, ticketImagePreview, ticketImageBusy, ticketImageError, ticketCoverOverride, loadTicketCover, generateTicketImage, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
