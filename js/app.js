@@ -1811,16 +1811,27 @@ const generateShareImageLegacy = () => {
                         // computed DOM layout through SVG foreignObject instead of
                         // html2canvas's reimplementation of text metrics (which caused
                         // iOS Safari headings and ranking rows to overlap).
+                        if (!window.htmlToImage || !window.htmlToImage.toCanvas) {
+                            throw new Error('圖片產生工具尚未載入，請重新整理後再試');
+                        }
+                        // Some mobile browsers intermittently fail at 3x rasterization.
+                        // Retry at 2x without cache-busting rather than showing an error immediately.
                         let canvas;
-                        if (window.htmlToImage && window.htmlToImage.toCanvas) {
+                        try {
                             canvas = await window.htmlToImage.toCanvas(element, {
                                 width: 360, height: 640, pixelRatio: 3,
                                 backgroundColor: recapPalette.value.background,
                                 cacheBust: true,
                                 style: { width: '360px', height: '640px', transform: 'none' }
                             });
-                        } else {
-                            throw new Error('圖片產生工具尚未載入，請重新整理後再試');
+                        } catch (firstError) {
+                            console.warn('Recap 3x export failed; retrying at 2x', firstError);
+                            canvas = await window.htmlToImage.toCanvas(element, {
+                                width: 360, height: 640, pixelRatio: 2,
+                                backgroundColor: recapPalette.value.background,
+                                cacheBust: false,
+                                style: { width: '360px', height: '640px', transform: 'none' }
+                            });
                         }
                         if (mode === 'preview') { shareImagePreview.value = canvas.toDataURL('image/png'); return; }
                         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
