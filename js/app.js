@@ -193,7 +193,7 @@ const openImportModal = () => { showImportModal.value = true; };
                     if (!file) return;
                     if (!file.type.startsWith('image/')) { ticketImageError.value = '請選擇圖片檔案'; return; }
                     const reader = new FileReader();
-                    reader.onload = () => { ticketCoverOverride.value = reader.result; ticketImagePreview.value = ''; ticketImageError.value = ''; };
+                    reader.onload = () => { ticketCoverOverride.value = reader.result; ticketImagePreview.value = ''; ticketImageError.value = ''; generateTicketImage('preview'); };
                     reader.readAsDataURL(file);
                 };
                 const ticketImageBusy = ref(false);
@@ -261,6 +261,18 @@ const openImportModal = () => { showImportModal.value = true; };
                             text('EVENT',450,305,30,'#94a3b8','center','500');
                             const titleLines=wrap(evt.title,780,51);
                             titleLines.slice(0,3).forEach((line,i)=>text(line,450,375+i*61,51,'#1e293b','center','700'));
+                            // Preserve the sticker shown on the live ticket (e.g. 拉完了).
+                            if (evt.sticker) {
+                                ctx.save();
+                                ctx.translate(735,305);
+                                ctx.rotate(12*Math.PI/180);
+                                ctx.font='700 76px "Noto Sans TC", "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+                                ctx.textAlign='center';ctx.textBaseline='middle';
+                                ctx.fillStyle='#1e293b';
+                                ctx.shadowColor='rgba(15,23,42,.15)';ctx.shadowBlur=4;
+                                ctx.fillText(String(evt.sticker),0,0,300);
+                                ctx.restore();
+                            }
                             const infoTop=Math.max(565,410+titleLines.slice(0,3).length*61);
                             text('DATE / TIME',70,infoTop,26,'#94a3b8','left','500');
                             text('LOCATION',830,infoTop,26,'#94a3b8','right','500');
