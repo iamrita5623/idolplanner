@@ -44,7 +44,7 @@
         }
     </script>
 
-    <link rel="stylesheet" href="./css/main.css?v=1.1.23">
+    <link rel="stylesheet" href="./css/main.css?v=1.1.24">
 
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
@@ -1162,10 +1162,9 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
       <span v-for="month in ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']" :key="month">{{ month }}</span>
     </div>
   </div>
-  <div style="position:absolute;left:22px;right:22px;top:520px;height:56px;border-radius:15px;overflow:hidden" :style="{background:'linear-gradient(180deg, '+recapPalette.ink+' 0%, '+recapPalette.background+' 240%)'}">
-    <div aria-hidden="true" style="position:absolute;inset:0;opacity:.42;background:repeating-conic-gradient(from 244deg at 50% 125%,transparent 0deg,rgba(255,255,255,.24) 7deg,transparent 15deg,transparent 35deg)"></div>
-    <div aria-hidden="true" style="position:absolute;inset:12px 0 0;opacity:.92;background-image:radial-gradient(circle,rgba(255,255,255,.98) 0 2px,rgba(255,255,255,.32) 3px,transparent 7px),radial-gradient(circle,rgba(255,255,255,.78) 0 1.6px,transparent 5px),radial-gradient(circle,rgba(255,255,255,.85) 0 1px,transparent 4px);background-size:35px 21px,27px 17px,19px 13px;background-position:5px 8px,16px 2px,3px 11px"></div>
-    <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:24px;background:linear-gradient(0deg,rgba(0,0,0,.20),transparent)"></div>
+  <div style="position:absolute;left:22px;right:22px;top:520px;height:56px;border-radius:15px;background:radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439;overflow:hidden">
+    <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:20px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div>
   </div>
   <p style="position:absolute;top:586px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0" :style="{color:recapPalette.ink}">{{ recapQuote }}</p>
   <p style="position:absolute;top:611px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
