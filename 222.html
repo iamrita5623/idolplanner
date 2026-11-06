@@ -707,23 +707,23 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         </button>
 
         <nav aria-label="主要分頁導覽" class="app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
-            <button @click="activeTab = 'home'" class="flex flex-col items-center gap-1 transition-colors w-16" 
+            <button @click="activeTab = 'home'" :aria-current="activeTab === 'home' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16" 
                 :class="activeTab === 'home' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'home' ? themeColor : '' }">
                 <i class="ph text-2xl ph-calendar-check" :class="{ 'ph-fill': activeTab === 'home', 'ph-bold': activeTab !== 'home' }"></i>
                 <span class="text-[10px] font-medium">行程</span>
             </button>
-            <button @click="activeTab = 'fandom'" class="flex flex-col items-center gap-1 transition-colors w-16"
+            <button @click="activeTab = 'fandom'" :aria-current="activeTab === 'fandom' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16"
                 :class="activeTab === 'fandom' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'fandom' ? themeColor : '' }">
                 <i class="ph text-2xl ph-heart-straight" :class="{ 'ph-fill': activeTab === 'fandom', 'ph-bold': activeTab !== 'fandom' }"></i>
                 <span class="text-[10px] font-medium">紀念日</span>
             </button>
 
-            <button @click="activeTab = 'map'" class="flex flex-col items-center gap-1 transition-colors w-16"
+            <button @click="activeTab = 'map'" :aria-current="activeTab === 'map' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16"
                 :class="activeTab === 'map' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'map' ? themeColor : '' }">
                 <i class="ph text-2xl ph-map-trifold" :class="{ 'ph-fill': activeTab === 'map', 'ph-bold': activeTab !== 'map' }"></i>
                 <span class="text-[10px] font-medium">地圖</span>
             </button>
-            <button @click="activeTab = 'stats'" class="flex flex-col items-center gap-1 transition-colors w-16"
+            <button @click="activeTab = 'stats'" :aria-current="activeTab === 'stats' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16"
                 :class="activeTab === 'stats' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'stats' ? themeColor : '' }">
                 <i class="ph text-2xl ph-chart-bar" :class="{ 'ph-fill': activeTab === 'stats', 'ph-bold': activeTab !== 'stats' }"></i>
                 <span class="text-[10px] font-medium">回顧</span>
