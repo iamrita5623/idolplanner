@@ -13,6 +13,7 @@
     <meta property="og:type" content="website">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -3026,38 +3027,23 @@ const generateShareImageLegacy = () => {
                             return;
                         }
                         const element = document.getElementById('share-template');
-                        if (!element || !window.html2canvas) throw new Error('分享模板或截圖工具尚未載入');
-                        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+                        if (!element) throw new Error('分享模板尚未載入');
                         await nextTick();
-                        // Render and capture the SAME detached, fixed-size DOM node.
-                        // Previously the source lived inside a scrolling modal but its
-                        // clone was moved to (0,0), causing html2canvas crop/baseline drift.
-                        const captureRoot = element.cloneNode(true);
-                        captureRoot.removeAttribute('id');
-                        Object.assign(captureRoot.style, {
-                            position: 'fixed', left: '0px', top: '0px',
-                            width: '360px', height: '640px', boxSizing: 'border-box',
-                            margin: '0px', padding: '0px', display: 'block',
-                            transform: 'none', zoom: '1', overflow: 'hidden',
-                            zIndex: '-1', pointerEvents: 'none'
-                        });
-                        document.body.appendChild(captureRoot);
+                        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+                        // Keep the live preview untouched. html-to-image captures the
+                        // computed DOM layout through SVG foreignObject instead of
+                        // html2canvas's reimplementation of text metrics (which caused
+                        // iOS Safari headings and ranking rows to overlap).
                         let canvas;
-                        try {
-                            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-                            canvas = await html2canvas(captureRoot, {
-                                useCORS: true,
+                        if (window.htmlToImage && window.htmlToImage.toCanvas) {
+                            canvas = await window.htmlToImage.toCanvas(element, {
+                                width: 360, height: 640, pixelRatio: 3,
                                 backgroundColor: recapPalette.value.background,
-                                scale: 3,
-                                width: 360,
-                                height: 640,
-                                windowWidth: Math.max(window.innerWidth, 360),
-                                scrollX: 0,
-                                scrollY: 0,
-                                logging: false
+                                cacheBust: true,
+                                style: { width: '360px', height: '640px', transform: 'none' }
                             });
-                        } finally {
-                            captureRoot.remove();
+                        } else {
+                            throw new Error('圖片產生工具尚未載入，請重新整理後再試');
                         }
                         if (mode === 'preview') { shareImagePreview.value = canvas.toDataURL('image/png'); return; }
                         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
