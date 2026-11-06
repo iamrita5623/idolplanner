@@ -113,3 +113,26 @@
 @media (max-height: 600px) {
   .settings-modal-panel { max-height: calc(100dvh - 16px); }
 }
+
+/* v1.1 mobile editors: one scrollable content region with safe-area room for actions. */
+.event-editor-sheet, .fandom-editor-sheet {
+  min-height: 0;
+  max-height: min(90dvh, calc(100dvh - env(safe-area-inset-top) - 12px));
+}
+.event-editor-sheet > .overflow-y-auto, .fandom-editor-sheet > .overflow-y-auto {
+  min-height: 0;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: max(7rem, calc(5rem + env(safe-area-inset-bottom)));
+}
+@media (max-width: 639px) {
+  .event-editor-sheet, .fandom-editor-sheet {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 18px;
+    max-height: min(92dvh, calc(100dvh - env(safe-area-inset-top) - 8px));
+  }
+}
+@media (max-height: 560px) {
+  .event-editor-sheet, .fandom-editor-sheet { max-height: calc(100dvh - 8px); }
+}
