@@ -207,6 +207,7 @@ const openImportModal = () => { showImportModal.value = true; };
                             const cover = element.querySelector('img');
                             let originalSrc = null;
                             let embeddedCover = false;
+                            let coverAccessDenied = false;
                             if (cover && cover.complete && cover.naturalWidth > 0) {
                                 originalSrc = cover.getAttribute('src');
                                 if (originalSrc && !originalSrc.startsWith('data:')) {
@@ -227,6 +228,7 @@ const openImportModal = () => { showImportModal.value = true; };
                                         });
                                         embeddedCover = true;
                                     } catch (error) {
+                                        coverAccessDenied = true;
                                         console.warn('外部封面不允許匯出，仍嘗試保留圖片', error);
                                     }
                                 }
@@ -255,6 +257,7 @@ const openImportModal = () => { showImportModal.value = true; };
                             } finally {
                                 if (cover && originalSrc && embeddedCover) cover.setAttribute('src', originalSrc);
                             }
+                            if (coverAccessDenied && !ticketImageError.value) ticketImageError.value = '封面網站可能限制圖片匯出；若 PNG 沒有封面，請改用可公開讀取的圖片網址或上傳圖片。';
                             const image = canvas.toDataURL('image/png');
                             ticketImagePreview.value = image;
                             blob = await (await fetch(image)).blob();
