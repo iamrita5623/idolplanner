@@ -179,3 +179,19 @@
 @media (prefers-reduced-motion: reduce) {
   .app-bottom-nav > button { transition: none; }
 }
+
+/* Stage 5 / third pass: concert-light sheen follows any user-selected header color. */
+.concert-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.concert-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(ellipse 65% 75% at 12% -15%, rgba(255,255,255,.19), transparent 78%),
+              radial-gradient(ellipse 55% 75% at 90% -25%, rgba(255,255,255,.12), transparent 78%);
+}
