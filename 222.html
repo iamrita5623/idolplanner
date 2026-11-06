@@ -953,7 +953,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <transition name="slide-up">
             <div v-if="showFandomModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeFandomModal"></div>
-                <div class="bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div class="fandom-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h2 class="text-xl font-bold text-slate-800">{{ isFandomEditing ? '編輯入坑日' : '新增入坑日' }}</h2>
                         <button @click="closeFandomModal" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
@@ -1020,7 +1020,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <transition name="slide-up">
             <div v-if="showModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModal"></div>
-                <div class="bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div class="event-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                    
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h2 class="text-xl font-bold text-slate-800">{{ isEditing ? '編輯行程' : '新增行程' }}</h2>
