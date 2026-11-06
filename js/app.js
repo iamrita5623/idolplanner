@@ -203,20 +203,57 @@ const openImportModal = () => { showImportModal.value = true; };
                             if (document.fonts && document.fonts.ready) await document.fonts.ready;
                             const element = document.getElementById('ticket-image-template');
                             if (!element || !window.htmlToImage || !window.htmlToImage.toCanvas) throw new Error('票券圖片工具尚未載入');
-                            const captureOptions = {
-                                pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: true
-                            };
+                            const captureOptions = { pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: false };
+                            const cover = element.querySelector('img');
+                            let originalSrc = null;
+                            let embeddedCover = false;
+                            if (cover && cover.complete && cover.naturalWidth > 0) {
+                                originalSrc = cover.getAttribute('src');
+                                if (originalSrc && !originalSrc.startsWith('data:')) {
+                                    try {
+                                        const response = await fetch(originalSrc, { mode: 'cors', credentials: 'omit' });
+                                        if (!response.ok) throw new Error('封面讀取失敗');
+                                        const coverBlob = await response.blob();
+                                        const dataUrl = await new Promise((resolve, reject) => {
+                                            const reader = new FileReader();
+                                            reader.onload = () => resolve(reader.result);
+                                            reader.onerror = reject;
+                                            reader.readAsDataURL(coverBlob);
+                                        });
+                                        cover.setAttribute('src', dataUrl);
+                                        await new Promise((resolve, reject) => {
+                                            if (cover.complete && cover.naturalWidth) return resolve();
+                                            cover.onload = resolve; cover.onerror = reject;
+                                        });
+                                        embeddedCover = true;
+                                    } catch (error) {
+                                        console.warn('外部封面不允許匯出，仍嘗試保留圖片', error);
+                                    }
+                                }
+                            }
                             let canvas;
                             try {
-                                canvas = await window.htmlToImage.toCanvas(element, captureOptions);
-                            } catch (coverError) {
-                                // External cover hosts may reject image embedding on Safari.
-                                // Retry without the cover only; preserve all ticket text and data.
-                                console.warn('票券封面無法嵌入，改以應援色背景製作票券', coverError);
+                                try {
+                                    canvas = await window.htmlToImage.toCanvas(element, captureOptions);
+                                } catch (firstError) {
+                                    // A second renderer can handle some fonts and images differently.
+                                    if (typeof html2canvas !== 'function') throw firstError;
+                                    canvas = await html2canvas(element, {
+                                        scale: 3, backgroundColor: '#ffffff', useCORS: true,
+                                        allowTaint: false, logging: false
+                                    });
+                                }
+                                // Ensure the result is exportable before accepting it.
+                                canvas.toDataURL('image/png');
+                            } catch (captureError) {
+                                console.warn('票券封面擷取失敗，使用無封面備援', captureError);
                                 canvas = await window.htmlToImage.toCanvas(element, {
                                     ...captureOptions,
                                     filter: node => !(node.tagName === 'IMG' && node.closest && node.closest('#ticket-image-template'))
                                 });
+                                ticketImageError.value = '封面來源限制圖片匯出；已保留票券文字與應援色，圖片中不含封面。';
+                            } finally {
+                                if (cover && originalSrc && embeddedCover) cover.setAttribute('src', originalSrc);
                             }
                             const image = canvas.toDataURL('image/png');
                             ticketImagePreview.value = image;
