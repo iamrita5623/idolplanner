@@ -136,3 +136,11 @@
 @media (max-height: 560px) {
   .event-editor-sheet, .fandom-editor-sheet { max-height: calc(100dvh - 8px); }
 }
+
+/* v1.1 mobile: keep secondary overlays inside the visual viewport. */
+.changelog-modal-panel { min-height: 0; max-height: min(70dvh, calc(100dvh - 24px)); }
+.changelog-modal-panel > .overflow-y-auto { min-height: 0; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+.ticket-preview-panel { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+@media (max-width: 639px) {
+  .changelog-modal-panel { padding-left: 16px; padding-right: 16px; }
+}
