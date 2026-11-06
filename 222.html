@@ -3028,38 +3028,37 @@ const generateShareImageLegacy = () => {
                         const element = document.getElementById('share-template');
                         if (!element || !window.html2canvas) throw new Error('分享模板或截圖工具尚未載入');
                         if (document.fonts && document.fonts.ready) await document.fonts.ready;
-                        // Capture the fixed 360×640 layout regardless of the phone's viewport.
-                        // Explicitly reset inherited typography inside the export tree.
-                        element.style.width = '360px';
-                        element.style.height = '640px';
                         await nextTick();
-                        const width = element.getBoundingClientRect().width;
-                        if (!Number.isFinite(width) || width <= 0) throw new Error('分享模板尚未完成排版，請稍後再試');
-                        const canvas = await html2canvas(element, {
-                            useCORS: true,
-                            backgroundColor: '#faf5fa',
-                            scale: 1080 / width,
-                            width,
-                            height: 640,
-                            windowWidth: 1200,
-                            windowHeight: 900,
-                            scrollX: 0,
-                            scrollY: 0,
-                            onclone: (doc) => {
-                                // Detach from the modal's scaled/flex ancestors in the capture document.
-                                const copy = doc.getElementById('share-template');
-                                if (!copy) return;
-                                doc.body.appendChild(copy);
-                                Object.assign(copy.style, {
-                                    display: 'block', position: 'fixed', top: '0px', left: '0px',
-                                    width: '360px', height: '640px', margin: '0px',
-                                    transform: 'none', zoom: '1', visibility: 'visible',
-                                    opacity: '1', zIndex: '2147483647'
-                                });
-                                doc.documentElement.style.scrollBehavior = 'auto';
-                                doc.body.style.margin = '0';
-                            }
+                        // Render and capture the SAME detached, fixed-size DOM node.
+                        // Previously the source lived inside a scrolling modal but its
+                        // clone was moved to (0,0), causing html2canvas crop/baseline drift.
+                        const captureRoot = element.cloneNode(true);
+                        captureRoot.removeAttribute('id');
+                        Object.assign(captureRoot.style, {
+                            position: 'fixed', left: '0px', top: '0px',
+                            width: '360px', height: '640px', boxSizing: 'border-box',
+                            margin: '0px', padding: '0px', display: 'block',
+                            transform: 'none', zoom: '1', overflow: 'hidden',
+                            zIndex: '-1', pointerEvents: 'none'
                         });
+                        document.body.appendChild(captureRoot);
+                        let canvas;
+                        try {
+                            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+                            canvas = await html2canvas(captureRoot, {
+                                useCORS: true,
+                                backgroundColor: recapPalette.value.background,
+                                scale: 3,
+                                width: 360,
+                                height: 640,
+                                windowWidth: Math.max(window.innerWidth, 360),
+                                scrollX: 0,
+                                scrollY: 0,
+                                logging: false
+                            });
+                        } finally {
+                            captureRoot.remove();
+                        }
                         if (mode === 'preview') { shareImagePreview.value = canvas.toDataURL('image/png'); return; }
                         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
                         if (!blob) throw new Error('圖片產生失敗');
