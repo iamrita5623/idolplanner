@@ -207,6 +207,7 @@ const openImportModal = () => { showImportModal.value = true; };
                             const cover = element.querySelector('img');
                             let originalSrc = null;
                             let embeddedCover = false;
+                            let embeddedCoverData = null;
                             let coverAccessDenied = false;
                             if (cover && cover.complete && cover.naturalWidth > 0) {
                                 originalSrc = cover.getAttribute('src');
@@ -222,6 +223,7 @@ const openImportModal = () => { showImportModal.value = true; };
                                             reader.readAsDataURL(coverBlob);
                                         });
                                         cover.setAttribute('src', dataUrl);
+                                        embeddedCoverData = dataUrl;
                                         await new Promise((resolve, reject) => {
                                             if (cover.complete && cover.naturalWidth) return resolve();
                                             cover.onload = resolve; cover.onerror = reject;
@@ -282,10 +284,10 @@ const openImportModal = () => { showImportModal.value = true; };
                             }
                             // If the renderer silently omitted a cover, restore its pixels
                             // from an exportable CORS image, then repaint the artist title.
-                            if (cover && originalSrc && embeddedCover && ctx) {
+                            if (cover && embeddedCoverData && ctx) {
                                 try {
                                     const source = new Image();
-                                    source.src = cover.src;
+                                    source.src = embeddedCoverData;
                                     await source.decode();
                                     const frame = cover.parentElement.getBoundingClientRect();
                                     const x = (frame.left - rootRect.left) * sx, y = (frame.top - rootRect.top) * sy;
