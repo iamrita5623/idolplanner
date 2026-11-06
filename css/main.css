@@ -195,3 +195,23 @@
   background: radial-gradient(ellipse 65% 75% at 12% -15%, rgba(255,255,255,.19), transparent 78%),
               radial-gradient(ellipse 55% 75% at 90% -25%, rgba(255,255,255,.12), transparent 78%);
 }
+
+/* Stage 5: visible but restrained concert audience lights along header base. */
+.concert-header > * { position: relative; z-index: 1; }
+.concert-header::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  left: 0; right: 0; bottom: 0;
+  height: 42px;
+  opacity: .68;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.90) 0 1.6px, transparent 2.7px),
+    radial-gradient(circle, rgba(255,246,220,.78) 0 1.2px, transparent 2.4px),
+    radial-gradient(circle, rgba(255,255,255,.48) 0 1px, transparent 2px);
+  background-size: 31px 19px, 43px 23px, 23px 17px;
+  background-position: 7px 6px, 18px 13px, 4px 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 75%);
+  mask-image: linear-gradient(to bottom, transparent, #000 75%);
+}
