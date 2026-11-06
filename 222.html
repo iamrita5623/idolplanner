@@ -2531,7 +2531,7 @@ const initMap = (preserveView = false) => {
             </div>`;
         });
         popup += `</div></div>`;
-        marker.bindPopup(popup, { maxWidth: 320, maxHeight: 330, autoPan: true, keepInView: true });
+        marker.bindPopup(popup, { maxWidth: 320, autoPan: true, keepInView: true, className: "event-map-popup" });
         marker.on('popupopen', (evt) => { const scroller = evt.popup.getElement()?.querySelector('[style*="overflow-y:auto"]'); if (scroller) { scroller.scrollTop = 0; L.DomEvent.disableScrollPropagation(scroller); L.DomEvent.disableClickPropagation(scroller); requestAnimationFrame(() => { scroller.scrollTop = 0; }); } });
         markers.push(marker);
     });
