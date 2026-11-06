@@ -1201,18 +1201,18 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         </transition>
 
         <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
-  <p style="position:absolute;top:20px;left:0;width:100%;font-size:11px;letter-spacing:2.5px;text-align:center;margin:0;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
-  <h2 style="position:absolute;top:42px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:66px;font-weight:500;line-height:1.15;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
-  <p style="position:absolute;top:126px;left:0;width:100%;font-size:11px;letter-spacing:2px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
+  <p style="position:absolute;top:20px;left:0;width:100%;font-size:11px;line-height:16px;letter-spacing:2.5px;text-align:center;margin:0;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
+  <h2 style="position:absolute;top:42px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:66px;font-weight:500;line-height:76px;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
+  <p style="position:absolute;top:126px;left:0;width:100%;font-size:11px;line-height:16px;letter-spacing:2px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
   <div style="position:absolute;top:145px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
     <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 4px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 6px;white-space:nowrap">✧ 追星回憶</p><p style="font-size:27px;font-weight:900;line-height:1;margin:0">{{ statsData.count }}</p><p style="font-size:11px;margin:3px 0 0">場回憶</p>
+      <p style="font-size:11px;line-height:15px;margin:0 0 6px;white-space:nowrap">✧ 追星回憶</p><p style="font-size:27px;font-weight:900;line-height:30px;margin:0">{{ statsData.count }}</p><p style="font-size:11px;line-height:15px;margin:3px 0 0">場回憶</p>
     </div>
     <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 6px;white-space:nowrap">⌖ 到訪城市</p><p style="font-size:27px;font-weight:900;line-height:1;margin:0">{{ recapCities.length }}</p><p style="font-size:9px;line-height:1.2;margin:4px 0 0;max-height:22px;overflow:hidden">{{ recapCities.length ? recapCities.join(' · ') : '尚無資料' }}</p>
+      <p style="font-size:11px;line-height:15px;margin:0 0 6px;white-space:nowrap">⌖ 到訪城市</p><p style="font-size:27px;font-weight:900;line-height:30px;margin:0">{{ recapCities.length }}</p><p style="font-size:9px;line-height:12px;margin:4px 0 0;max-height:24px;overflow:hidden">{{ recapCities.length ? recapCities.join(' · ') : '尚無資料' }}</p>
     </div>
     <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">⌂ 最常去</p><p style="font-size:11px;font-weight:800;line-height:1.2;margin:0;height:27px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;margin:3px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
+      <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">⌂ 最常去</p><p style="font-size:11px;font-weight:800;line-height:14px;margin:0;height:28px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;line-height:15px;margin:3px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
     </div>
   </div>
   <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
@@ -3044,7 +3044,21 @@ const generateShareImageLegacy = () => {
                             windowWidth: 1200,
                             windowHeight: 900,
                             scrollX: 0,
-                            scrollY: 0
+                            scrollY: 0,
+                            onclone: (doc) => {
+                                // Detach from the modal's scaled/flex ancestors in the capture document.
+                                const copy = doc.getElementById('share-template');
+                                if (!copy) return;
+                                doc.body.appendChild(copy);
+                                Object.assign(copy.style, {
+                                    display: 'block', position: 'fixed', top: '0px', left: '0px',
+                                    width: '360px', height: '640px', margin: '0px',
+                                    transform: 'none', zoom: '1', visibility: 'visible',
+                                    opacity: '1', zIndex: '2147483647'
+                                });
+                                doc.documentElement.style.scrollBehavior = 'auto';
+                                doc.body.style.margin = '0';
+                            }
                         });
                         if (mode === 'preview') { shareImagePreview.value = canvas.toDataURL('image/png'); return; }
                         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
