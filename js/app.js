@@ -1835,12 +1835,25 @@ const generateShareImageLegacy = () => {
                                 });
                             } catch (secondError) {
                                 console.warn('Recap html-to-image retry failed', secondError);
-                                if (typeof window.html2canvas !== 'function') {
+                                // A final lightweight foreignObject attempt is often
+                                // more faithful than html2canvas on mobile Safari.
+                                try {
+                                    canvas = await window.htmlToImage.toCanvas(element, {
+                                        width: 360, height: 640, pixelRatio: 1,
+                                        backgroundColor: recapPalette.value.background,
+                                        cacheBust: false,
+                                        skipFonts: true,
+                                        style: { width: '360px', height: '640px', transform: 'none' }
+                                    });
+                                } catch (thirdError) {
+                                    console.warn('Recap lightweight export failed', thirdError);
+                                }
+                                if (!canvas && typeof window.html2canvas !== 'function') {
                                     throw new Error('PNG 工具均無法使用：' + String(secondError && secondError.message || secondError));
                                 }
                                 // Last-resort alternative renderer. Preserve the original
                                 // 360x640 preview and avoid changing the visible DOM.
-                                try {
+                                if (!canvas) try {
                                     canvas = await window.html2canvas(element, {
                                         scale: 2, width: 360, height: 640,
                                         backgroundColor: recapPalette.value.background,
