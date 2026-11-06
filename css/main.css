@@ -89,3 +89,13 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 2px solid white;
             cursor: pointer;
         }
+
+/* 地圖活動彈窗：僅保留活動清單本身的單一捲軸 */
+.event-map-popup .leaflet-popup-content-wrapper { overflow: visible; }
+.event-map-popup .leaflet-popup-content [style*="overflow-y:auto"] {
+    scrollbar-width: thin;
+    scrollbar-color: #a3a3a3 transparent;
+}
+.event-map-popup .leaflet-popup-content [style*="overflow-y:auto"]::-webkit-scrollbar { width: 5px; }
+.event-map-popup .leaflet-popup-content [style*="overflow-y:auto"]::-webkit-scrollbar-thumb { background: #a3a3a3; border-radius: 8px; }
+.event-map-popup .leaflet-popup-content [style*="overflow-y:auto"]::-webkit-scrollbar-track { background: transparent; }
