@@ -734,6 +734,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             
             <div v-if="showTicketModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" @click.self="showTicketModal = false">
                 <div class="ticket-preview-panel w-full max-w-xs transform transition-all relative" @click.stop>
+                    <button @click="showTicketModal = false" aria-label="關閉票券" class="absolute top-2 right-2 z-30 w-9 h-9 rounded-full bg-black/65 text-white flex items-center justify-center text-xl shadow-lg"><i class="ph ph-x"></i></button>
                     <div id="ticket-image-template" v-show="!ticketImagePreview" class="ticket-stub bg-white rounded-3xl overflow-hidden relative text-slate-800">
                         <div class="h-20 relative flex items-center justify-center" :style="{ backgroundColor: getEventColor(ticketEvent) }">
      
@@ -793,11 +794,8 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <template v-else>
                             <button @click="ticketImagePreview = ''" class="rounded-xl bg-white/20 text-white px-3 py-2 text-sm">返回票券</button>
                             <button @click="generateTicketImage('share')" :disabled="ticketImageBusy" class="rounded-xl bg-white text-slate-800 px-3 py-2 text-sm font-bold">分享圖片</button>
-                            <button @click="generateTicketImage('download')" :disabled="ticketImageBusy" class="rounded-xl bg-white text-slate-800 px-3 py-2 text-sm font-bold">下載 PNG</button>
                         </template>
-                        <button @click="showTicketModal = false" class="rounded-xl bg-white/20 text-white px-3 py-2 text-sm">關閉</button>
                     </div>
-                    <button @click="showTicketModal = false" class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-white/80 hover:text-white text-sm flex flex-col items-center"><i class="ph ph-x-circle text-3xl"></i></button>
                 </div>
             </div>
       
@@ -1210,7 +1208,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/map.js?v=1.1.1"></script>
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
-    <script src="./js/app.js?v=1.1.10"></script>
+    <script src="./js/app.js?v=1.1.11"></script>
 </body>
 </html>
 
