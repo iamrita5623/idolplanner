@@ -2505,16 +2505,18 @@ const initMap = () => {
         groupPoints[key].push(e);
     });
 
+    // 將使用者輸入視為純文字，避免活動名稱破壞 Leaflet 彈窗結構。
+    const escapePopupText = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
     Object.values(groupPoints).forEach(eventsAtLoc => {
         const latest = eventsAtLoc[eventsAtLoc.length - 1];
         const color = getEventColor(latest);
         const marker = L.circleMarker([latest.lat, latest.lng], { radius: 7, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.8 }).addTo(map);
-        let popup = `<div style="min-width:210px;max-width:280px;"><div style="position:sticky;top:0;background:white;z-index:2;padding:7px 2px;border-bottom:1px solid #e5e7eb;font-weight:700;">${eventsAtLoc.length} 場活動 · ${selectedMapYear.value === 'ALL' ? '全部年度' : selectedMapYear.value + ' 年'}</div><div style="max-height:245px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;">`;
+        let popup = `<div style="min-width:210px;max-width:280px;"><div style="max-height:min(45dvh,380px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;">`;
         [...eventsAtLoc].reverse().forEach(ev => {
             popup += `<div style="border-bottom:1px dashed #eee; margin-bottom:5px; padding-bottom:5px;">
-                <b style="color:${getEventColor(ev)}">${ev.artist}</b><br>
-                <small>${ev.title}</small><br>
-                <small style="color:#666">📅 ${ev.date}</small>
+                <b style="color:${getEventColor(ev)}">${escapePopupText(ev.artist)}</b><br>
+                <small>${escapePopupText(ev.title)}</small><br>
+                <small style="color:#666">📅 ${escapePopupText(ev.date)}</small>
             </div>`;
         });
         popup += `</div></div>`;
