@@ -1826,12 +1826,40 @@ const generateShareImageLegacy = () => {
                             });
                         } catch (firstError) {
                             console.warn('Recap 3x export failed; retrying at 2x', firstError);
-                            canvas = await window.htmlToImage.toCanvas(element, {
-                                width: 360, height: 640, pixelRatio: 2,
-                                backgroundColor: recapPalette.value.background,
-                                cacheBust: false,
-                                style: { width: '360px', height: '640px', transform: 'none' }
-                            });
+                            try {
+                                canvas = await window.htmlToImage.toCanvas(element, {
+                                    width: 360, height: 640, pixelRatio: 2,
+                                    backgroundColor: recapPalette.value.background,
+                                    cacheBust: false,
+                                    style: { width: '360px', height: '640px', transform: 'none' }
+                                });
+                            } catch (secondError) {
+                                console.warn('Recap html-to-image retry failed', secondError);
+                                if (typeof window.html2canvas !== 'function') {
+                                    throw new Error('PNG 工具均無法使用：' + String(secondError && secondError.message || secondError));
+                                }
+                                // Last-resort alternative renderer. Preserve the original
+                                // 360x640 preview and avoid changing the visible DOM.
+                                try {
+                                    canvas = await window.html2canvas(element, {
+                                        scale: 2, width: 360, height: 640,
+                                        backgroundColor: recapPalette.value.background,
+                                        useCORS: true, logging: false,
+                                        scrollX: 0, scrollY: 0,
+                                        onclone: (doc) => {
+                                            const node = doc.getElementById('share-template');
+                                            if (node) {
+                                                node.style.transform = 'none';
+                                                node.style.width = '360px';
+                                                node.style.height = '640px';
+                                            }
+                                        }
+                                    });
+                                } catch (fallbackError) {
+                                    console.error('Recap fallback failed', {firstError, secondError, fallbackError});
+                                    throw new Error('雙引擎產圖失敗：' + String(fallbackError && fallbackError.message || fallbackError));
+                                }
+                            }
                         }
                         if (mode === 'preview') { shareImagePreview.value = canvas.toDataURL('image/png'); return; }
                         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
@@ -1859,7 +1887,7 @@ const generateShareImageLegacy = () => {
                         setTimeout(() => URL.revokeObjectURL(url), 60000);
                     } catch (err) {
                         console.error('分享圖片產生失敗', err);
-                        shareError.value = '圖片製作失敗，請重試或改用其他瀏覽器。';
+                        shareError.value = '圖片製作失敗：' + String(err && err.message || err).slice(0, 140) + '。請截圖回報此訊息。';
                     } finally {
                         shareBusy.value = false;
                     }
