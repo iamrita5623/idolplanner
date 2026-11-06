@@ -167,3 +167,15 @@
   outline-offset: -2px;
 }
 .settings-modal-panel, .changelog-modal-panel { box-shadow: 0 20px 55px rgba(48,39,65,.18); }
+
+/* Stage 5 / second pass: a quiet concert-light highlight, no extra accent hues. */
+.app-bottom-nav {
+  background-image: linear-gradient(180deg, rgba(169,154,203,.07), rgba(255,255,255,0) 26px);
+}
+.app-bottom-nav > button[aria-current="page"] {
+  background: linear-gradient(180deg, rgba(169,154,203,.10), rgba(169,154,203,0) 90%);
+}
+.app-bottom-nav > button:focus-visible { outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .app-bottom-nav > button { transition: none; }
+}
