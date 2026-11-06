@@ -257,6 +257,58 @@ const openImportModal = () => { showImportModal.value = true; };
                             } finally {
                                 if (cover && originalSrc && embeddedCover) cover.setAttribute('src', originalSrc);
                             }
+                            // Canvas exporters may omit CSS repeating gradients. Paint the barcode
+                            // as actual pixels so the PNG matches the on-screen ticket.
+                            const rootRect = element.getBoundingClientRect();
+                            const sx = canvas.width / rootRect.width;
+                            const sy = canvas.height / rootRect.height;
+                            const ctx = canvas.getContext('2d');
+                            const barcode = element.querySelector('.ticket-barcode-graphic');
+                            if (barcode && ctx) {
+                                const rect = barcode.getBoundingClientRect();
+                                const x = (rect.left - rootRect.left) * sx;
+                                const y = (rect.top - rootRect.top) * sy;
+                                const w = rect.width * sx, h = rect.height * sy;
+                                ctx.fillStyle = '#f8fafc';
+                                ctx.fillRect(x, y, w, h);
+                                ctx.fillStyle = '#334155';
+                                const widths = [2,1,4,2,3,1,2,4,1,3,2,1,4,2,1,3,2,4,1,2,3,1,4,2,1,3,2,1,4,2,3,1,2,4,1,3,2,1,4,2,1,3,2,4];
+                                let cursor = 0, index = 0;
+                                while (cursor < rect.width) {
+                                    const width = widths[index % widths.length];
+                                    if (index % 2 === 0) ctx.fillRect(x + cursor * sx, y, Math.min(width * sx, w - cursor * sx), h);
+                                    cursor += width; index++;
+                                }
+                            }
+                            // If the renderer silently omitted a cover, restore its pixels
+                            // from an exportable CORS image, then repaint the artist title.
+                            if (cover && originalSrc && embeddedCover && ctx) {
+                                try {
+                                    const source = new Image();
+                                    source.src = cover.src;
+                                    await source.decode();
+                                    const frame = cover.parentElement.getBoundingClientRect();
+                                    const x = (frame.left - rootRect.left) * sx, y = (frame.top - rootRect.top) * sy;
+                                    const w = frame.width * sx, h = frame.height * sy;
+                                    const ratio = Math.max(w / source.naturalWidth, h / source.naturalHeight);
+                                    const sw = w / ratio, sh = h / ratio;
+                                    ctx.save();
+                                    ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+                                    ctx.globalAlpha = .95;
+                                    ctx.drawImage(source, (source.naturalWidth - sw) / 2, (source.naturalHeight - sh) / 2, sw, sh, x, y, w, h);
+                                    ctx.globalAlpha = 1;
+                                    const heading = frame && cover.parentElement.querySelector('h2');
+                                    if (heading) {
+                                        const style = getComputedStyle(heading);
+                                        ctx.fillStyle = style.color;
+                                        ctx.font = 'bold ' + (parseFloat(style.fontSize) * sy) + 'px sans-serif';
+                                        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                                        ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 3 * sy;
+                                        ctx.fillText(heading.textContent.trim(), x + w/2, y + h/2, w - 12 * sx);
+                                    }
+                                    ctx.restore();
+                                } catch (error) { console.warn('封面像素補繪未完成', error); }
+                            }
                             if (coverAccessDenied && !ticketImageError.value) ticketImageError.value = '封面網站可能限制圖片匯出；若 PNG 沒有封面，請改用可公開讀取的圖片網址或上傳圖片。';
                             const image = canvas.toDataURL('image/png');
                             ticketImagePreview.value = image;
