@@ -153,3 +153,17 @@
   background: repeating-linear-gradient(90deg, #334155 0 2px, transparent 2px 4px, #334155 4px 5px, transparent 5px 8px, #334155 8px 12px, transparent 12px 15px, #334155 15px 17px, transparent 17px 20px);
 }
 .ticket-barcode-number { margin-top: 3px; font: 500 12px/18px monospace; letter-spacing: 5px; color: #475569; }
+
+/* v1.1 stage 5: restrained midnight-purple / concert-light shell accents.
+   Keep user-selected header and active-tab colors untouched. */
+:root { --concert-midnight: #302741; --concert-lavender: #a99acb; }
+.app-bottom-nav {
+  border-top-color: #e9e3f1;
+  box-shadow: 0 -5px 20px rgba(48,39,65,.055);
+}
+.app-bottom-nav > button { border-radius: 12px; }
+.app-bottom-nav > button:focus-visible {
+  outline: 2px solid var(--concert-lavender);
+  outline-offset: -2px;
+}
+.settings-modal-panel, .changelog-modal-panel { box-shadow: 0 20px 55px rgba(48,39,65,.18); }
