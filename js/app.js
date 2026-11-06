@@ -186,6 +186,50 @@ const openImportModal = () => { showImportModal.value = true; };
                 const calendarEvent = ref(null);     
   
                 const ticketEvent = ref({});
+                const ticketImagePreview = ref('');
+                const ticketImageBusy = ref(false);
+                const ticketImageError = ref('');
+                const generateTicketImage = async (mode = 'preview') => {
+                    if (ticketImageBusy.value) return;
+                    ticketImageBusy.value = true;
+                    ticketImageError.value = '';
+                    try {
+                        let blob;
+                        if (ticketImagePreview.value) {
+                            blob = await (await fetch(ticketImagePreview.value)).blob();
+                        } else {
+                            ticketImagePreview.value = '';
+                            await nextTick();
+                            if (document.fonts && document.fonts.ready) await document.fonts.ready;
+                            const element = document.getElementById('ticket-image-template');
+                            if (!element || !window.htmlToImage || !window.htmlToImage.toCanvas) throw new Error('票券圖片工具尚未載入');
+                            const canvas = await window.htmlToImage.toCanvas(element, {
+                                pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: true
+                            });
+                            const image = canvas.toDataURL('image/png');
+                            ticketImagePreview.value = image;
+                            blob = await (await fetch(image)).blob();
+                        }
+                        if (mode === 'preview') return;
+                        const filename = (String(ticketEvent.value.date || '追星') + '_紀念票券.png').replace(/[\\/:*?"<>|]/g, '-');
+                        if (mode === 'share' && navigator.share && navigator.canShare) {
+                            const file = new File([blob], filename, {type:'image/png'});
+                            if (navigator.canShare({files:[file]})) {
+                                try { await navigator.share({files:[file], title:'我的追星紀念票券'}); return; }
+                                catch (err) { if (err.name === 'AbortError') return; }
+                            }
+                        }
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url; link.download = filename;
+                        document.body.appendChild(link); link.click(); link.remove();
+                        setTimeout(() => URL.revokeObjectURL(url), 60000);
+                    } catch (err) {
+                        console.error('票券圖片產生失敗', err);
+                        ticketImageError.value = '票券圖片產生失敗，請重試；若有外部封面圖片，請檢查圖片是否允許跨網域存取。';
+                    } finally { ticketImageBusy.value = false; }
+                };
+
                 const isEditing = ref(false);
                 const isFandomEditing = ref(false); 
                 const editFandomIndex = ref(null); 
@@ -1424,6 +1468,8 @@ const initMap = (preserveView = false) => {
                 // Ticket Logic
                 const showTicket = (evt) => {
                     ticketEvent.value = evt;
+                    ticketImagePreview.value = '';
+                    ticketImageError.value = '';
                     showTicketModal.value = true;
                 }
 
@@ -1859,7 +1905,7 @@ const generateShareImageLegacy = () => {
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
-                    calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
+                    calendarEvent, ticketEvent, ticketImagePreview, ticketImageBusy, ticketImageError, generateTicketImage, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
