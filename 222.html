@@ -706,7 +706,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <i class="ph ph-plus text-2xl font-bold"></i>
         </button>
 
-        <nav class="bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
+        <nav aria-label="主要分頁導覽" class="app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
             <button @click="activeTab = 'home'" class="flex flex-col items-center gap-1 transition-colors w-16" 
                 :class="activeTab === 'home' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'home' ? themeColor : '' }">
                 <i class="ph text-2xl ph-calendar-check" :class="{ 'ph-fill': activeTab === 'home', 'ph-bold': activeTab !== 'home' }"></i>
@@ -845,7 +845,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         </transition>
 
 <div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
-    <div class="bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
+    <div class="settings-modal-panel bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
         
         <!-- 標題列 -->
         <div class="flex justify-between items-center p-6 pb-4 shrink-0">
