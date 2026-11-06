@@ -734,7 +734,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             
             <div v-if="showTicketModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" @click.self="showTicketModal = false">
                 <div class="ticket-preview-panel w-full max-w-xs transform transition-all relative" @click.stop>
-                    <div class="ticket-stub bg-white rounded-3xl overflow-hidden relative text-slate-800">
+                    <div id="ticket-image-template" v-show="!ticketImagePreview" class="ticket-stub bg-white rounded-3xl overflow-hidden relative text-slate-800">
                         <div class="h-20 relative flex items-center justify-center" :style="{ backgroundColor: getEventColor(ticketEvent) }">
      
                             <img v-if="ticketEvent.coverUrl" :src="ticketEvent.coverUrl" class="absolute inset-0 w-full h-full object-cover opacity-95" alt="Event Cover" onerror="this.style.display='none'">
@@ -782,6 +782,20 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <div class="ticket-divider bg-[#f8fafc] -mx-2"></div>
    
                         <div class="bg-[#f8fafc] p-6 pt-4 text-center"><div class="font-barcode text-5xl text-slate-700 opacity-80">{{ ticketEvent.id ? ticketEvent.id.toString().slice(-8) : '12345678' }}</div><p class="text-[10px] text-slate-400 mt-2">IDOL TRACKER EXCLUSIVE TICKET</p></div>
+                    </div>
+                    <div v-if="ticketImagePreview" class="flex flex-col items-center gap-2">
+                        <img :src="ticketImagePreview" alt="已產生的紀念票券 PNG 圖片，可長按儲存" class="w-full h-auto rounded-2xl select-auto" style="-webkit-touch-callout:default;user-select:auto">
+                        <p class="text-white text-xs text-center">這是真正的 PNG 圖片，可長按儲存到手機。</p>
+                    </div>
+                    <p v-if="ticketImageError" class="mt-3 text-xs text-red-200 text-center">{{ ticketImageError }}</p>
+                    <div class="mt-3 flex flex-wrap justify-center gap-2">
+                        <button v-if="!ticketImagePreview" @click="generateTicketImage('preview')" :disabled="ticketImageBusy" class="rounded-xl bg-white text-slate-800 px-4 py-2 text-sm font-bold">{{ ticketImageBusy ? '正在製作…' : '產生票券圖片' }}</button>
+                        <template v-else>
+                            <button @click="ticketImagePreview = ''" class="rounded-xl bg-white/20 text-white px-3 py-2 text-sm">返回票券</button>
+                            <button @click="generateTicketImage('share')" :disabled="ticketImageBusy" class="rounded-xl bg-white text-slate-800 px-3 py-2 text-sm font-bold">分享圖片</button>
+                            <button @click="generateTicketImage('download')" :disabled="ticketImageBusy" class="rounded-xl bg-white text-slate-800 px-3 py-2 text-sm font-bold">下載 PNG</button>
+                        </template>
+                        <button @click="showTicketModal = false" class="rounded-xl bg-white/20 text-white px-3 py-2 text-sm">關閉</button>
                     </div>
                     <button @click="showTicketModal = false" class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-white/80 hover:text-white text-sm flex flex-col items-center"><i class="ph ph-x-circle text-3xl"></i></button>
                 </div>
@@ -1196,7 +1210,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/map.js?v=1.1.1"></script>
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
-    <script src="./js/app.js?v=1.1.5"></script>
+    <script src="./js/app.js?v=1.1.9"></script>
 </body>
 </html>
 
