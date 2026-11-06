@@ -1119,7 +1119,9 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         </transition>
 
         <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
-  <p style="position:absolute;top:14px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:2px;text-align:center;margin:0;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#9f8cda 0%,#e6aacb 32%,#b2d6ec 68%,#9f8cda 100%)"></div>
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:115px;background:radial-gradient(ellipse at 18% 0%,rgba(203,168,255,.20),transparent 65%),radial-gradient(ellipse at 82% 0%,rgba(145,213,255,.16),transparent 65%);pointer-events:none"></div>
+  <p style="position:absolute;top:17px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:2px;text-align:center;margin:0;white-space:nowrap;font-weight:800">IDOL PLANNER · MY YEAR IN MUSIC</p>
   <h2 style="position:absolute;top:35px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:58px;font-weight:500;line-height:68px;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
   <p style="position:absolute;top:110px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:1.7px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
   <div style="position:absolute;top:137px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
@@ -1152,7 +1154,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   <div style="position:absolute;top:434px;left:22px;right:22px;height:77px">
     <h3 style="font-size:11px;letter-spacing:1.3px;font-weight:900;line-height:15px;margin:0 0 7px">MONTHLY ACTIVITY</h3>
     <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:37px;align-items:end">
-      <div v-for="(n,i) in recapMonths" :key="i" style="height:100%;display:flex;align-items:flex-end"><div :style="{width:'100%',height:Math.max(5,n/recapMonthMax*100)+'%',background:'#383437',opacity:n?1:.18,borderRadius:'3px 3px 0 0'}"></div></div>
+      <div v-for="(n,i) in recapMonths" :key="i" style="height:100%;display:flex;align-items:flex-end"><div :style="{width:'100%',height:Math.max(5,n/recapMonthMax*100)+'%',background:recapPalette.ink,opacity:n?0.85:.16,borderRadius:'3px 3px 0 0'}"></div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:5px;text-align:center;font-size:7px;line-height:10px">
       <span v-for="month in ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']" :key="month">{{ month }}</span>
@@ -1162,7 +1164,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div>
     <div style="position:absolute;left:0;right:0;bottom:0;height:20px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div>
   </div>
-  <p style="position:absolute;top:586px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0;color:#55465e">{{ recapQuote }}</p>
+  <p style="position:absolute;top:586px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0" :style="{color:recapPalette.ink}">{{ recapQuote }}</p>
   <p style="position:absolute;top:611px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
 </div>
 <div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
