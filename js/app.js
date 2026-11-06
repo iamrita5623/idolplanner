@@ -186,144 +186,6 @@ const openImportModal = () => { showImportModal.value = true; };
                 const calendarEvent = ref(null);     
   
                 const ticketEvent = ref({});
-                const ticketImagePreview = ref('');
-                const ticketCoverOverride = ref('');
-                const loadTicketCover = (event) => {
-                    const file = event.target.files && event.target.files[0];
-                    if (!file) return;
-                    if (!file.type.startsWith('image/')) { ticketImageError.value = '請選擇圖片檔案'; return; }
-                    const reader = new FileReader();
-                    reader.onload = () => { ticketCoverOverride.value = reader.result; ticketImagePreview.value = ''; ticketImageError.value = ''; generateTicketImage('preview'); };
-                    reader.readAsDataURL(file);
-                };
-                const ticketImageBusy = ref(false);
-                const ticketImageError = ref('');
-                const generateTicketImage = async (mode = 'preview') => {
-                    if (ticketImageBusy.value) return;
-                    ticketImageBusy.value = true;
-                    ticketImageError.value = '';
-                    try {
-                        let blob;
-                        if (ticketImagePreview.value) {
-                            blob = await (await fetch(ticketImagePreview.value)).blob();
-                        } else {
-                            ticketImagePreview.value = '';
-                            await nextTick();
-                            if (document.fonts && document.fonts.ready) await document.fonts.ready;
-                            const element = document.getElementById('ticket-image-template');
-                            if (!element || !window.htmlToImage || !window.htmlToImage.toCanvas) throw new Error('票券圖片工具尚未載入');
-                            // Draw the PNG directly. DOM screenshot libraries can silently omit
-                            // CSS barcode gradients and remote images on mobile Safari.
-                            const W = 900, H = 1250, canvas = document.createElement('canvas');
-                            canvas.width = W; canvas.height = H;
-                            const ctx = canvas.getContext('2d');
-                            const evt = ticketEvent.value;
-                            const color = getEventColor(evt);
-                            const round = (x,y,w,h,r,fill) => {
-                                ctx.fillStyle = fill; ctx.beginPath();
-                                ctx.roundRect(x,y,w,h,r); ctx.fill();
-                            };
-                            const text = (value,x,y,size=30,color='#1e293b',align='left',weight='600') => {
-                                ctx.fillStyle=color; ctx.textAlign=align; ctx.textBaseline='middle';
-                                ctx.font=weight+' '+size+'px "Noto Sans TC", sans-serif';
-                                ctx.fillText(String(value||''),x,y);
-                            };
-                            const wrap = (value,maxWidth,size,weight='700') => {
-                                ctx.font=weight+' '+size+'px "Noto Sans TC", sans-serif';
-                                const lines=[''];
-                                for (const char of String(value||'')) {
-                                    let last=lines.length-1;
-                                    if (ctx.measureText(lines[last]+char).width>maxWidth && lines[last]) lines.push(char);
-                                    else lines[last]+=char;
-                                }
-                                return lines;
-                            };
-                            ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
-                            ctx.fillStyle=color;ctx.fillRect(0,0,W,240);
-                            const sourceUrl = ticketCoverOverride.value || evt.coverUrl;
-                            if (sourceUrl) {
-                                try {
-                                    const source = new Image();
-                                    if (!sourceUrl.startsWith('data:') && !sourceUrl.startsWith('blob:')) source.crossOrigin='anonymous';
-                                    source.src=sourceUrl;
-                                    await source.decode();
-                                    const ratio=Math.max(W/source.naturalWidth,240/source.naturalHeight);
-                                    const sw=W/ratio,sh=240/ratio;
-                                    ctx.save();ctx.beginPath();ctx.rect(0,0,W,240);ctx.clip();
-                                    ctx.globalAlpha=.95;
-                                    ctx.drawImage(source,(source.naturalWidth-sw)/2,(source.naturalHeight-sh)/2,sw,sh,0,0,W,240);
-                                    ctx.restore();
-                                } catch (error) {
-                                    ticketImageError.value='封面網站限制圖片匯出。可點「選擇封面照片」使用手機相簿中的同一張圖片。';
-                                }
-                            }
-                            text(evt.artist,450,120,54,isColorLight(color)?'#1e293b':'#ffffff','center','700');
-                            text('EVENT',450,305,30,'#94a3b8','center','500');
-                            const titleLines=wrap(evt.title,780,51);
-                            titleLines.slice(0,3).forEach((line,i)=>text(line,450,375+i*61,51,'#1e293b','center','700'));
-                            // Preserve the sticker shown on the live ticket (e.g. 拉完了).
-                            if (evt.sticker) {
-                                ctx.save();
-                                ctx.translate(735,305);
-                                ctx.rotate(12*Math.PI/180);
-                                ctx.font='700 76px "Noto Sans TC", "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
-                                ctx.textAlign='center';ctx.textBaseline='middle';
-                                ctx.fillStyle='#1e293b';
-                                ctx.shadowColor='rgba(15,23,42,.15)';ctx.shadowBlur=4;
-                                ctx.fillText(String(evt.sticker),0,0,300);
-                                ctx.restore();
-                            }
-                            const infoTop=Math.max(565,410+titleLines.slice(0,3).length*61);
-                            text('DATE / TIME',70,infoTop,26,'#94a3b8','left','500');
-                            text('LOCATION',830,infoTop,26,'#94a3b8','right','500');
-                            text(evt.date,70,infoTop+58,37);
-                            text(evt.time,70,infoTop+110,37);
-                            wrap(evt.location,370,34).slice(0,2).forEach((line,i)=>text(line,830,infoTop+58+i*44,34,'#1e293b','right'));
-                            const lineY=infoTop+170;
-                            ctx.strokeStyle='#e2e8f0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(70,lineY);ctx.lineTo(830,lineY);ctx.stroke();
-                            text('SEAT',70,lineY+70,26,'#94a3b8','left','500');
-                            text('TICKET PRICE',830,lineY+70,26,'#94a3b8','right','500');
-                            wrap(evt.seat||'無座席資訊',470,34).slice(0,2).forEach((line,i)=>text(line,70,lineY+132+i*43,34,color));
-                            text('$'+formatMoney(getTicketPrice(evt.expenses)),830,lineY+132,43,'#1e293b','right');
-                            const bottomY=Math.max(lineY+255,960);
-                            ctx.fillStyle='#f8fafc';ctx.fillRect(0,bottomY,W,H-bottomY);
-                            ctx.strokeStyle='#dbe3ee';ctx.setLineDash([15,11]);ctx.lineWidth=4;
-                            ctx.beginPath();ctx.moveTo(0,bottomY);ctx.lineTo(W,bottomY);ctx.stroke();ctx.setLineDash([]);
-                            const barsTop=bottomY+58,barH=125,barLeft=160,barRight=740;
-                            const widths=[3,1,2,2,4,1,2,1,3,2,1,2,4,1,3,1,2,3,1,2,4,1,2,1,3,2,1,4];
-                            ctx.fillStyle='#334155';
-                            let px=barLeft,index=0;
-                            while(px<barRight) {
-                                const width=widths[index%widths.length]*3;
-                                if(index%2===0)ctx.fillRect(px,barsTop,Math.min(width,barRight-px),barH);
-                                px+=width;index++;
-                            }
-                            text(evt.id?String(evt.id).slice(-8):'12345678',450,barsTop+170,28,'#475569','center','500');
-                            text('IDOL TRACKER EXCLUSIVE TICKET',450,barsTop+230,24,'#94a3b8','center','500');
-                            const image = canvas.toDataURL('image/png');
-                            ticketImagePreview.value = image;
-                            blob = await (await fetch(image)).blob();
-                        }
-                        if (mode === 'preview') return;
-                        const filename = (String(ticketEvent.value.date || '追星') + '_紀念票券.png').replace(/[\\/:*?"<>|]/g, '-');
-                        if (mode === 'share' && navigator.share && navigator.canShare) {
-                            const file = new File([blob], filename, {type:'image/png'});
-                            if (navigator.canShare({files:[file]})) {
-                                try { await navigator.share({files:[file], title:'我的追星紀念票券'}); return; }
-                                catch (err) { if (err.name === 'AbortError') return; }
-                            }
-                        }
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url; link.download = filename;
-                        document.body.appendChild(link); link.click(); link.remove();
-                        setTimeout(() => URL.revokeObjectURL(url), 60000);
-                    } catch (err) {
-                        console.error('票券圖片產生失敗', err);
-                        ticketImageError.value = '票券圖片產生失敗，請重新整理後再試。';
-                    } finally { ticketImageBusy.value = false; }
-                };
-
                 const isEditing = ref(false);
                 const isFandomEditing = ref(false); 
                 const editFandomIndex = ref(null); 
@@ -1562,9 +1424,6 @@ const initMap = (preserveView = false) => {
                 // Ticket Logic
                 const showTicket = (evt) => {
                     ticketEvent.value = evt;
-                    ticketCoverOverride.value = '';
-                    ticketImagePreview.value = '';
-                    ticketImageError.value = '';
                     showTicketModal.value = true;
                 }
 
@@ -2000,7 +1859,7 @@ const generateShareImageLegacy = () => {
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
-                    calendarEvent, ticketEvent, ticketImagePreview, ticketImageBusy, ticketImageError, ticketCoverOverride, loadTicketCover, generateTicketImage, isEditing, form, importJson, importMode, readImportFile, searchQuery,
+                    calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
