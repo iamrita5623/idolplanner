@@ -1200,44 +1200,46 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </div>
         </transition>
 
-        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0 overflow-hidden" :style="{width:'360px',height:'640px',boxSizing:'border-box',padding:'22px 22px 18px',background:recapPalette.background,color:recapPalette.ink,display:'block',position:'relative',fontFamily:'Arial, sans-serif'}">
-  <p style="font-size:11px;letter-spacing:3px;text-align:center;margin:0;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
-  <h2 style="font-size:60px;font-weight:900;line-height:1.08;letter-spacing:-3px;text-align:center;margin:28px 0 0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
-  <p style="font-size:11px;letter-spacing:2px;text-align:center;font-weight:800;margin:0 0 14px">THE YEAR I SHOWED UP</p>
-  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px">
-    <div style="height:96px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">✧ 追星回憶</p><p style="font-size:28px;font-weight:900;line-height:1;margin:0">{{ statsData.count }}</p><p style="font-size:11px;margin:3px 0 0">場回憶</p>
+        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Arial, sans-serif'}">
+  <p style="position:absolute;top:25px;left:0;width:100%;font-size:11px;letter-spacing:2.5px;text-align:center;margin:0;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
+  <h2 style="position:absolute;top:61px;left:0;width:100%;font-size:60px;font-weight:900;line-height:1.1;letter-spacing:-3px;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
+  <p style="position:absolute;top:132px;left:0;width:100%;font-size:11px;letter-spacing:2px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
+  <div style="position:absolute;top:160px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 4px;box-sizing:border-box;color:#342f35">
+      <p style="font-size:11px;margin:0 0 6px;white-space:nowrap">✧ 追星回憶</p><p style="font-size:27px;font-weight:900;line-height:1;margin:0">{{ statsData.count }}</p><p style="font-size:11px;margin:3px 0 0">場回憶</p>
     </div>
-    <div style="height:91px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">⌖ 到訪城市</p><p style="font-size:28px;font-weight:900;line-height:1;margin:0">{{ recapCities.length }}</p><p style="font-size:10px;line-height:1.25;margin:4px 0 0;max-height:25px;overflow:hidden">{{ recapCities.length ? recapCities.join(' · ') : '尚無資料' }}</p>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35">
+      <p style="font-size:11px;margin:0 0 6px;white-space:nowrap">⌖ 到訪城市</p><p style="font-size:27px;font-weight:900;line-height:1;margin:0">{{ recapCities.length }}</p><p style="font-size:9px;line-height:1.2;margin:4px 0 0;max-height:22px;overflow:hidden">{{ recapCities.length ? recapCities.join(' · ') : '尚無資料' }}</p>
     </div>
-    <div style="height:91px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 8px;white-space:nowrap">⌂ 最常去</p><p style="font-size:12px;font-weight:800;line-height:1.2;margin:0;height:30px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;margin:4px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35">
+      <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">⌂ 最常去</p><p style="font-size:11px;font-weight:800;line-height:1.2;margin:0;height:27px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;margin:3px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
     </div>
   </div>
-  <div style="background:white;border-radius:17px;padding:16px 17px 11px;color:#342f35;height:208px;box-sizing:border-box">
-    <h3 style="font-size:16px;font-weight:900;margin:0 0 16px">TOP 3 ARTISTS</h3>
+  <div style="position:absolute;top:259px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
+    <h3 style="font-size:15px;font-weight:900;line-height:20px;margin:0 0 12px">TOP 3 ARTISTS</h3>
     <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
-    <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="margin-bottom:13px">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;margin-bottom:5px">
+    <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="height:43px;box-sizing:border-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;height:22px;line-height:20px">
         <span style="display:flex;align-items:center;gap:7px;min-width:0;font-weight:800"><span :style="{background:i===0?'#d9bc79':i===1?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ i+1 }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap">{{ a.count }} 次見面</span>
       </div>
-      <div style="height:7px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'7px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
+      <div style="height:6px;margin-top:3px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
     </div>
   </div>
-  <div style="margin-top:15px">
-    <h3 style="font-size:11px;letter-spacing:1.5px;font-weight:900;margin:0 0 9px">MONTHLY ACTIVITY</h3>
-    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:47px;align-items:end">
+  <div style="position:absolute;top:449px;left:22px;right:22px;height:77px">
+    <h3 style="font-size:11px;letter-spacing:1.3px;font-weight:900;line-height:15px;margin:0 0 7px">MONTHLY ACTIVITY</h3>
+    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:37px;align-items:end">
       <div v-for="(n,i) in recapMonths" :key="i" style="height:100%;display:flex;align-items:flex-end"><div :style="{width:'100%',height:Math.max(5,n/recapMonthMax*100)+'%',background:'#383437',opacity:n?1:.18,borderRadius:'3px 3px 0 0'}"></div></div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:5px;text-align:center;font-size:7px">
+    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:5px;text-align:center;font-size:7px;line-height:10px">
       <span v-for="month in ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']" :key="month">{{ month }}</span>
     </div>
   </div>
-  <div style="position:absolute;left:22px;right:22px;bottom:44px;height:67px;border-radius:15px;background:radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439;overflow:hidden">
-    <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div><div style="position:absolute;left:0;right:0;bottom:0;height:24px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div><div style="position:absolute;left:0;right:0;bottom:0;height:7px;background:repeating-linear-gradient(90deg,#d9c8ed 0px,#d9c8ed 3px,transparent 3px,transparent 9px);opacity:.85"></div>
+  <div style="position:absolute;left:22px;right:22px;top:535px;height:56px;border-radius:15px;background:radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439;overflow:hidden">
+    <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:20px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div>
   </div>
-  <p style="position:absolute;bottom:17px;left:0;right:0;font-size:9px;letter-spacing:1.4px;text-align:center;margin:0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
+  <p style="position:absolute;top:598px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0;color:#55465e">這一年，因為每一次相見而閃閃發亮。</p>
+  <p style="position:absolute;top:620px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
 </div>
 <div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '顯示圖片・長按儲存' }}</button><div v-if="!shareImagePreview" class="w-full max-w-sm flex gap-2 shrink-0 pb-6"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
