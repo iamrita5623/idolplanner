@@ -2964,6 +2964,7 @@ const generateShareImageLegacy = () => {
                         if (document.fonts && document.fonts.ready) await document.fonts.ready;
                         await nextTick();
                         const width = element.getBoundingClientRect().width;
+                        if (!Number.isFinite(width) || width <= 0) throw new Error('分享模板尚未完成排版，請稍後再試');
                         const canvas = await html2canvas(element, {
                             useCORS: true,
                             backgroundColor: '#faf5fa',
