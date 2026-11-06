@@ -99,3 +99,17 @@
 .event-map-popup .leaflet-popup-content [style*="overflow-y:auto"]::-webkit-scrollbar { width: 5px; }
 .event-map-popup .leaflet-popup-content [style*="overflow-y:auto"]::-webkit-scrollbar-thumb { background: #a3a3a3; border-radius: 8px; }
 .event-map-popup .leaflet-popup-content [style*="overflow-y:auto"]::-webkit-scrollbar-track { background: transparent; }
+
+/* v1.1 mobile layout: protect bottom navigation and modal from narrow screens. */
+#app { min-height: 0; }
+#app > main { min-height: 0; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+.app-bottom-nav { gap: 4px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.app-bottom-nav > button { min-width: 0; flex: 1 1 0%; min-height: 44px; }
+.settings-modal-panel { width: min(20rem, calc(100vw - 24px)); max-height: min(85dvh, calc(100dvh - 24px)); }
+@media (max-width: 380px) {
+  .app-bottom-nav { padding-left: 8px; padding-right: 8px; }
+  .app-bottom-nav > button { width: auto; }
+}
+@media (max-height: 600px) {
+  .settings-modal-panel { max-height: calc(100dvh - 16px); }
+}
