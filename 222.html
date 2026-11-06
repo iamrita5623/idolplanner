@@ -950,6 +950,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
 
+<div class="border-b border-slate-100 pb-4 text-left"><label for="recap-home-city" class="block text-xs font-semibold text-slate-600 mb-2">年度回顧出發城市</label><input id="recap-home-city" v-model.trim="recapHomeCity" list="recap-home-cities" placeholder="例如：台北、首爾、東京" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" /><datalist id="recap-home-cities"><option v-for="city in recapKnownCities" :key="city" :value="city"></option></datalist><p class="text-[10px] text-slate-400 mt-2">只儲存在這台裝置；最遠追星依城市中心點直線距離估算。</p></div>
 <!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
 <div class="border-b border-slate-100 pb-4">
     <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
@@ -1206,17 +1207,23 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   <h2 style="position:absolute;top:35px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:58px;font-weight:500;line-height:68px;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
   <p style="position:absolute;top:110px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:1.7px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
   <div style="position:absolute;top:137px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
-    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 4px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;line-height:15px;margin:0 0 6px;white-space:nowrap">✧ 追星回憶</p><p style="font-size:27px;font-weight:900;line-height:30px;margin:0">{{ statsData.count }}</p><p style="font-size:11px;line-height:15px;margin:3px 0 0">場回憶</p>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35;display:grid;grid-template-rows:17px 32px 17px;align-content:center;min-width:0">
+      <p style="font-size:11px;line-height:17px;margin:0;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M3 8V5h18v3a4 4 0 0 0 0 8v3H3v-3a4 4 0 0 0 0-8Z"/><path d="M12 5v2m0 4v2m0 4v2"/></svg> 追星回憶</p>
+      <p style="font-size:27px;font-weight:900;line-height:32px;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden;overflow-wrap:anywhere">{{ statsData.count }}</p>
+      <p style="font-size:10px;line-height:17px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">場回憶</p>
     </div>
-    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;line-height:15px;margin:0 0 6px;white-space:nowrap">⌖ 到訪城市</p><p style="font-size:27px;font-weight:900;line-height:30px;margin:0">{{ recapCities.length }}</p><p style="font-size:9px;line-height:12px;margin:4px 0 0;max-height:24px;overflow:hidden">{{ recapCities.length ? recapCities.join(' · ') : '尚無資料' }}</p>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35;display:grid;grid-template-rows:17px 32px 17px;align-content:center;min-width:0">
+      <p style="font-size:11px;line-height:17px;margin:0;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="m22 2-8 20-4-8-8-4Z"/><path d="M22 2 10 14"/></svg> 最遠追星</p>
+      <p style="font-size:12px;font-weight:900;line-height:16px;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden;overflow-wrap:anywhere">{{ recapFarthestCity ? recapFarthestCity.city : '—' }}</p>
+      <p style="font-size:10px;line-height:17px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ recapFarthestCity ? recapFarthestCity.km.toLocaleString() + ' km' : (recapHomeCity ? '尚無城市資料' : '請先設定出發城市') }}</p>
     </div>
-    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">⌂ 最常去</p><p style="font-size:11px;font-weight:800;line-height:14px;margin:0;height:28px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;line-height:15px;margin:3px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:10px 3px;box-sizing:border-box;color:#342f35;display:grid;grid-template-rows:17px 32px 17px;align-content:center;min-width:0">
+      <p style="font-size:11px;line-height:17px;margin:0;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M3 21V8l9-5 9 5v13H3Z"/><path d="M3 10h18M9 21v-7h6v7"/></svg> 最常去</p>
+      <p style="font-size:12px;font-weight:900;line-height:16px;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '—' }}</p>
+      <p style="font-size:10px;line-height:17px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '尚無資料' }}</p>
     </div>
   </div>
-  <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
+    <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
     <h3 style="font-size:15px;font-weight:900;line-height:20px;margin:0 0 12px">TOP 3 ARTISTS</h3>
     <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
     <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="height:43px;box-sizing:border-box">
@@ -2240,6 +2247,27 @@ const recapVenueCity = (event) => {
   return '';
 };
 const recapCities = computed(() => { const rows = events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))); const cities = ['臺北','台北','新北','桃園','新竹','苗栗','臺中','台中','彰化','南投','雲林','嘉義','臺南','台南','高雄','屏東','宜蘭','花蓮','臺東','台東','基隆','澎湖','金門','連江','首爾','서울','Seoul','釜山','부산','Busan','仁川','인천','Incheon','大邱','대구','Daegu','東京','Tokyo','大阪','Osaka','名古屋','Nagoya','福岡','Fukuoka','橫濱','横浜','Yokohama','千葉','Chiba','埼玉','Saitama','札幌','Sapporo','神戶','神戸','Kobe','京都','Kyoto','廣島','広島','Hiroshima','仙台','Sendai','香港','Hong Kong','澳門','Macau','新加坡','Singapore','曼谷','Bangkok','台北','Taipei','高雄','Kaohsiung','倫敦','London','巴黎','Paris','紐約','New York','洛杉磯','Los Angeles','舊金山','San Francisco','芝加哥','Chicago','多倫多','Toronto','溫哥華','Vancouver','雪梨','Sydney','墨爾本','Melbourne','馬尼拉','Manila','吉隆坡','Kuala Lumpur','雅加達','Jakarta']; const normalized = new Set(); rows.forEach(e => { const location = String(e.location || ''); const city = cities.find(c => location.toLowerCase().includes(c.toLowerCase())); if(city || recapVenueCity(e)) { const aliases = {'서울':'首爾','Seoul':'首爾','부산':'釜山','Busan':'釜山','인천':'仁川','Incheon':'仁川','대구':'大邱','Daegu':'大邱','Tokyo':'東京','Osaka':'大阪','Nagoya':'名古屋','Fukuoka':'福岡','横浜':'橫濱','Yokohama':'橫濱','Chiba':'千葉','Saitama':'埼玉','Sapporo':'札幌','神戸':'神戶','Kobe':'神戶','Kyoto':'京都','広島':'廣島','Hiroshima':'廣島','Sendai':'仙台','Hong Kong':'香港','Macau':'澳門','Singapore':'新加坡','Bangkok':'曼谷','Taipei':'台北','Kaohsiung':'高雄','London':'倫敦','Paris':'巴黎','New York':'紐約','Los Angeles':'洛杉磯','San Francisco':'舊金山','Chicago':'芝加哥','Toronto':'多倫多','Vancouver':'溫哥華','Sydney':'雪梨','Melbourne':'墨爾本','Manila':'馬尼拉','Kuala Lumpur':'吉隆坡','Jakarta':'雅加達'}; normalized.add((aliases[city] || city || recapVenueCity(e)).replace('臺','台')); } }); return [...normalized]; });
+const recapHomeCity = ref(localStorage.getItem('idolRecapHomeCity') || '');
+watch(recapHomeCity, city => localStorage.setItem('idolRecapHomeCity', city));
+const recapCityCoordinates = {
+'台北':[25.033,121.565],'新北':[25.012,121.465],'桃園':[24.993,121.301],'新竹':[24.804,120.971],'苗栗':[24.56,120.82],'台中':[24.147,120.673],'彰化':[24.075,120.542],'南投':[23.915,120.684],'雲林':[23.709,120.541],'嘉義':[23.48,120.449],'台南':[22.999,120.227],'高雄':[22.627,120.301],'屏東':[22.676,120.494],'宜蘭':[24.757,121.753],'花蓮':[23.987,121.601],'台東':[22.758,121.144],'基隆':[25.128,121.741],'澎湖':[23.568,119.566],'金門':[24.449,118.376],'連江':[26.16,119.95],
+'首爾':[37.5665,126.978],'釜山':[35.1796,129.0756],'仁川':[37.456,126.705],'大邱':[35.871,128.602],'東京':[35.676,139.65],'大阪':[34.694,135.502],'名古屋':[35.181,136.907],'福岡':[33.59,130.402],'橫濱':[35.444,139.638],'千葉':[35.607,140.106],'埼玉':[35.861,139.645],'札幌':[43.062,141.354],'神戶':[34.691,135.195],'京都':[35.012,135.768],'廣島':[34.385,132.455],'仙台':[38.268,140.869],
+'香港':[22.319,114.169],'澳門':[22.199,113.543],'新加坡':[1.352,103.82],'曼谷':[13.756,100.502],'倫敦':[51.507,-0.128],'巴黎':[48.857,2.352],'紐約':[40.713,-74.006],'洛杉磯':[34.052,-118.244],'舊金山':[37.775,-122.419],'芝加哥':[41.878,-87.63],'多倫多':[43.653,-79.383],'溫哥華':[49.283,-123.121],'雪梨':[-33.869,151.209],'墨爾本':[-37.814,144.963],'馬尼拉':[14.6,120.984],'吉隆坡':[3.139,101.687],'雅加達':[-6.208,106.846]
+};
+const recapCityAliases = {'臺北':'台北','臺中':'台中','臺南':'台南','臺東':'台東','台北市':'台北','臺北市':'台北','台中市':'台中','臺中市':'台中','台南市':'台南','臺南市':'台南','高雄市':'高雄','서울':'首爾','Seoul':'首爾','부산':'釜山','Busan':'釜山','인천':'仁川','Incheon':'仁川','대구':'大邱','Daegu':'大邱','Tokyo':'東京','Osaka':'大阪','Nagoya':'名古屋','Fukuoka':'福岡','横浜':'橫濱','Yokohama':'橫濱','Chiba':'千葉','Saitama':'埼玉','Sapporo':'札幌','神戸':'神戶','Kobe':'神戶','Kyoto':'京都','広島':'廣島','Hiroshima':'廣島','Sendai':'仙台','Hong Kong':'香港','Macau':'澳門','Singapore':'新加坡','Bangkok':'曼谷','Taipei':'台北','Kaohsiung':'高雄','London':'倫敦','Paris':'巴黎','New York':'紐約','Los Angeles':'洛杉磯','San Francisco':'舊金山','Chicago':'芝加哥','Toronto':'多倫多','Vancouver':'溫哥華','Sydney':'雪梨','Melbourne':'墨爾本','Manila':'馬尼拉','Kuala Lumpur':'吉隆坡','Jakarta':'雅加達'};
+const recapKnownCities = Object.keys(recapCityCoordinates);
+const recapNormalizeCity = input => { const value=String(input||'').trim(); if(!value) return ''; const alias=Object.keys(recapCityAliases).find(k=>k.toLowerCase()===value.toLowerCase()); const normalized=alias?recapCityAliases[alias]:value.replace(/臺/g,'台'); return Object.keys(recapCityCoordinates).find(k=>k.toLowerCase()===normalized.toLowerCase()) || ''; };
+const recapFarthestCity = computed(() => {
+  const home=recapCityCoordinates[recapNormalizeCity(recapHomeCity.value)]; if(!home) return null;
+  let best=null;
+  for(const cityName of recapCities.value) {
+    const city=recapNormalizeCity(cityName), coords=recapCityCoordinates[city];
+    if(!coords) continue;
+    const km=Math.round(calculateKm(home[0],home[1],coords[0],coords[1]));
+    if(!best || km>best.km) best={city,km};
+  }
+  return best;
+});
 const recapTopVenue = computed(() => { const counts = new Map(); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const raw=String(e.location || '').trim(); if (!raw) return; const key=raw.replace(/臺/g,'台').replace(/\s+/g,' ').trim(); const entry=counts.get(key) || {name:key,count:0}; entry.count++; counts.set(key,entry); }); return [...counts.values()].sort((a,b)=>b.count-a.count || a.name.localeCompare(b.name,'zh-Hant'))[0] || null; });
 const recapMonths = computed(() => { const months = Array(12).fill(0); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const m = Number(String(e.date || '').slice(5,7)); if(m>=1 && m<=12) months[m-1]++; }); return months; });
 const recapMonthMax = computed(() => Math.max(1,...recapMonths.value));
@@ -3090,7 +3118,7 @@ const generateShareImageLegacy = () => {
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
-                    getEventColor, emotionalSummary, recapCities, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, isSearching, searchError, mappedEventsCount, missingCoordsCount,
+                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, isSearching, searchError, mappedEventsCount, missingCoordsCount,
     
                     downloadBackup, restoreBackup, idolNagging, showCalendarOptions, addToiCal, addToGoogleCalendar, showTicket, getTicketPrice, updateAppTitle,
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
