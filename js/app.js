@@ -948,18 +948,44 @@ const availableYears = computed(() => {
 // City labels also recognize known venues and saved map coordinates, not only city words in the venue name.
 const recapVenueCity = (event) => {
   const place = String(event.location || '').toLowerCase().replace(/\s+/g,'');
-  const venues = [['台北','台北大巨蛋','臺北大巨蛋','taipeidome','台北小巨蛋','臺北小巨蛋','taipeiarena','國家體育場'],['高雄','高雄巨蛋','高雄流行音樂中心','高流','世運主場館','kaohsiungarena'],['桃園','桃園巨蛋','桃園體育館'],['台中','台中洲際','臺中洲際','台中巨蛋','臺中巨蛋'],['新北','新莊體育館','新北市工商展覽中心']];
+  const venues = [
+    ['首爾','kspodome','olympicgymnasticsarena','olympicpark','olympichall','jamsilstadium','jamsilindoorstadium','jamsilarena','gocheokskydome','gocheokdome','高尺天空巨蛋','蠶室','蚕室','잠실','고척','올림픽공원','올림픽체조경기장','체조경기장','ks포돔'],
+    ['台北','台北大巨蛋','臺北大巨蛋','taipeidome','台北小巨蛋','臺北小巨蛋','taipeiarena'],
+    ['高雄','高雄巨蛋','高雄流行音樂中心','高流','世運主場館','kaohsiungarena'],
+    ['桃園','桃園巨蛋','桃園體育館'],
+    ['台中','台中洲際','臺中洲際','台中巨蛋','臺中巨蛋'],
+    ['新北','新莊體育館','新北市工商展覽中心']
+  ];
   for (const [city,...names] of venues) if(names.some(name=>place.includes(name.toLowerCase()))) return city;
-  const lat=Number(event.lat),lng=Number(event.lng);
-  if (!Number.isFinite(lat)||!Number.isFinite(lng)||!lat||!lng) return '';
-  if(lat>=24.96&&lat<=25.22&&lng>=121.43&&lng<=121.67) return '台北';
-  if(lat>=24.75&&lat<=25.32&&lng>=121.25&&lng<=121.85) return '新北';
-  if(lat>=24.78&&lat<=25.12&&lng>=120.95&&lng<=121.45) return '桃園';
-  if(lat>=24.05&&lat<=24.35&&lng>=120.50&&lng<=120.85) return '台中';
-  if(lat>=22.48&&lat<=22.85&&lng>=120.20&&lng<=120.48) return '高雄';
   return '';
 };
-const recapCities = computed(() => { const rows = events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))); const cities = ['臺北','台北','新北','桃園','新竹','苗栗','臺中','台中','彰化','南投','雲林','嘉義','臺南','台南','高雄','屏東','宜蘭','花蓮','臺東','台東','基隆','澎湖','金門','連江','首爾','서울','Seoul','釜山','부산','Busan','仁川','인천','Incheon','大邱','대구','Daegu','東京','Tokyo','大阪','Osaka','名古屋','Nagoya','福岡','Fukuoka','橫濱','横浜','Yokohama','千葉','Chiba','埼玉','Saitama','札幌','Sapporo','神戶','神戸','Kobe','京都','Kyoto','廣島','広島','Hiroshima','仙台','Sendai','香港','Hong Kong','澳門','Macau','新加坡','Singapore','曼谷','Bangkok','台北','Taipei','高雄','Kaohsiung','倫敦','London','巴黎','Paris','紐約','New York','洛杉磯','Los Angeles','舊金山','San Francisco','芝加哥','Chicago','多倫多','Toronto','溫哥華','Vancouver','雪梨','Sydney','墨爾本','Melbourne','馬尼拉','Manila','吉隆坡','Kuala Lumpur','雅加達','Jakarta']; const normalized = new Set(); rows.forEach(e => { const location = String(e.location || ''); const city = cities.find(c => location.toLowerCase().includes(c.toLowerCase())); if(city || recapVenueCity(e)) { const aliases = {'서울':'首爾','Seoul':'首爾','부산':'釜山','Busan':'釜山','인천':'仁川','Incheon':'仁川','대구':'大邱','Daegu':'大邱','Tokyo':'東京','Osaka':'大阪','Nagoya':'名古屋','Fukuoka':'福岡','横浜':'橫濱','Yokohama':'橫濱','Chiba':'千葉','Saitama':'埼玉','Sapporo':'札幌','神戸':'神戶','Kobe':'神戶','Kyoto':'京都','広島':'廣島','Hiroshima':'廣島','Sendai':'仙台','Hong Kong':'香港','Macau':'澳門','Singapore':'新加坡','Bangkok':'曼谷','Taipei':'台北','Kaohsiung':'高雄','London':'倫敦','Paris':'巴黎','New York':'紐約','Los Angeles':'洛杉磯','San Francisco':'舊金山','Chicago':'芝加哥','Toronto':'多倫多','Vancouver':'溫哥華','Sydney':'雪梨','Melbourne':'墨爾本','Manila':'馬尼拉','Kuala Lumpur':'吉隆坡','Jakarta':'雅加達'}; normalized.add((aliases[city] || city || recapVenueCity(e)).replace('臺','台')); } }); return [...normalized]; });
+const recapCities = computed(() => {
+  const rows = events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value)));
+  const recognized = new Set();
+  const names = [...Object.keys(recapCityAliases), ...Object.keys(recapCityCoordinates)].sort((a,b)=>b.length-a.length);
+  for (const event of rows) {
+    const location = String(event.location || '').trim();
+    // First use explicit city names, including multilingual aliases and full addresses.
+    const match = names.find(name => location.toLowerCase().includes(name.toLowerCase()));
+    let city = match ? recapNormalizeCity(match) : '';
+    if (!city) city = recapVenueCity(event);
+    // Event map coordinates also identify cities when a venue name does not include one.
+    if (!city && event.lat != null && event.lng != null && String(event.lat).trim() !== '' && String(event.lng).trim() !== '') {
+      const lat = Number(event.lat), lng = Number(event.lng);
+      if (Number.isFinite(lat) && Number.isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 && (lat !== 0 || lng !== 0)) {
+        let nearest = '', nearestKm = Infinity;
+        for (const [name, coords] of Object.entries(recapCityCoordinates)) {
+          const km = calculateKm(lat,lng,coords[0],coords[1]);
+          if (km < nearestKm) { nearest = name; nearestKm = km; }
+        }
+        // Limit approximation to nearby known cities; don't assign remote events to an unrelated city.
+        if (nearestKm <= 55) city = nearest;
+      }
+    }
+    if (city) recognized.add(city);
+  }
+  return [...recognized];
+});
 const recapHomeCity = ref(localStorage.getItem('idolRecapHomeCity') || '');
 watch(recapHomeCity, city => localStorage.setItem('idolRecapHomeCity', city));
 const recapCityCoordinates = {
