@@ -1200,18 +1200,7 @@ const idolNagging = computed(() => {
 
                 const mappedEventsCount = computed(() => events.value.filter(e => e.lat && e.lng).length);
                 const missingCoordsCount = computed(() => events.value.length - mappedEventsCount.value);
-                const calculateTotal = (expenses) => expenses ? expenses.reduce((sum, i) => sum + (Number(i.amount)||0), 0) : 0;
-                const getTicketPrice = (expenses) => {
-                    if (!expenses || !Array.isArray(expenses)) return 0;
-                    return expenses.reduce((sum, item) => {
-                        const name = item.item ? item.item.toLowerCase() : '';
-                        if (name.includes('門票') || name.includes('ticket')) {
-                            return sum + (Number(item.amount) || 0);
-                        }
-                        return sum;
-                    }, 0);
-                };
-
+                const { calculateTotal, getTicketPrice } = window.IdolPlannerEvents;
                 const addExpenseItem = (n) => form.value.expenses.push({ item: n, amount: '' });
                 const removeExpenseItem = (i) => form.value.expenses.splice(i, 1);
                 const addChecklistItem = () => form.value.checklist.push({ text: '', checked: false });
@@ -1737,11 +1726,7 @@ const initMap = (preserveView = false) => {
                     reader.readAsDataURL(file);
                 };
                 
-                const formatMoney = (v) => v ? v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
-                const getDay = (d) => new Date(d).getDate();
-                const getMonth = (d) => ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"][new Date(d).getMonth()];
-                const getDaysDiff = (d) => Math.ceil((new Date(d).setHours(0,0,0,0) - new Date().setHours(0,0,0,0))/(1000*60*60*24));
-
+                const { formatMoney, getDay, getMonth, getDaysDiff } = window.IdolPlannerEvents;
 
 const generateShareImageLegacy = () => {
     const element = document.getElementById('share-template');
