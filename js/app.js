@@ -203,9 +203,21 @@ const openImportModal = () => { showImportModal.value = true; };
                             if (document.fonts && document.fonts.ready) await document.fonts.ready;
                             const element = document.getElementById('ticket-image-template');
                             if (!element || !window.htmlToImage || !window.htmlToImage.toCanvas) throw new Error('票券圖片工具尚未載入');
-                            const canvas = await window.htmlToImage.toCanvas(element, {
+                            const captureOptions = {
                                 pixelRatio: 3, backgroundColor: '#ffffff', cacheBust: true
-                            });
+                            };
+                            let canvas;
+                            try {
+                                canvas = await window.htmlToImage.toCanvas(element, captureOptions);
+                            } catch (coverError) {
+                                // External cover hosts may reject image embedding on Safari.
+                                // Retry without the cover only; preserve all ticket text and data.
+                                console.warn('票券封面無法嵌入，改以應援色背景製作票券', coverError);
+                                canvas = await window.htmlToImage.toCanvas(element, {
+                                    ...captureOptions,
+                                    filter: node => !(node.tagName === 'IMG' && node.closest && node.closest('#ticket-image-template'))
+                                });
+                            }
                             const image = canvas.toDataURL('image/png');
                             ticketImagePreview.value = image;
                             blob = await (await fetch(image)).blob();
@@ -226,7 +238,7 @@ const openImportModal = () => { showImportModal.value = true; };
                         setTimeout(() => URL.revokeObjectURL(url), 60000);
                     } catch (err) {
                         console.error('票券圖片產生失敗', err);
-                        ticketImageError.value = '票券圖片產生失敗，請重試；若有外部封面圖片，請檢查圖片是否允許跨網域存取。';
+                        ticketImageError.value = '票券圖片產生失敗，請重新整理後再試。';
                     } finally { ticketImageBusy.value = false; }
                 };
 
