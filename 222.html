@@ -1200,44 +1200,44 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </div>
         </transition>
 
-        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0 overflow-hidden" :style="{width:'360px',height:'640px',boxSizing:'border-box',padding:'22px 22px 18px',background:recapPalette.background,color:recapPalette.ink,display:'flex',flexDirection:'column',fontFamily:'Arial, sans-serif'}">
-  <p style="font-size:11px;letter-spacing:3px;text-align:center;margin:0 0 15px;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
-  <h2 style="font-size:60px;font-weight:900;line-height:1;letter-spacing:-3px;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
-  <p style="font-size:11px;letter-spacing:2px;text-align:center;font-weight:800;margin:1px 0 12px">THE YEAR I SHOWED UP</p>
+        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0 overflow-hidden" :style="{width:'360px',height:'640px',boxSizing:'border-box',padding:'22px 22px 18px',background:recapPalette.background,color:recapPalette.ink,display:'block',position:'relative',fontFamily:'Arial, sans-serif'}">
+  <p style="font-size:11px;letter-spacing:3px;text-align:center;margin:0;white-space:nowrap">IDOL PLANNER · MY YEAR IN MUSIC</p>
+  <h2 style="font-size:60px;font-weight:900;line-height:1.08;letter-spacing:-3px;text-align:center;margin:28px 0 0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
+  <p style="font-size:11px;letter-spacing:2px;text-align:center;font-weight:800;margin:0 0 14px">THE YEAR I SHOWED UP</p>
   <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px">
-    <div style="height:91px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
+    <div style="height:96px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
       <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">✧ 追星回憶</p><p style="font-size:28px;font-weight:900;line-height:1;margin:0">{{ statsData.count }}</p><p style="font-size:11px;margin:3px 0 0">場回憶</p>
     </div>
     <div style="height:91px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
       <p style="font-size:11px;margin:0 0 7px;white-space:nowrap">⌖ 到訪城市</p><p style="font-size:28px;font-weight:900;line-height:1;margin:0">{{ recapCities.length }}</p><p style="font-size:10px;line-height:1.25;margin:4px 0 0;max-height:25px;overflow:hidden">{{ recapCities.length ? recapCities.join(' · ') : '尚無資料' }}</p>
     </div>
     <div style="height:91px;background:white;border-radius:15px;text-align:center;padding:10px 5px;box-sizing:border-box;color:#342f35">
-      <p style="font-size:11px;margin:0 0 8px;white-space:nowrap">⌂ 最常去</p><p style="font-size:12px;font-weight:800;line-height:1.2;margin:0;height:29px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;margin:4px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
+      <p style="font-size:11px;margin:0 0 8px;white-space:nowrap">⌂ 最常去</p><p style="font-size:12px;font-weight:800;line-height:1.2;margin:0;height:30px;overflow:hidden;overflow-wrap:anywhere">{{ recapTopVenue ? recapTopVenue.name : '尚無資料' }}</p><p style="font-size:11px;margin:4px 0 0">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '' }}</p>
     </div>
   </div>
-  <div style="background:white;border-radius:17px;padding:16px 17px 11px;color:#342f35;min-height:208px;box-sizing:border-box">
+  <div style="background:white;border-radius:17px;padding:16px 17px 11px;color:#342f35;height:208px;box-sizing:border-box">
     <h3 style="font-size:16px;font-weight:900;margin:0 0 16px">TOP 3 ARTISTS</h3>
     <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
-    <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="margin-bottom:15px">
+    <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="margin-bottom:13px">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;margin-bottom:5px">
         <span style="display:flex;align-items:center;gap:7px;min-width:0;font-weight:800"><span :style="{background:i===0?'#d9bc79':i===1?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ i+1 }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap">{{ a.count }} 次見面</span>
       </div>
       <div style="height:7px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'7px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
     </div>
   </div>
-  <div style="margin-top:16px">
+  <div style="margin-top:15px">
     <h3 style="font-size:11px;letter-spacing:1.5px;font-weight:900;margin:0 0 9px">MONTHLY ACTIVITY</h3>
-    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:54px;align-items:end">
+    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:47px;align-items:end">
       <div v-for="(n,i) in recapMonths" :key="i" style="height:100%;display:flex;align-items:flex-end"><div :style="{width:'100%',height:Math.max(5,n/recapMonthMax*100)+'%',background:'#383437',opacity:n?1:.18,borderRadius:'3px 3px 0 0'}"></div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:5px;text-align:center;font-size:7px">
       <span v-for="month in ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']" :key="month">{{ month }}</span>
     </div>
   </div>
-  <div style="margin-top:auto;height:58px;border-radius:15px;background:radial-gradient(ellipse at 35% 15%,#8d7aab,transparent 60%),radial-gradient(ellipse at 85% 30%,#bd8a9c,transparent 55%),#272439;display:flex;align-items:center;justify-content:space-around;color:#eee5f3;font-size:27px">
-    <span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span>
+  <div style="position:absolute;left:22px;right:22px;bottom:44px;height:67px;border-radius:15px;background:radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439;overflow:hidden">
+    <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div><div style="position:absolute;left:0;right:0;bottom:0;height:24px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div><div style="position:absolute;left:0;right:0;bottom:0;height:7px;background:repeating-linear-gradient(90deg,#d9c8ed 0px,#d9c8ed 3px,transparent 3px,transparent 9px);opacity:.85"></div>
   </div>
-  <p style="font-size:10px;letter-spacing:1.6px;text-align:center;margin:12px 0 0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
+  <p style="position:absolute;bottom:17px;left:0;right:0;font-size:9px;letter-spacing:1.4px;text-align:center;margin:0">EVERY MOMENT MATTERS · IDOL PLANNER</p>
 </div>
 <div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '顯示圖片・長按儲存' }}</button><div v-if="!shareImagePreview" class="w-full max-w-sm flex gap-2 shrink-0 pb-6"><button @click="generateShareImage('download')" :disabled="shareBusy" class="flex-1 rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '儲存 PNG' }}</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="flex-1 rounded-xl text-white p-3 text-sm font-bold" :style="{backgroundColor:themeColor}">{{ shareBusy ? '製作中…' : '分享圖片' }}</button></div></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
@@ -2206,7 +2206,21 @@ const availableYears = computed(() => {
                     };
                 });
 
-const recapCities = computed(() => { const rows = events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))); const cities = ['臺北','台北','新北','桃園','新竹','苗栗','臺中','台中','彰化','南投','雲林','嘉義','臺南','台南','高雄','屏東','宜蘭','花蓮','臺東','台東','基隆','澎湖','金門','連江','首爾','서울','Seoul','釜山','부산','Busan','仁川','인천','Incheon','大邱','대구','Daegu','東京','Tokyo','大阪','Osaka','名古屋','Nagoya','福岡','Fukuoka','橫濱','横浜','Yokohama','千葉','Chiba','埼玉','Saitama','札幌','Sapporo','神戶','神戸','Kobe','京都','Kyoto','廣島','広島','Hiroshima','仙台','Sendai','香港','Hong Kong','澳門','Macau','新加坡','Singapore','曼谷','Bangkok','台北','Taipei','高雄','Kaohsiung','倫敦','London','巴黎','Paris','紐約','New York','洛杉磯','Los Angeles','舊金山','San Francisco','芝加哥','Chicago','多倫多','Toronto','溫哥華','Vancouver','雪梨','Sydney','墨爾本','Melbourne','馬尼拉','Manila','吉隆坡','Kuala Lumpur','雅加達','Jakarta']; const normalized = new Set(); rows.forEach(e => { const location = String(e.location || ''); const city = cities.find(c => location.toLowerCase().includes(c.toLowerCase())); if(city) { const aliases = {'서울':'首爾','Seoul':'首爾','부산':'釜山','Busan':'釜山','인천':'仁川','Incheon':'仁川','대구':'大邱','Daegu':'大邱','Tokyo':'東京','Osaka':'大阪','Nagoya':'名古屋','Fukuoka':'福岡','横浜':'橫濱','Yokohama':'橫濱','Chiba':'千葉','Saitama':'埼玉','Sapporo':'札幌','神戸':'神戶','Kobe':'神戶','Kyoto':'京都','広島':'廣島','Hiroshima':'廣島','Sendai':'仙台','Hong Kong':'香港','Macau':'澳門','Singapore':'新加坡','Bangkok':'曼谷','Taipei':'台北','Kaohsiung':'高雄','London':'倫敦','Paris':'巴黎','New York':'紐約','Los Angeles':'洛杉磯','San Francisco':'舊金山','Chicago':'芝加哥','Toronto':'多倫多','Vancouver':'溫哥華','Sydney':'雪梨','Melbourne':'墨爾本','Manila':'馬尼拉','Kuala Lumpur':'吉隆坡','Jakarta':'雅加達'}; normalized.add((aliases[city] || city).replace('臺','台')); } }); return [...normalized]; });
+// City labels also recognize known venues and saved map coordinates, not only city words in the venue name.
+const recapVenueCity = (event) => {
+  const place = String(event.location || '').toLowerCase().replace(/\s+/g,'');
+  const venues = [['台北','台北大巨蛋','臺北大巨蛋','taipeidome','台北小巨蛋','臺北小巨蛋','taipeiarena','國家體育場'],['高雄','高雄巨蛋','高雄流行音樂中心','高流','世運主場館','kaohsiungarena'],['桃園','桃園巨蛋','桃園體育館'],['台中','台中洲際','臺中洲際','台中巨蛋','臺中巨蛋'],['新北','新莊體育館','新北市工商展覽中心']];
+  for (const [city,...names] of venues) if(names.some(name=>place.includes(name.toLowerCase()))) return city;
+  const lat=Number(event.lat),lng=Number(event.lng);
+  if (!Number.isFinite(lat)||!Number.isFinite(lng)||!lat||!lng) return '';
+  if(lat>=24.96&&lat<=25.22&&lng>=121.43&&lng<=121.67) return '台北';
+  if(lat>=24.75&&lat<=25.32&&lng>=121.25&&lng<=121.85) return '新北';
+  if(lat>=24.78&&lat<=25.12&&lng>=120.95&&lng<=121.45) return '桃園';
+  if(lat>=24.05&&lat<=24.35&&lng>=120.50&&lng<=120.85) return '台中';
+  if(lat>=22.48&&lat<=22.85&&lng>=120.20&&lng<=120.48) return '高雄';
+  return '';
+};
+const recapCities = computed(() => { const rows = events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))); const cities = ['臺北','台北','新北','桃園','新竹','苗栗','臺中','台中','彰化','南投','雲林','嘉義','臺南','台南','高雄','屏東','宜蘭','花蓮','臺東','台東','基隆','澎湖','金門','連江','首爾','서울','Seoul','釜山','부산','Busan','仁川','인천','Incheon','大邱','대구','Daegu','東京','Tokyo','大阪','Osaka','名古屋','Nagoya','福岡','Fukuoka','橫濱','横浜','Yokohama','千葉','Chiba','埼玉','Saitama','札幌','Sapporo','神戶','神戸','Kobe','京都','Kyoto','廣島','広島','Hiroshima','仙台','Sendai','香港','Hong Kong','澳門','Macau','新加坡','Singapore','曼谷','Bangkok','台北','Taipei','高雄','Kaohsiung','倫敦','London','巴黎','Paris','紐約','New York','洛杉磯','Los Angeles','舊金山','San Francisco','芝加哥','Chicago','多倫多','Toronto','溫哥華','Vancouver','雪梨','Sydney','墨爾本','Melbourne','馬尼拉','Manila','吉隆坡','Kuala Lumpur','雅加達','Jakarta']; const normalized = new Set(); rows.forEach(e => { const location = String(e.location || ''); const city = cities.find(c => location.toLowerCase().includes(c.toLowerCase())); if(city || recapVenueCity(e)) { const aliases = {'서울':'首爾','Seoul':'首爾','부산':'釜山','Busan':'釜山','인천':'仁川','Incheon':'仁川','대구':'大邱','Daegu':'大邱','Tokyo':'東京','Osaka':'大阪','Nagoya':'名古屋','Fukuoka':'福岡','横浜':'橫濱','Yokohama':'橫濱','Chiba':'千葉','Saitama':'埼玉','Sapporo':'札幌','神戸':'神戶','Kobe':'神戶','Kyoto':'京都','広島':'廣島','Hiroshima':'廣島','Sendai':'仙台','Hong Kong':'香港','Macau':'澳門','Singapore':'新加坡','Bangkok':'曼谷','Taipei':'台北','Kaohsiung':'高雄','London':'倫敦','Paris':'巴黎','New York':'紐約','Los Angeles':'洛杉磯','San Francisco':'舊金山','Chicago':'芝加哥','Toronto':'多倫多','Vancouver':'溫哥華','Sydney':'雪梨','Melbourne':'墨爾本','Manila':'馬尼拉','Kuala Lumpur':'吉隆坡','Jakarta':'雅加達'}; normalized.add((aliases[city] || city || recapVenueCity(e)).replace('臺','台')); } }); return [...normalized]; });
 const recapTopVenue = computed(() => { const counts = new Map(); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const raw=String(e.location || '').trim(); if (!raw) return; const key=raw.replace(/臺/g,'台').replace(/\s+/g,' ').trim(); const entry=counts.get(key) || {name:key,count:0}; entry.count++; counts.set(key,entry); }); return [...counts.values()].sort((a,b)=>b.count-a.count || a.name.localeCompare(b.name,'zh-Hant'))[0] || null; });
 const recapMonths = computed(() => { const months = Array(12).fill(0); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const m = Number(String(e.date || '').slice(5,7)); if(m>=1 && m<=12) months[m-1]++; }); return months; });
 const recapMonthMax = computed(() => Math.max(1,...recapMonths.value));
