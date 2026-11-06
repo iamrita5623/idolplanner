@@ -950,7 +950,6 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
 
-<div class="border-b border-slate-100 pb-4 text-left"><label for="recap-home-city" class="block text-xs font-semibold text-slate-600 mb-2">年度回顧出發城市</label><input id="recap-home-city" v-model.trim="recapHomeCity" list="recap-home-cities" placeholder="例如：台北、首爾、東京" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" /><datalist id="recap-home-cities"><option v-for="city in recapKnownCities" :key="city" :value="city"></option></datalist><p class="text-[10px] text-slate-400 mt-2">只儲存在這台裝置；最遠追星依城市中心點直線距離估算。</p></div>
 <!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
 <div class="border-b border-slate-100 pb-4">
     <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
@@ -984,6 +983,14 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
                     <input type="text" v-model="customTitle" @change="updateAppTitle" placeholder="追星日記 ✨"
                          class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
+                </div>
+
+                <div class="border-b border-slate-100 pb-4">
+                    <label for="recap-home-city" class="block text-xs font-medium text-slate-500 mb-2">年度回顧出發城市</label>
+                    <input id="recap-home-city" v-model.trim="recapHomeCity" list="recap-home-cities" placeholder="例如：台北、首爾、東京"
+                           class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
+                    <datalist id="recap-home-cities"><option v-for="city in recapKnownCities" :key="city" :value="city"></option></datalist>
+                    <p class="text-[10px] text-slate-400 mt-2 italic">※ 出發城市只儲存在此裝置；距離以城市中心點直線估算。</p>
                 </div>
 
                 <div class="border-b border-slate-100 pb-4">
@@ -1228,7 +1235,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
     <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="height:43px;box-sizing:border-box">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;height:22px;line-height:20px">
-        <span style="display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto;font-weight:800"><span :style="{background:i===0?'#d9bc79':i===1?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ i+1 }}</span><span style="display:block;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap;flex:0 0 auto">{{ a.count }} 次見面</span>
+        <span style="display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto;font-weight:800"><span :style="{background:a.count===statsData.topArtists[0].count?'#d9bc79':a.count===statsData.topArtists[1]?.count?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ statsData.topArtists.findIndex(artist => artist.count === a.count) + 1 }}</span><span style="display:block;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap;flex:0 0 auto">{{ a.count }} 次見面</span>
       </div>
       <div style="height:6px;margin-top:3px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
     </div>
