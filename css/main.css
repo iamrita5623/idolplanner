@@ -144,3 +144,12 @@
 @media (max-width: 639px) {
   .changelog-modal-panel { padding-left: 16px; padding-right: 16px; }
 }
+
+/* Ticket image: barcode stays consistent even if web fonts fail to load. */
+.ticket-barcode-graphic {
+  width: min(100%, 240px);
+  height: 52px;
+  margin: 0 auto;
+  background: repeating-linear-gradient(90deg, #334155 0 2px, transparent 2px 4px, #334155 4px 5px, transparent 5px 8px, #334155 8px 12px, transparent 12px 15px, #334155 15px 17px, transparent 17px 20px);
+}
+.ticket-barcode-number { margin-top: 3px; font: 500 12px/18px monospace; letter-spacing: 5px; color: #475569; }
