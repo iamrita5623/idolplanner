@@ -1395,7 +1395,7 @@ const openImportModal = () => { showImportModal.value = true; };
                 const shareBusy = ref(false);
                 const shareError = ref('');
                 const shareImagePreview = ref('');
-                const openSharePreview = () => { shareImagePreview.value = ''; shareError.value = ''; selectedMapYear.value = selectedYear.value; showShareModal.value = true; };
+                const openSharePreview = () => { shareImagePreview.value = ''; shareError.value = ''; showShareModal.value = true; };
                 const shareDistanceAvailable = computed(() => events.value.filter(e => (selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))) && e.lat != null && e.lng != null).length >= 2);
                 const shareDistanceLabel = computed(() => shareDistanceAvailable.value ? String(totalDistance.value) : '—'); 
                 const showTicketModal = ref(false);
