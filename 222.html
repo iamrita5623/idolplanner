@@ -1082,6 +1082,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                             </div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
+                            <p v-if="/kspo|체조경기장/i.test(form.location || '')" class="text-xs text-slate-600 mt-2">KSPO DOME 地圖定位建議使用 <button type="button" class="font-bold underline text-blue-700" @click="form.location = '올림픽체조경기장'; searchError = ''">올림픽체조경기장（點此填入）</button>。只會修改目前編輯中的地點欄位，儲存前可再確認。</p>
                             <p v-if="searchError" class="text-xs font-medium mt-2 p-2 rounded-lg" :class="searchError.includes('成功') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                                 {{ searchError }}
                             </p>
@@ -1198,7 +1199,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/map.js?v=1.1.1"></script>
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
-    <script src="./js/app.js?v=1.1.25"></script>
+    <script src="./js/app.js?v=1.1.26"></script>
 </body>
 </html>
 
