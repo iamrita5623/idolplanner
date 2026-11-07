@@ -1273,7 +1273,18 @@ const idolNagging = computed(() => {
                     showChangelogModal.value = true;
                 };
 
-                const searchCoordinates = async () => {
+                const windowVenueMatches = (input) => {
+    const q = String(input || '').trim().toLocaleLowerCase();
+    if (!q) return [];
+    const venues = window.IDOL_VENUES || [];
+    return venues.map(v => {
+        const name = v.label.toLocaleLowerCase(), search = v.search.toLocaleLowerCase();
+        const aliases = String(v.aliases || '').toLocaleLowerCase();
+        const score = name === q || search === q ? 0 : name.startsWith(q) || search.startsWith(q) ? 1 : name.includes(q) || search.includes(q) ? 2 : aliases.includes(q) ? 3 : 99;
+        return { ...v, score };
+    }).filter(v => v.score < 99).sort((a,b) => a.score-b.score || a.label.localeCompare(b.label,'zh-Hant')).slice(0,5);
+};
+const searchCoordinates = async () => {
     if (!form.value.location) {
         searchError.value = "請先輸入地點名稱";
         return;
@@ -1919,7 +1930,7 @@ const generateShareImageLegacy = () => {
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
-                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, isSearching, searchError, mappedEventsCount, missingCoordsCount,
+                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, windowVenueMatches, isSearching, searchError, mappedEventsCount, missingCoordsCount,
     
                     downloadBackup, restoreBackup, idolNagging, showCalendarOptions, addToiCal, addToGoogleCalendar, showTicket, getTicketPrice, updateAppTitle,
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
