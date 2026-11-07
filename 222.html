@@ -1082,7 +1082,23 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                             </div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
-                            <p v-if="/kspo|체조경기장/i.test(form.location || '')" class="text-xs text-slate-600 mt-2">KSPO DOME 地圖定位建議使用 <button type="button" class="font-bold underline text-blue-700" @click="form.location = '올림픽체조경기장'; searchError = ''">올림픽체조경기장（點此填入）</button>。只會修改目前編輯中的地點欄位，儲存前可再確認。</p>
+                            <div class="mt-2 text-xs text-slate-600">
+                                <p class="mb-1 font-medium">常見場館・地圖搜尋名稱（點選填入）</p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <button v-for="venue in [
+                                        {label:'林口體育館',search:'體大林口綜合體育館',keys:'林口 體大 國立體育大學'},
+                                        {label:'KSPO DOME',search:'올림픽체조경기장',keys:'kspo 올림픽체조경기장 체조경기장'},
+                                        {label:'ticketLINK Live Arena（手球館）',search:'올림픽핸드볼경기장',keys:'ticketlink handball 手球館 핸드볼경기장'},
+                                        {label:'高尺天空巨蛋',search:'고척스카이돔',keys:'高尺 gocheok 고척'},
+                                        {label:'蠶室室內體育館',search:'잠실실내체육관',keys:'蠶室 잠실 jamsil'}
+                                    ].filter(v => !(form.location || '').trim() || (v.label+' '+v.search+' '+v.keys).toLowerCase().includes((form.location || '').trim().toLowerCase())).slice(0,5)"
+                                    :key="venue.label" type="button" class="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-left hover:bg-blue-50"
+                                    @click="form.location = venue.search; form.lat = null; form.lng = null; searchError = ''">
+                                        {{ venue.label }} <span class="text-slate-400">→ {{ venue.search }}</span>
+                                    </button>
+                                </div>
+                                <p class="mt-1 text-slate-400">名稱僅供搜尋建議；選取後請按定位按鈕確認座標。</p>
+                            </div>
                             <p v-if="searchError" class="text-xs font-medium mt-2 p-2 rounded-lg" :class="searchError.includes('成功') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                                 {{ searchError }}
                             </p>
