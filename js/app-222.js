@@ -1559,13 +1559,13 @@ const showReplayStop = (index) => {
     }).addTo(map);
     // 每站放大，將活動點留在畫面偏上方，為原有地圖字卡及底部控制列預留空間。
     const zoom = Math.max(map.getZoom(), 11);
-    const target = map.project(L.latLng(coords), zoom).add([0, 95]);
+    const target = map.project(L.latLng(coords), zoom).add([0, -65]);
     const shiftedCenter = map.unproject(target, zoom);
     const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
     const sameLocation = replayStops.value.filter(e =>
         Number(e.lat).toFixed(4) === Number(stop.lat).toFixed(4) &&
         Number(e.lng).toFixed(4) === Number(stop.lng).toFixed(4));
-    let popup = '<div style="min-width:210px;max-width:280px;"><div style="max-height:min(35dvh,260px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;">';
+    let popup = '<div style="min-width:210px;max-width:280px;"><div style="max-height:min(24dvh,190px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;">';
     [...sameLocation].reverse().forEach(ev => {
         popup += '<div style="border-bottom:1px dashed #eee;margin-bottom:5px;padding-bottom:5px;">'
             + '<b style="color:' + getEventColor(ev) + '">' + escapeText(ev.artist) + '</b><br>'
