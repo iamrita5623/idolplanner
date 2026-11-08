@@ -1557,7 +1557,7 @@ const showReplayStop = (index) => {
         radius: 13, color: '#fff', weight: 4, fillColor: getEventColor(stop),
         fillOpacity: 1, interactive: false
     }).addTo(map);
-    map.flyTo(coords, Math.max(map.getZoom(), 9), { duration: 0.8 });
+    // 保持全年足跡在同一畫面；逐站高亮，不再強制放大或移動地圖。
 };
 const advanceReplay = () => {
     if (!replayPlaying.value) return;
@@ -1582,6 +1582,12 @@ const startReplay = () => {
         return;
     }
     stopReplay();
+    const bounds = L.latLngBounds(replayStops.value.map(e => [Number(e.lat), Number(e.lng)]));
+    map.invalidateSize();
+    if (bounds.isValid()) {
+        // 保留底部控制列空間；縮放至當年度所有活動都看得見。
+        map.fitBounds(bounds, { paddingTopLeft: [28, 28], paddingBottomRight: [28, 105], maxZoom: 11, animate: false });
+    }
     replayPlaying.value = true;
     advanceReplay();
 };
