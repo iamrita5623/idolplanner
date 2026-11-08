@@ -543,6 +543,29 @@
     </div>
 </div>
 
+
+<!-- 年度足跡重播控制：獨立覆蓋層，不影響原本 Leaflet 地圖與里程 -->
+<div class="absolute bottom-5 left-4 right-4 z-[500] flex flex-col gap-2 pointer-events-none">
+    <div v-if="replayEvent" class="pointer-events-auto bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-slate-100 p-4" role="status" aria-live="polite">
+        <div class="flex items-center justify-between gap-2 text-xs text-slate-500 mb-2">
+            <span>年度足跡 · 第 {{ replayIndex + 1 }} / {{ replayStops.length }} 站</span>
+            <span>{{ replayPlaying ? '自動播放中 · 每站 2.5 秒' : '播放完成' }}</span>
+        </div>
+        <div class="font-bold text-slate-800 text-base break-words">{{ replayEvent.title || '未命名活動' }}</div>
+        <div class="text-sm text-slate-600 mt-1 break-words">{{ replayEvent.artist || '未填歌手' }} · {{ replayEvent.date || '未填日期' }}</div>
+        <div class="text-xs text-slate-500 mt-1 break-words">{{ replayEvent.location || '未填地點' }}</div>
+        <button type="button" @click="openReplayEvent" class="mt-3 w-full rounded-xl bg-slate-800 text-white text-sm font-bold py-2">查看完整活動</button>
+    </div>
+    <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-2xl shadow-lg p-2 border border-slate-100">
+        <button type="button" v-if="!replayPlaying" @click="startReplay" :disabled="!replayStops.length"
+            class="flex-1 rounded-xl bg-slate-800 text-white py-2.5 px-3 text-sm font-bold disabled:opacity-40">
+            ▶ {{ replayEvent ? '重新播放' : '年度足跡重播' }}
+        </button>
+        <button type="button" v-else @click="stopReplay" class="flex-1 rounded-xl bg-slate-800 text-white py-2.5 px-3 text-sm font-bold">■ 停止重播</button>
+        <span class="text-[11px] text-slate-500 shrink-0 px-1">{{ replayStops.length }} 站</span>
+    </div>
+    <p v-if="!replayStops.length" class="text-center text-[11px] text-slate-600 bg-white/90 rounded-lg py-1">此年度尚無可定位的活動</p>
+</div>
    </div> <div v-if="activeTab === 'stats'" class="space-y-6 p-5 pb-32">
                  <div class="flex justify-between items-center mb-2">
                    
