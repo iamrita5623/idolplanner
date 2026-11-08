@@ -1102,7 +1102,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   
                         <div class="space-y-4">
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">活動名稱</label><input v-model="form.title" type="text" placeholder="例如: 2024 世界巡迴演唱會" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
-                            <div><label class="block text-sm font-medium text-slate-500 mb-1">活動類型（同偶像、同名稱一起套用）</label><select v-model="formActivityCategory" @change="formCategoryTouched = true" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800"><option value="">依名稱自動建議（未確認）</option><option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option></select><p class="text-xs text-slate-400 mt-1">不確定可先選「尚未分類」，之後到設定批次整理。</p></div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">活動類型（同偶像、同名稱一起套用）</label><select v-model="formActivityCategory" @change="formCategoryTouched = true" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800"><option value="" disabled>請選擇活動類型</option><option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option></select><p class="text-xs text-slate-400 mt-1">請手動選擇活動類型；不確定時可選「尚未分類」。不會透過 API 自動查詢。</p></div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-slate-500 mb-1">封面圖片 (選填)</label>
@@ -1306,7 +1306,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.60"></script>
+<script src="./js/app-222.js?v=1.1.61"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
