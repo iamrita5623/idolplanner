@@ -339,8 +339,8 @@ const categoryFor=e=>{
 };
 const activityGroups=computed(()=>{
  const map=new Map();
- events.value.forEach(e=>{const key=activityKey(e);if(!map.has(key))map.set(key,{key,artist:e.artist||'其他',title:e.title||'',count:0,suggested:suggestActivityCategory(e.title)});map.get(key).count++});
- return [...map.values()].sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
+ events.value.forEach(e=>{const key=activityKey(e);if(!map.has(key))map.set(key,{key,artist:e.artist||'其他',title:e.title||'',count:0,suggested:suggestActivityCategory(e.title),customNames:new Set()});const g=map.get(key);g.count++;if(e.customCategory&&String(e.customCategory).trim())g.customNames.add(String(e.customCategory).trim())});
+ return [...map.values()].map(g=>({...g,customNames:[...g.customNames]})).sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
 });
 const filteredActivityGroups=computed(()=>activityGroups.value.filter(g=>{
  const pending=!Object.prototype.hasOwnProperty.call(activityCategoryMap.value,g.key),q=activityCategoryQuery.value.trim().toLocaleLowerCase();
