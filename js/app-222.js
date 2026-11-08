@@ -305,7 +305,7 @@ const activitySearchUrl=()=>{const q=(lookupQuery.value||'').trim();const countr
 const openActivitySearch=()=>{window.location.href=activitySearchUrl();};
 const applyLookupDraft=()=>{let n=0;for(const k of ['date','time','location','coverUrl']){const v=String(lookupDraft.value[k]||'').trim();if(!lookupFields.value[k]||!v)continue;if(form.value[k]&&form.value[k]!==v&&!confirm('覆蓋原本的'+({date:'日期',time:'時間',location:'地點',coverUrl:'封面'}[k])+'？'))continue;form.value[k]=v;n++;if(k==='location'){form.value.lat=null;form.value.lng=null;searchError.value='請使用原本的定位按鈕確認座標';}if(k==='coverUrl')form.value.useUrl=true;}lookupMessage.value=n?'已帶入 '+n+' 個欄位，請確認後儲存':'未帶入資料';};
 
-const activityTypes=[['concert','專場演唱會'],['festival','拼盤演唱會／音樂節'],['fanmeeting','見面會'],['birthday','生日會'],['fansign','簽售會／簽名會'],['prerecord','事前錄製'],['broadcast','生放／公開放送'],['other','其他活動'],['unknown','尚未分類']].map(([value,label])=>({value,label}));
+const activityTypes=[['concert','專場演唱會'],['festival','拼盤演唱會／音樂節'],['fanmeeting','見面會'],['birthday','生日會'],['fansign','簽售會／簽名會'],['prerecord','事前錄製'],['broadcast','生放／公開放送'],['other','自訂活動類型'],['unknown','尚未分類']].map(([value,label])=>({value,label}));
 const activityCategoryMap=ref({});
 const confirmedSeries=ref({});
 const rejectedSeries=ref({});
