@@ -1017,7 +1017,7 @@ watch(activeTab, (newTab) => {
                             String(e.title || '').toLocaleLowerCase().includes(query) ||
                             normalizedArtists(e).some(name => name.toLocaleLowerCase().includes(query)) ||
                             String(e.location || '').toLocaleLowerCase().includes(query)
-                        ).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+                        ).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
                     }
 
                     return viewMode.value === 'upcoming' 
