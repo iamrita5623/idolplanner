@@ -1,0 +1,5 @@
+const CACHE = 'idolplanner-static-v1';
+const ASSETS = ['./222.html','./css/main.css','./js/app.js','./js/events.js','./js/recap.js','./js/map.js','./js/venues.js','./icons/idolplanner.svg'];
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).catch(()=>{}));self.skipWaiting();});
+self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('idolplanner-static-')&&key!==CACHE).map(key=>caches.delete(key)))));self.clients.claim();});
+self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;const url=new URL(req.url);if(!url.pathname.startsWith(new URL('./',self.registration.scope).pathname))return;if(req.mode==='navigate'){event.respondWith(fetch(req).catch(()=>caches.match('./222.html')));return;}if(!ASSETS.some(asset=>url.pathname.endsWith(asset.slice(1))))return;event.respondWith(fetch(req).then(res=>{if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(req,copy));}return res;}).catch(()=>caches.match(req)));});
