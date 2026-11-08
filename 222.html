@@ -959,7 +959,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                             <p>原本符合多場條件：{{ categoryPreview.old.length }} 組</p>
                             <p>新分類符合多場條件：{{ categoryPreview.next.length }} 組</p>
                             <p class="text-slate-400">可先確認分類，再決定是否啟用新統計。</p>
-                            <div v-for="item in categoryPreview.next" :key="item.title">{{ item.title }} · {{ item.count }} 場</div>
+                            <div v-for="item in categoryPreview.next" :key="item.title">{{ item.artist ? item.artist + " · " : "" }}{{ item.title }} · {{ item.count }} 場</div>
                             <button v-if="!useCategoryStats" @click="confirmCategoryStats" class="w-full py-2 rounded-lg bg-slate-700 text-white text-xs">確認啟用新分類統計</button>
                             <button v-else @click="revertCategoryStats" class="w-full py-2 rounded-lg bg-white border text-slate-600 text-xs">切回原本統計</button>
                         </div>
@@ -1073,7 +1073,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   
                         <div class="space-y-4">
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">活動名稱</label><input v-model="form.title" type="text" placeholder="例如: 2024 世界巡迴演唱會" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
-                            <div><label class="block text-sm font-medium text-slate-500 mb-1">活動類型（同偶像、同名稱一起套用）</label><select v-model="formActivityCategory" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800"><option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option></select><p class="text-xs text-slate-400 mt-1">不確定可先選「尚未分類」，之後到設定批次整理。</p></div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">活動類型（同偶像、同名稱一起套用）</label><select v-model="formActivityCategory" @change="formCategoryTouched = true" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800"><option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option></select><p class="text-xs text-slate-400 mt-1">不確定可先選「尚未分類」，之後到設定批次整理。</p></div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-slate-500 mb-1">封面圖片 (選填)</label>
@@ -1276,7 +1276,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app.js?v=1.1.29"></script>
+<script src="./js/app.js?v=1.1.30"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
