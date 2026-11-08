@@ -287,7 +287,18 @@ const ACTIVITY_API_BASE=''; // Set to deployed Cloudflare Worker URL after deplo
 const searchActivityApi=async()=>{const q=(lookupQuery.value||form.value.title||artistDraft.value||form.value.artist||'').trim();if(!q){lookupApiMessage.value='請先輸入活動名稱或藝人';return;}if(!ACTIVITY_API_BASE){lookupApiMessage.value='活動 API 後端尚未部署；可先使用下方網頁搜尋';return;}lookupLoading.value=true;lookupApiMessage.value='';lookupResults.value=[];lookupSelected.value=null;try{const u=new URL('/api/events/search',ACTIVITY_API_BASE);u.searchParams.set('q',q);u.searchParams.set('country',lookupCountry.value);u.searchParams.set('limit','20');const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);let response;try{response=await fetch(u.toString(),{signal:controller.signal});}finally{clearTimeout(timer);}if(!response.ok)throw Error('API HTTP '+response.status);const data=await response.json();lookupResults.value=Array.isArray(data.results)?data.results.slice(0,20):[];lookupApiMessage.value=lookupResults.value.length?'請選擇正確場次，確認資料來源':'沒有找到符合的場次，可改用網頁搜尋';}catch(e){lookupApiMessage.value='搜尋失敗：'+(e.name==='AbortError'?'連線逾時':e.message);}finally{lookupLoading.value=false;}};
 const selectLookupResult=item=>{lookupSelected.value=item;lookupChosenArtists.value=[];lookupDraft.value={date:item.date||'',time:item.startTime||'',location:item.venue?.name||'',coverUrl:''};lookupApiMessage.value='請核對來源及勾選要帶入的資料';};
 const applySelectedLookup=()=>{const item=lookupSelected.value;if(!item)return;if(lookupFields.value.title&&item.title&&(!form.value.title||form.value.title===item.title||confirm('覆蓋原本的活動名稱？')))form.value.title=item.title;applyLookupDraft();if(lookupChosenArtists.value.length){const existing=normalizedArtists(form.value);form.value.artists=Array.from(new Set([...existing,...lookupChosenArtists.value]));form.value.artist=form.value.artists[0]||'';}lookupApiMessage.value='已處理所選欄位，請檢查場館定位與資料後再儲存';};
-const normalizedArtists=e=>Array.from(new Set((Array.isArray(e.artists)&&e.artists.length?e.artists:String(e.artist||'').split(/[、,，;；\\n]/)).map(x=>String(x||'').trim()).filter(Boolean)));
+const normalizedArtists=e=>{
+    const raw=Array.isArray(e.artists)&&e.artists.length?e.artists:String(e.artist||'').split(/[、,，;；\n]/);
+    const names=raw.map(x=>String(x||'').trim()).filter(Boolean);
+    // Compatibility for records split by the previous faulty /\\n/ separator.
+    // Only repair the specific adjacent "Mi" + "ho" pair; do not merge arbitrary artists.
+    const repaired=[];
+    for(let i=0;i<names.length;i++){
+        if(names[i]==='Mi'&&names[i+1]==='ho'){repaired.push('Minho');i++;}
+        else repaired.push(names[i]);
+    }
+    return Array.from(new Set(repaired));
+};
 const addFormArtist=()=>{const a=artistDraft.value.trim();if(!a)return;form.value.artists=Array.from(new Set([...normalizedArtists(form.value),a]));form.value.artist=form.value.artists[0]||'';artistDraft.value='';};
 const removeFormArtist=a=>{form.value.artists=normalizedArtists(form.value).filter(x=>x!==a);form.value.artist=form.value.artists[0]||'';};
 const activitySearchUrl=()=>{const q=(lookupQuery.value||'').trim();const country=({KR:'韓國',JP:'日本',TW:'台灣'})[lookupCountry.value]||'';return 'https://www.google.com/search?q='+encodeURIComponent([q,country,form.value.date,'演出 時間 場館 官方'].filter(Boolean).join(' '));};
