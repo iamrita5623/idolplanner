@@ -272,6 +272,10 @@ const activityCategoryQuery=ref('');
 const activityCategoryFilter=ref('all');
 const showActivityCategories=ref(false);
 const showCategoryPreview=ref(false);
+const useCategoryStats=ref(false);
+const formActivityCategory=ref('unknown');
+const confirmCategoryStats=()=>{if(!confirm('確定改用活動分類計算大型演出？尚未分類的行程不會計入。可隨時切回原本統計。'))return;useCategoryStats.value=true;localStorage.setItem('idolUseCategoryStats','true');};
+const revertCategoryStats=()=>{useCategoryStats.value=false;localStorage.setItem('idolUseCategoryStats','false');};
 const activityKey=e=>JSON.stringify([String(e.artist||'').trim().toLocaleLowerCase(),String(e.title||'').trim().toLocaleLowerCase()]);
 const suggestActivityCategory=title=>{
  const t=String(title||'').toLocaleLowerCase();
@@ -554,6 +558,7 @@ onMounted(async () => {
     }
 
     if (!currentUser.value) {try {activityCategoryMap.value=JSON.parse(localStorage.getItem('idolActivityCategories')||'{}')} catch(e){console.warn(e)}}
+    useCategoryStats.value=localStorage.getItem('idolUseCategoryStats')==='true';
     // 3. 🌟 關鍵：資料載入完成後，等待 0.5 秒再解除防護，防止自動覆蓋！
     setTimeout(() => {
         isInitializing.value = false;
@@ -978,7 +983,8 @@ const availableYears = computed(() => {
                         const t = e.title.trim();
                         if (!excludeKeywords.some(k => t.includes(k))) titleMap[t] = (titleMap[t] || 0) + 1;
                     });
-                    const series = Object.keys(titleMap).map(key => ({ title: key, count: titleMap[key] })).filter(item => item.count > 1).sort((a, b) => b.count - a.count);
+                    const selectedTitleMap = useCategoryStats.value ? (()=>{const m={};targetEvents.forEach(e=>{if(['concert','festival','fanmeeting','birthday'].includes(categoryFor(e))){const t=String(e.title||'').trim();m[t]=(m[t]||0)+1;}});return m;})() : titleMap;
+                    const series = Object.keys(selectedTitleMap).map(key => ({ title: key, count: selectedTitleMap[key] })).filter(item => item.count > 1).sort((a, b) => b.count - a.count);
                     return { 
                         count, 
                         totalSpent, 
@@ -1259,6 +1265,7 @@ const idolNagging = computed(() => {
                 const openModal = () => {
                     isEditing.value = false;
                     form.value = { ...defaultForm, date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
+                    formActivityCategory.value='unknown';
                     searchError.value = '';
                     showModal.value = true;
                 };
@@ -1273,6 +1280,7 @@ const idolNagging = computed(() => {
                         coverUrl: evt.coverUrl || '',
                         sticker: evt.sticker || ''
                     };
+                    formActivityCategory.value=categoryFor(evt); 
                     form.value.useUrl = (evt.coverUrl && !evt.coverUrl.startsWith('data:')) || false;
                     searchError.value = '';
                     showModal.value = true;
@@ -1286,6 +1294,8 @@ const idolNagging = computed(() => {
                     if (form.value.color === themeColor.value) form.value.color = '';
 
                     const eventToSave = JSON.parse(JSON.stringify(form.value));
+                    const key=activityKey(eventToSave);
+                    if(formActivityCategory.value!=='unknown' && activityTypes.some(t=>t.value===formActivityCategory.value))setActivityGroupCategory(key,formActivityCategory.value);
                     delete eventToSave.useUrl;
 
                     if (isEditing.value) {
@@ -1968,7 +1978,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
-                    activityTypes,activityCategoryMap,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,
+                    activityTypes,activityCategoryMap,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
