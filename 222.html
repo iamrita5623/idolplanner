@@ -548,13 +548,19 @@
 <div class="absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
   <div class="pointer-events-auto bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-100 px-3 py-2.5">
     <div class="flex items-center gap-2">
-      <button type="button" @click="replayPlaying ? stopReplay() : startReplay()" :disabled="!replayPlaying && !replayStops.length"
-        :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#263238' : '#fff' }"
-        class="shrink-0 rounded-lg px-3 py-2 text-xs font-bold disabled:opacity-40">
-        {{ replayPlaying ? '■ 停止' : '▶ 重播' }}
-      </button>
+      <div class="flex items-center gap-1 shrink-0">
+        <button type="button" @click="startReplay" :disabled="!replayStops.length || replayPlaying"
+          :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#263238' : '#fff' }"
+          class="rounded-lg w-9 h-9 text-sm font-bold disabled:opacity-40" aria-label="播放或繼續" title="播放或繼續">▶</button>
+        <button type="button" @click="pauseReplay" :disabled="!replayPlaying"
+          class="rounded-lg w-9 h-9 text-sm font-bold border border-slate-200 disabled:opacity-40"
+          :style="{ color: themeColor }" aria-label="暫停" title="暫停">⏸</button>
+        <button type="button" @click="stopReplay" :disabled="replayIndex < 0"
+          class="rounded-lg w-9 h-9 text-sm font-bold border border-slate-200 disabled:opacity-40"
+          :style="{ color: themeColor }" aria-label="停止" title="停止">■</button>
+      </div>
       <button v-if="replayEvent" type="button" @click="openReplayEvent" class="flex-1 min-w-0 text-left" title="查看地圖活動小字卡">
-        <div class="text-[10px] text-slate-500">第 {{ replayIndex + 1 }} / {{ replayStops.length }} 站 · {{ replayPlaying ? '每站 2.5 秒' : '播放完成' }} · 點擊查看</div>
+        <div class="text-[10px] text-slate-500">第 {{ replayIndex + 1 }} / {{ replayStops.length }} 站 · {{ replayPlaying ? '播放中 · 每站 2.5 秒' : (replayPaused ? '已暫停' : '播放完成') }} · 點擊查看</div>
         <div class="text-xs font-bold text-slate-800 truncate">{{ replayEvent.title || '未命名活動' }}</div>
         <div class="text-[10px] text-slate-500 truncate">{{ replayEvent.artist || '未填歌手' }} · {{ replayEvent.date || '未填日期' }}</div>
       </button>
@@ -1303,7 +1309,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.39"></script>
+<script src="./js/app-222.js?v=1.1.40"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
