@@ -101,6 +101,8 @@ const checkUserAndFetchData = async () => {
             if (typeof raw.themeColor === 'string') themeColor.value = raw.themeColor;
             if (Number(raw.yearlyBudget) > 0) yearlyBudget.value = Number(raw.yearlyBudget);
             if (raw.activityCategories && typeof raw.activityCategories==='object' && !Array.isArray(raw.activityCategories)) activityCategoryMap.value=raw.activityCategories;
+            if (raw.confirmedSeries && typeof raw.confirmedSeries==='object' && !Array.isArray(raw.confirmedSeries)) confirmedSeries.value=raw.confirmedSeries;
+            if (raw.rejectedSeries && typeof raw.rejectedSeries==='object' && !Array.isArray(raw.rejectedSeries)) rejectedSeries.value=raw.rejectedSeries;
         }
         cloudReady.value = true;
         return { status: 'loaded' };
@@ -268,6 +270,9 @@ const totalDistance = computed(() => {
 
 const activityTypes=[['concert','專場演唱會'],['festival','拼盤演唱會／音樂節'],['fanmeeting','見面會'],['birthday','生日會'],['fansign','簽售會／簽名會'],['prerecord','事前錄製'],['broadcast','生放／公開放送'],['other','其他活動'],['unknown','尚未分類']].map(([value,label])=>({value,label}));
 const activityCategoryMap=ref({});
+const confirmedSeries=ref({});
+const rejectedSeries=ref({});
+const showSeriesReview=ref(false);
 const activityCategoryQuery=ref('');
 const activityCategoryFilter=ref('all');
 const showActivityCategories=ref(false);
@@ -305,15 +310,51 @@ const filteredActivityGroups=computed(()=>activityGroups.value.filter(g=>{
 }));
 const setActivityGroupCategory=(key,value)=>{if(activityTypes.some(t=>t.value===value))activityCategoryMap.value={...activityCategoryMap.value,[key]:value};};
 const activityCategoryPending=computed(()=>activityGroups.value.filter(g=>categoryFor({artist:g.artist,title:g.title})==='unknown').reduce((sum,g)=>sum+g.count,0));
+
+// Series suggestions never change original events or their titles.
+// Only same-artist, same-year DAY-number variants are proposed.
+const seriesBase=title=>String(title||'').replace(/(?:[\s\[(（【:：-]*)(?:day|d)[\s._-]*0*[1-9][0-9]*(?:[\s\])）】]*)/gi,' ').replace(/\s+/g,' ').trim().toLocaleLowerCase();
+const seriesDay=title=>/(?:^|[\s\[(（【:：-])(?:day|d)[\s._-]*0*[1-9][0-9]*(?=$|[\s\])）】])/i.test(String(title||''));
+const seriesCandidateGroups=computed(()=>{
+ const groups=new Map();
+ events.value.forEach(e=>{
+  if(!['concert','festival','fanmeeting','birthday'].includes(categoryFor(e)) || !seriesDay(e.title))return;
+  const year=String(e.date||'').slice(0,4),base=seriesBase(e.title),artist=String(e.artist||'').trim().toLocaleLowerCase();
+  if(!/^\d{4}$/.test(year)||!base||!artist)return;
+  const id=JSON.stringify([artist,year,base]);
+  if(!groups.has(id))groups.set(id,{id,artist:e.artist,year,base,titles:new Map(),keys:new Set()});
+  const g=groups.get(id);g.titles.set(e.title,(g.titles.get(e.title)||0)+1);g.keys.add(activityKey(e));
+ });
+ return [...groups.values()].filter(g=>g.titles.size>=2).map(g=>({id:g.id,artist:g.artist,year:g.year,base:g.base,titles:[...g.titles.keys()],keys:[...g.keys],count:[...g.titles.values()].reduce((a,b)=>a+b,0),accepted:g.keys.every(k=>confirmedSeries.value[k]===g.id),rejected:!!rejectedSeries.value[g.id]})).filter(g=>!g.accepted&&!g.rejected);
+});
+const acceptSeries=g=>{
+ if(!confirm('確認將這些活動合併為同系列統計？原始行程不會修改。'))return;
+ const next={...confirmedSeries.value};
+ g.keys.forEach(k=>{next[k]=g.id});
+ confirmedSeries.value=next;
+ const rejected={...rejectedSeries.value};delete rejected[g.id];rejectedSeries.value=rejected;
+};
+const rejectSeries=g=>{rejectedSeries.value={...rejectedSeries.value,[g.id]:true};};
+const resetSeries=()=>{if(confirm('清除所有系列合併確認與略過紀錄？原始行程不受影響。')){confirmedSeries.value={};rejectedSeries.value={};}};
+const seriesStatsKey=e=>{
+ const key=activityKey(e),id=confirmedSeries.value[key];
+ if(!id)return key;
+ // Keep confirmations scoped to the original artist and year.
+ try {const [artist,year]=JSON.parse(id);if(artist===String(e.artist||'').trim().toLocaleLowerCase()&&year===String(e.date||'').slice(0,4))return id;}catch(_){}
+ return key;
+};
+
 const categoryPreview=computed(()=>{
  const included=new Set(['concert','festival','fanmeeting','birthday']),excluded=['사전녹화','事前錄製','簽售會','簽名會','錄製'];
  const list=selectedYear.value==='ALL'?events.value:events.value.filter(e=>String(e.date||'').startsWith(String(selectedYear.value)));
  const old={},next={};
- list.forEach(e=>{const t=String(e.title||'').trim();if(!excluded.some(k=>t.includes(k)))old[t]=(old[t]||0)+1;if(included.has(categoryFor(e))){const key=activityKey(e);if(!next[key])next[key]={title:t,artist:e.artist||'其他',count:0};next[key].count++;}});
+ list.forEach(e=>{const t=String(e.title||'').trim();if(!excluded.some(k=>t.includes(k)))old[t]=(old[t]||0)+1;if(included.has(categoryFor(e))){const key=seriesStatsKey(e);if(!next[key])next[key]={title:confirmedSeries.value[activityKey(e)]?seriesBase(t):t,artist:e.artist||'其他',count:0};next[key].count++;}});
  const rows=obj=>Object.keys(obj).filter(k=>obj[k]>1).map(title=>({title,count:obj[title]}));
  return {old:rows(old),next:Object.values(next).filter(item=>item.count>1).sort((a,b)=>b.count-a.count)};
 });
 watch(activityCategoryMap,map=>{localStorage.setItem('idolActivityCategories',JSON.stringify(map));syncToCloud();},{deep:true});
+watch(confirmedSeries,map=>{localStorage.setItem('idolConfirmedSeries',JSON.stringify(map));syncToCloud();},{deep:true});
+watch(rejectedSeries,map=>{localStorage.setItem('idolRejectedSeries',JSON.stringify(map));syncToCloud();},{deep:true});
 
                 const presetColors = ['#63b3b0', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#1dd1a1'];
                 const customTitle = ref(localStorage.getItem('appTitle') || '追星日記 ✨');
@@ -518,6 +559,8 @@ const syncToCloud = () => {
         const snapshot = {
             schemaVersion: 3,
             activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value)),
+            confirmedSeries: JSON.parse(JSON.stringify(confirmedSeries.value)),
+            rejectedSeries: JSON.parse(JSON.stringify(rejectedSeries.value)),
             events: JSON.parse(JSON.stringify(events.value)),
             fandoms: JSON.parse(JSON.stringify(fandoms.value)),
             customTitle: customTitle.value,
@@ -563,6 +606,7 @@ onMounted(async () => {
     }
 
     if (!currentUser.value) {try {activityCategoryMap.value=JSON.parse(localStorage.getItem('idolActivityCategories')||'{}')} catch(e){console.warn(e)}}
+    if (!currentUser.value) {try {confirmedSeries.value=JSON.parse(localStorage.getItem('idolConfirmedSeries')||'{}');rejectedSeries.value=JSON.parse(localStorage.getItem('idolRejectedSeries')||'{}')}catch(e){console.warn(e)}}
     // New category-based recap is enabled by default; users can still switch back in Settings.
     useCategoryStats.value=localStorage.getItem('idolUseCategoryStats')!=='false';
     // 3. 🌟 關鍵：資料載入完成後，等待 0.5 秒再解除防護，防止自動覆蓋！
@@ -989,7 +1033,7 @@ const availableYears = computed(() => {
                         const t = e.title.trim();
                         if (!excludeKeywords.some(k => t.includes(k))) titleMap[t] = (titleMap[t] || 0) + 1;
                     });
-                    const series = useCategoryStats.value ? (()=>{const m=new Map();targetEvents.forEach(e=>{if(['concert','festival','fanmeeting','birthday'].includes(categoryFor(e))){const key=activityKey(e);if(!m.has(key))m.set(key,{title:String(e.title||'').trim(),artist:e.artist||'其他',count:0});m.get(key).count++;}});return [...m.values()].filter(item=>item.count>1).sort((a,b)=>b.count-a.count);})() : Object.keys(titleMap).map(key => ({ title:key,count:titleMap[key] })).filter(item=>item.count>1).sort((a,b)=>b.count-a.count);
+                    const series = useCategoryStats.value ? (()=>{const m=new Map();targetEvents.forEach(e=>{if(['concert','festival','fanmeeting','birthday'].includes(categoryFor(e))){const key=seriesStatsKey(e);if(!m.has(key))m.set(key,{title:confirmedSeries.value[activityKey(e)]?seriesBase(e.title):String(e.title||'').trim(),artist:e.artist||'其他',count:0});m.get(key).count++;}});return [...m.values()].filter(item=>item.count>1).sort((a,b)=>b.count-a.count);})() : Object.keys(titleMap).map(key => ({ title:key,count:titleMap[key] })).filter(item=>item.count>1).sort((a,b)=>b.count-a.count);
                     return { 
                         count, 
                         totalSpent, 
@@ -1512,7 +1556,9 @@ const initMap = (preserveView = false) => {
                                 customTitle: customTitle.value,
                                 themeColor: themeColor.value,
                                 yearlyBudget: yearlyBudget.value,
-                                activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value))
+                                activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value)),
+                                confirmedSeries: JSON.parse(JSON.stringify(confirmedSeries.value)),
+                                rejectedSeries: JSON.parse(JSON.stringify(rejectedSeries.value))
                             }
                         };
                         const json = JSON.stringify(snapshot, null, 2);
@@ -1568,12 +1614,16 @@ const initMap = (preserveView = false) => {
                                 themeColor: themeColor.value,
                                 yearlyBudget: yearlyBudget.value,
                                 activityCategories: activityCategoryMap.value,
+                                confirmedSeries: confirmedSeries.value,
+                                rejectedSeries: rejectedSeries.value,
                                 savedAt: new Date().toISOString()
                             }));
                             events.value = restoreData.events;
                             if (isFull) {
                                 fandoms.value = restoreData.fandoms;
                                 if (restoreData.activityCategories && typeof restoreData.activityCategories==='object' && !Array.isArray(restoreData.activityCategories)) activityCategoryMap.value = restoreData.activityCategories;
+                                if (restoreData.confirmedSeries && typeof restoreData.confirmedSeries==='object' && !Array.isArray(restoreData.confirmedSeries)) confirmedSeries.value=restoreData.confirmedSeries;
+                                if (restoreData.rejectedSeries && typeof restoreData.rejectedSeries==='object' && !Array.isArray(restoreData.rejectedSeries)) rejectedSeries.value=restoreData.rejectedSeries;
                                 if (typeof restoreData.customTitle === 'string') customTitle.value = restoreData.customTitle;
                                 if (typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor)) {
                                     themeColor.value = restoreData.themeColor;
@@ -1985,7 +2035,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
-                    activityTypes,activityCategoryMap,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
+                    activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
