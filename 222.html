@@ -549,15 +549,14 @@
   <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
     <div class="flex items-center gap-1 shrink-0" :style="{ color: themeColor }">
       <button type="button" @click="previousReplayStop" :disabled="!replayStops.length || replayIndex <= 0"
-        class="w-7 h-7 flex items-center justify-center text-sm disabled:opacity-30" aria-label="上一站" title="上一站">|◀</button>
-      <button type="button" @click="startReplay" :disabled="!replayStops.length || replayPlaying"
-        class="w-7 h-7 flex items-center justify-center text-base disabled:opacity-30" aria-label="播放或繼續" title="播放或繼續">▶</button>
-      <button type="button" @click="pauseReplay" :disabled="!replayPlaying"
-        class="w-7 h-7 flex items-center justify-center text-base disabled:opacity-30" aria-label="暫停" title="暫停">Ⅱ</button>
+        class="w-9 h-9 flex items-center justify-center rounded-full disabled:opacity-30" aria-label="上一站" title="上一站"><i class="ph ph-skip-back text-lg"></i></button>
+      <button type="button" @click="replayPlaying ? pauseReplay() : startReplay()" :disabled="!replayStops.length"
+        :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#263238' : '#fff' }"
+        class="w-10 h-10 flex items-center justify-center rounded-full disabled:opacity-30" :aria-label="replayPlaying ? '暫停' : '播放或繼續'" :title="replayPlaying ? '暫停' : '播放或繼續'">
+        <i :class="replayPlaying ? 'ph ph-pause text-lg' : 'ph ph-play text-lg'"></i>
+      </button>
       <button type="button" @click="nextReplayStop" :disabled="!replayStops.length || replayIndex >= replayStops.length - 1"
-        class="w-7 h-7 flex items-center justify-center text-sm disabled:opacity-30" aria-label="下一站" title="下一站">▶|</button>
-      <button type="button" @click="stopReplay" :disabled="replayIndex < 0"
-        class="w-7 h-7 flex items-center justify-center text-sm disabled:opacity-30" aria-label="停止" title="停止">■</button>
+        class="w-9 h-9 flex items-center justify-center rounded-full disabled:opacity-30" aria-label="下一站" title="下一站"><i class="ph ph-skip-forward text-lg"></i></button>
     </div>
     <div class="h-6 w-px bg-slate-200 shrink-0"></div>
     <button v-if="replayEvent" type="button" @click="openReplayEvent" class="flex-1 min-w-0 text-left" title="點擊顯示地圖活動小字卡">
@@ -1306,7 +1305,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.44"></script>
+<script src="./js/app-222.js?v=1.1.45"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
