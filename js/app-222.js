@@ -1006,11 +1006,7 @@ watch(activeTab, (newTab) => {
                             String(e.title || '').toLocaleLowerCase().includes(query) ||
                             normalizedArtists(e).some(name => name.toLocaleLowerCase().includes(query)) ||
                             String(e.location || '').toLocaleLowerCase().includes(query)
-                        ).sort((a, b) => { 
-                            const diffA = Math.abs(new Date(a.date) - new Date(today));
-                            const diffB = Math.abs(new Date(b.date) - new Date(today));
-                            return diffA - diffB;
-                        });
+                        ).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
                     }
 
                     return viewMode.value === 'upcoming' 
