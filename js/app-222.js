@@ -1604,6 +1604,16 @@ const startReplay = () => {
     replayPlaying.value = true;
     advanceReplay();
 };
+const jumpReplayStop = (index) => {
+    if (!map || !replayStops.value.length || index < 0 || index >= replayStops.value.length) return;
+    clearReplayTimer();
+    replayPlaying.value = false;
+    replayPaused.value = true;
+    map.stop();
+    showReplayStop(index);
+};
+const previousReplayStop = () => jumpReplayStop(replayIndex.value - 1);
+const nextReplayStop = () => jumpReplayStop(replayIndex.value < 0 ? 0 : replayIndex.value + 1);
 const openReplayEvent = () => {
     const event = replayEvent.value;
     if (!event) return;
@@ -2174,7 +2184,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
