@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 <rect width="512" height="512" rx="96" fill="#27243B"/>
-<g fill="none" stroke="#E9BFDD" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" transform="translate(-88 -58) scale(1.43)">
+<g fill="none" stroke="#E9BFDD" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" transform="translate(-70 -125) scale(1.35)">
 <path d="M207 169v31M273 169v31"/>
 <path d="M177 192h125a15 15 0 0 1 15 15v45M177 192a15 15 0 0 0-15 15v104a15 15 0 0 0 15 15h59"/>
 <path d="M162 226h155"/>
 <path d="M278 326c-11-9-27-23-27-38 0-11 8-19 18-19 7 0 13 4 18 10 5-6 11-10 18-10 10 0 18 8 18 19 0 15-16 29-27 38l-9 7z"/>
 </g>
-<text x="256" y="421" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="500" letter-spacing="2" fill="#E9BFDD">IDOL PLANNER</text>
+<text x="256" y="401" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="500" letter-spacing="2" fill="#E9BFDD">IDOL PLANNER</text>
 </svg>
