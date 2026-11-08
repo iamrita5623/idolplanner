@@ -957,7 +957,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                             <p v-if="!filteredActivityGroups.length" class="text-xs text-slate-400 text-center">沒有符合的活動</p>
                         </div>
                         <div class="border-t border-slate-100 pt-3 space-y-2">
-                            <button @click="showSeriesReview = !showSeriesReview" class="w-full flex justify-between text-sm font-bold text-slate-700"><span>同系列活動建議（DAY 1／DAY 2）</span><span>{{ seriesCandidateGroups.length }} 組待審核 {{ showSeriesReview ? '▲' : '▼' }}</span></button>
+                            <button @click="showSeriesReview = !showSeriesReview" class="w-full flex justify-between items-center gap-3 text-sm font-bold text-slate-700 text-left"><span class="min-w-0">同系列活動建議（DAY 1／DAY 2）</span><span class="shrink-0 whitespace-nowrap text-xs text-slate-400">{{ seriesCandidateGroups.length }} 組待確認 {{ showSeriesReview ? '▲' : '▼' }}</span></button>
                             <div v-if="showSeriesReview" class="space-y-3">
                                 <p class="text-xs text-slate-500">只建議同偶像、同年份且有不同 DAY 場次名稱的活動；確認後才合併大型演出統計，不修改原始行程。</p>
                                 <div v-for="group in seriesCandidateGroups" :key="group.id" class="bg-slate-50 rounded-xl p-3 space-y-2">
