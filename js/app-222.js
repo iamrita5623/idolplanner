@@ -299,24 +299,6 @@ const normalizedArtists=e=>{
     }
     return Array.from(new Set(repaired));
 };
-const legacyArtistRepairPreview=ref([]);
-const legacyArtistRepairStatus=ref('');
-const previewLegacyArtistRepair=()=>{
-    legacyArtistRepairStatus.value='檢查中…';
-    try { legacyArtistRepairPreview.value=events.value.map((event,index)=>{
-        const raw=Array.isArray(event.artists)&&event.artists.length?event.artists:[];
-        const pairs=[];
-        for(let i=0;i<raw.length-1;i++)if(String(raw[i]).trim()==='Mi'&&String(raw[i+1]).trim()==='ho')pairs.push(i);
-        return pairs.length?{index,title:String(event.title||'未命名活動'),date:String(event.date||''),before:raw.join('、'),after:normalizedArtists(event).join('、')}:null;
-    }).filter(Boolean);
-    legacyArtistRepairStatus.value=legacyArtistRepairPreview.value.length?'檢查完成：找到 '+legacyArtistRepairPreview.value.length+' 筆待確認紀錄':'檢查完成：目前沒有找到 Mi、ho 相鄰的舊紀錄（共檢查 '+events.value.length+' 場活動）';
-    }catch(err){legacyArtistRepairStatus.value='檢查失敗：'+String(err.message||err);}
-};
-const downloadLegacyArtistBackup=()=>{
-    const data=JSON.stringify(events.value,null,2);
-    const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));
-    const a=document.createElement('a');a.href=url;a.download='idolplanner-events-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-};
 const addFormArtist=()=>{const a=artistDraft.value.trim();if(!a)return;form.value.artists=Array.from(new Set([...normalizedArtists(form.value),a]));form.value.artist=form.value.artists[0]||'';artistDraft.value='';};
 const removeFormArtist=a=>{form.value.artists=normalizedArtists(form.value).filter(x=>x!==a);form.value.artist=form.value.artists[0]||'';};
 const activitySearchUrl=()=>{const q=(lookupQuery.value||'').trim();const country=({KR:'韓國',JP:'日本',TW:'台灣'})[lookupCountry.value]||'';return 'https://www.google.com/search?q='+encodeURIComponent([q,country,form.value.date,'演出 時間 場館 官方'].filter(Boolean).join(' '));};
