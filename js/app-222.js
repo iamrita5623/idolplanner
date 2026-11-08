@@ -2192,7 +2192,7 @@ const generateShareImageLegacy = () => {
                 const getMapLink = (l) => l ?
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
-                    events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle, legacyArtistRepairPreview, legacyArtistRepairStatus, previewLegacyArtistRepair, downloadLegacyArtistBackup,
+                    events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle, 
                     activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,confirmSuggestedCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, artistDraft, addFormArtist, removeFormArtist, lookupExpanded, lookupMessage, lookupDraft, lookupFields, lookupQuery, lookupCountry, lookupLoading, lookupApiMessage, lookupResults, lookupSelected, lookupChosenArtists, searchActivityApi, selectLookupResult, applySelectedLookup, activitySearchUrl, openActivitySearch, applyLookupDraft, importJson, importMode, readImportFile, searchQuery,
