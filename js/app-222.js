@@ -1365,7 +1365,7 @@ const idolNagging = computed(() => {
                     isEditing.value = false;
                     artistDraft.value='';lookupExpanded.value=false;lookupMessage.value='';lookupDraft.value={date:'',time:'',location:'',coverUrl:''};
                     form.value = { ...defaultForm, artists:[], date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
-                    formActivityCategory.value='';
+                    formActivityCategory.value='unknown';
                     formCustomCategory.value='';
                     formCategoryTouched.value=false;
                     searchError.value = '';
