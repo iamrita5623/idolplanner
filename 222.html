@@ -1136,18 +1136,18 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse at 30% 10%,#ff9cae,transparent 62%),radial-gradient(ellipse at 80% 15%,#e64c75,transparent 60%),#772c49' : selectedYear === '2024' ? 'radial-gradient(ellipse at 30% 10%,#ffe0a9,transparent 62%),radial-gradient(ellipse at 80% 15%,#ff9e8a,transparent 60%),#97536c' : selectedYear === '2025' ? 'radial-gradient(ellipse at 30% 10%,#dcb4a1,transparent 62%),radial-gradient(ellipse at 80% 15%,#a87a6c,transparent 60%),#573d42' : selectedYear === '2026' ? 'radial-gradient(ellipse at 30% 10%,#f9e7e2,transparent 62%),radial-gradient(ellipse at 80% 15%,#c4b9c5,transparent 60%),#79717c' : 'radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439'}">
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.20) 8deg,transparent 17deg,transparent 34deg);opacity:.7"></div>
     <div style="position:absolute;left:0;right:0;bottom:0;height:20px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div>
-    <div style="position:absolute;inset:0;pointer-events:none" :style="{background:'linear-gradient(to bottom, '+recapPalette.background+' 0%, '+recapPalette.background+' 9%, transparent 75%)'}"></div>
+    <div style="position:absolute;inset:0;pointer-events:none" :style="{background:'linear-gradient(to bottom, '+recapPalette.background+' 0%, '+recapPalette.background+' 72%, transparent 100%)'}"></div>
   </div>
   <!-- Inline SVG keeps the light-sea illustration local and exportable without external images. -->
   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 130" preserveAspectRatio="none" style="position:absolute;left:0;bottom:0;width:360px;height:130px;pointer-events:none;overflow:hidden">
     <defs>
       <linearGradient id="recap-sea-wave" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#fff" stop-opacity=".08"/>
-        <stop offset="100%" :stop-color="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" stop-opacity=".60"/>
+        <stop offset="100%" :stop-color="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" stop-opacity=".42"/>
       </linearGradient>
     </defs>
     <path d="M0 47 C72 37 108 29 161 38 S275 15 360 24 L360 130 L0 130 Z" fill="url(#recap-sea-wave)"/>
-    <path d="M0 52 C85 39 119 35 169 43 S283 22 360 30" fill="none" :stroke="selectedYear === '2023' ? '#f7a1b6' : selectedYear === '2024' ? '#ffbfaa' : selectedYear === '2025' ? '#c89c85' : selectedYear === '2026' ? '#8eaea3' : recapPalette.background" stroke-opacity=".5" stroke-width="1.5"/>
+    <path d="M0 52 C85 39 119 35 169 43 S283 22 360 30" fill="none" :stroke="selectedYear === '2023' ? '#f7a1b6' : selectedYear === '2024' ? '#ffbfaa' : selectedYear === '2025' ? '#c89c85' : selectedYear === '2026' ? '#8eaea3' : recapPalette.background" stroke-opacity=".38" stroke-width="1.5"/>
     <g :stroke="selectedYear === '2023' ? '#ffd0dc' : selectedYear === '2024' ? '#ffe6bd' : selectedYear === '2025' ? '#f4d8bc' : selectedYear === '2026' ? '#d5fff0' : '#f9fffa'" stroke-opacity=".7" stroke-width="3" stroke-linecap="round">
       <path d="M26 119 L21 81 M72 122 L77 69 M128 122 L119 78 M196 126 L203 63 M256 124 L250 73 M319 121 L325 64"/>
     </g>
@@ -1162,8 +1162,8 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <g :fill="selectedYear === '2023' ? '#ffd0dc' : selectedYear === '2024' ? '#ffe6bd' : selectedYear === '2025' ? '#f4d8bc' : selectedYear === '2026' ? '#d5fff0' : '#f9fffa'" opacity=".72">
       <circle cx="48" cy="84" r="2"/><circle cx="96" cy="95" r="2.5"/><circle cx="157" cy="77" r="2"/><circle cx="229" cy="91" r="2.5"/><circle cx="293" cy="85" r="2"/><circle cx="344" cy="91" r="2"/>
     </g>
-    <path d="M0 116 Q10 94 20 113 Q31 90 43 111 Q58 91 71 112 Q85 88 98 111 Q111 94 124 113 Q139 87 152 112 Q167 94 180 113 Q195 86 210 112 Q225 91 239 112 Q254 88 269 111 Q282 93 296 111 Q313 89 327 112 Q343 93 360 111 L360 130 L0 130 Z" :fill="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" fill-opacity=".65"/>
-    <g :fill="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" fill-opacity=".72">
+    <path d="M0 116 Q10 94 20 113 Q31 90 43 111 Q58 91 71 112 Q85 88 98 111 Q111 94 124 113 Q139 87 152 112 Q167 94 180 113 Q195 86 210 112 Q225 91 239 112 Q254 88 269 111 Q282 93 296 111 Q313 89 327 112 Q343 93 360 111 L360 130 L0 130 Z" :fill="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" fill-opacity=".45"/>
+    <g :fill="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" fill-opacity=".50">
       <circle cx="23" cy="108" r="10"/><circle cx="76" cy="108" r="11"/><circle cx="123" cy="110" r="10"/><circle cx="203" cy="110" r="12"/><circle cx="252" cy="109" r="10"/><circle cx="324" cy="108" r="12"/>
     </g>
   </svg>
