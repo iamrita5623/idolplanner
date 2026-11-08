@@ -893,6 +893,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
             <div class="space-y-6 text-center">
 
+<div class="border-b border-slate-100 pb-4 text-left space-y-2"><p class="text-sm font-bold text-slate-700">舊藝人名稱檢查（僅預覽）</p><p class="text-xs text-slate-500">檢查舊資料中相鄰的 Mi、ho。此功能不會修改或上傳活動資料。</p><div class="flex gap-2"><button type="button" @click="previewLegacyArtistRepair" class="flex-1 border rounded-lg p-2 text-xs">檢查舊資料</button><button type="button" @click="downloadLegacyArtistBackup" class="flex-1 border rounded-lg p-2 text-xs">下載原始備份</button></div><p v-if="legacyArtistRepairPreview.length" class="text-xs text-amber-700">找到 {{legacyArtistRepairPreview.length}} 筆待確認紀錄：</p><div v-for="item in legacyArtistRepairPreview" :key="item.index" class="bg-slate-50 rounded-lg p-2 text-xs"><p>{{item.date}} {{item.title}}</p><p>原始：{{item.before}}</p><p>預覽：{{item.after}}</p></div><p v-if="!legacyArtistRepairPreview.length" class="text-xs text-slate-400">點「檢查舊資料」查看是否有需要修復的紀錄。</p></div>
 <!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
 <div class="border-b border-slate-100 pb-4">
     <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
@@ -1306,7 +1307,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.56"></script>
+<script src="./js/app-222.js?v=1.1.57"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
