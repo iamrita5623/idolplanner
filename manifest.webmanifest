@@ -1,6 +1,6 @@
 {
   "name": "追星日記｜IDOL PLANNER",
-  "short_name": "追星日記",
+  "short_name": "IDOL PLANNER",
   "description": "收藏每一次追星的行程與回憶",
   "start_url": "./222.html",
   "scope": "./",
@@ -13,7 +13,7 @@
       "src": "./icons/idolplanner.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
