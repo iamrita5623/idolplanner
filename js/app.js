@@ -558,7 +558,8 @@ onMounted(async () => {
     }
 
     if (!currentUser.value) {try {activityCategoryMap.value=JSON.parse(localStorage.getItem('idolActivityCategories')||'{}')} catch(e){console.warn(e)}}
-    useCategoryStats.value=localStorage.getItem('idolUseCategoryStats')==='true';
+    // New category-based recap is enabled by default; users can still switch back in Settings.
+    useCategoryStats.value=localStorage.getItem('idolUseCategoryStats')!=='false';
     // 3. 🌟 關鍵：資料載入完成後，等待 0.5 秒再解除防護，防止自動覆蓋！
     setTimeout(() => {
         isInitializing.value = false;
