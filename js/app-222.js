@@ -279,6 +279,14 @@ const totalDistance = computed(() => mapDistanceDetails.value.km);
                     useUrl: false
                 };
                 const form = ref({ ...defaultForm });
+const artistDraft=ref(''),lookupExpanded=ref(false),lookupMessage=ref('');
+const lookupDraft=ref({date:'',time:'',location:'',coverUrl:''});
+const lookupFields=ref({date:true,time:true,location:true,coverUrl:false});
+const normalizedArtists=e=>Array.from(new Set((Array.isArray(e.artists)&&e.artists.length?e.artists:String(e.artist||'').split(/[、,，;；\\n]/)).map(x=>String(x||'').trim()).filter(Boolean)));
+const addFormArtist=()=>{const a=artistDraft.value.trim();if(!a)return;form.value.artists=Array.from(new Set([...normalizedArtists(form.value),a]));form.value.artist=form.value.artists[0]||'';artistDraft.value='';};
+const removeFormArtist=a=>{form.value.artists=normalizedArtists(form.value).filter(x=>x!==a);form.value.artist=form.value.artists[0]||'';};
+const openActivitySearch=()=>{if(!form.value.title.trim()){lookupMessage.value='請先輸入活動名稱';return;}window.open('https://www.google.com/search?q='+encodeURIComponent([form.value.title,form.value.date,form.value.location,'演出藝人 時間 場館 官方'].filter(Boolean).join(' ')),'_blank','noopener,noreferrer');lookupMessage.value='請核對官方來源後再填入資料';};
+const applyLookupDraft=()=>{let n=0;for(const k of ['date','time','location','coverUrl']){const v=String(lookupDraft.value[k]||'').trim();if(!lookupFields.value[k]||!v)continue;if(form.value[k]&&form.value[k]!==v&&!confirm('覆蓋原本的'+({date:'日期',time:'時間',location:'地點',coverUrl:'封面'}[k])+'？'))continue;form.value[k]=v;n++;if(k==='location'){form.value.lat=null;form.value.lng=null;searchError.value='請使用原本的定位按鈕確認座標';}if(k==='coverUrl')form.value.useUrl=true;}lookupMessage.value=n?'已帶入 '+n+' 個欄位，請確認後儲存':'未帶入資料';};
 
 const activityTypes=[['concert','專場演唱會'],['festival','拼盤演唱會／音樂節'],['fanmeeting','見面會'],['birthday','生日會'],['fansign','簽售會／簽名會'],['prerecord','事前錄製'],['broadcast','生放／公開放送'],['other','其他活動'],['unknown','尚未分類']].map(([value,label])=>({value,label}));
 const activityCategoryMap=ref({});
@@ -1335,7 +1343,8 @@ const idolNagging = computed(() => {
                 const updateCustomTheme = (e) => setTheme(e.target.value);
                 const openModal = () => {
                     isEditing.value = false;
-                    form.value = { ...defaultForm, date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
+                    artistDraft.value='';lookupExpanded.value=false;lookupMessage.value='';lookupDraft.value={date:'',time:'',location:'',coverUrl:''};
+                    form.value = { ...defaultForm, artists:[], date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
                     formActivityCategory.value='';
                     formCategoryTouched.value=false;
                     searchError.value = '';
@@ -1352,6 +1361,7 @@ const idolNagging = computed(() => {
                         coverUrl: evt.coverUrl || '',
                         sticker: evt.sticker || ''
                     };
+                    form.value.artists=normalizedArtists(evt);artistDraft.value='';lookupExpanded.value=false;lookupMessage.value='';lookupDraft.value={date:'',time:'',location:'',coverUrl:''};
                     formActivityCategory.value=categoryFor(evt);
                     formCategoryTouched.value=false; 
                     form.value.useUrl = (evt.coverUrl && !evt.coverUrl.startsWith('data:')) || false;
@@ -1361,6 +1371,7 @@ const idolNagging = computed(() => {
 
                 const closeModal = () => showModal.value = false;
                 const saveEvent = () => {
+                    if(artistDraft.value.trim())addFormArtist();form.value.artists=normalizedArtists(form.value);form.value.artist=form.value.artists[0]||'';
                     if (!form.value.title || !form.value.date) return alert('請填寫活動名稱與日期 🥺');
                     form.value.expenses = form.value.expenses.filter(e => e.item && e.item.trim() !== '');
                     form.value.checklist = form.value.checklist.filter(c => c.text && c.text.trim() !== '');
@@ -2170,7 +2181,7 @@ const generateShareImageLegacy = () => {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
                     activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,confirmSuggestedCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
-                    calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
+                    calendarEvent, ticketEvent, isEditing, form, artistDraft, addFormArtist, removeFormArtist, lookupExpanded, lookupMessage, lookupDraft, lookupFields, openActivitySearch, applyLookupDraft, importJson, importMode, readImportFile, searchQuery,
                   
                     cssVars, greetingMessage, filteredEvents, upcomingCount, currentYearExpense, statsData, presetColors, 
               
