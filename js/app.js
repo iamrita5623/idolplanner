@@ -305,11 +305,12 @@ const activityGroups=computed(()=>{
  return [...map.values()].sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
 });
 const filteredActivityGroups=computed(()=>activityGroups.value.filter(g=>{
- const category=categoryFor({artist:g.artist,title:g.title}),q=activityCategoryQuery.value.trim().toLocaleLowerCase();
- return (!q||(g.artist+' '+g.title).toLocaleLowerCase().includes(q))&&(activityCategoryFilter.value==='all'||(activityCategoryFilter.value==='unknown'?category==='unknown':category!=='unknown'));
+ const pending=!Object.prototype.hasOwnProperty.call(activityCategoryMap.value,g.key),q=activityCategoryQuery.value.trim().toLocaleLowerCase();
+ return (!q||(g.artist+' '+g.title).toLocaleLowerCase().includes(q))&&(activityCategoryFilter.value==='all'||(activityCategoryFilter.value==='unknown'?pending:!pending));
 }));
 const setActivityGroupCategory=(key,value)=>{if(activityTypes.some(t=>t.value===value))activityCategoryMap.value={...activityCategoryMap.value,[key]:value};};
-const activityCategoryPending=computed(()=>activityGroups.value.filter(g=>categoryFor({artist:g.artist,title:g.title})==='unknown').reduce((sum,g)=>sum+g.count,0));
+const confirmSuggestedCategory=g=>setActivityGroupCategory(g.key,activityCategoryMap.value[g.key]||g.suggested);
+const activityCategoryPending=computed(()=>activityGroups.value.filter(g=>!Object.prototype.hasOwnProperty.call(activityCategoryMap.value,g.key)).reduce((sum,g)=>sum+g.count,0));
 
 // Series suggestions never change original events or their titles.
 // Only same-artist, same-year DAY-number variants are proposed.
@@ -2044,7 +2045,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
-                    activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
+                    activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,confirmSuggestedCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
