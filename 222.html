@@ -7,6 +7,12 @@
     <title>我的追星日記 🌟 |
 追星行程管理、費用紀錄與地圖足跡</title>
     
+    <link rel="manifest" href="./manifest.webmanifest">
+    <meta name="theme-color" content="#568f87">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="追星日記">
+    <link rel="icon" type="image/svg+xml" href="./icons/idolplanner.svg">
     <meta name="description" content="專為追星族設計的日記App。輕鬆紀錄偶像活動行程、演唱會費用、追星足跡地圖，並管理出發前必帶清單。讓每一份愛意都被珍藏！">
     <meta property="og:title" content="我的追星日記 🌟 - 行程費用管理 App">
     <meta property="og:description" content="追星族必備！紀錄所有偶像活動、演唱會門票支出、地圖足跡，不再錯過任何一個重要瞬間。">
@@ -1236,6 +1242,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
 <script src="./js/app.js?v=1.1.27"></script>
+    <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
 
