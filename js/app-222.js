@@ -359,8 +359,10 @@ const seriesCandidateGroups=computed(()=>{
   if(!['concert','festival','fanmeeting','birthday'].includes(categoryFor(e)) || !seriesDay(e.title))return;
   const year=String(e.date||'').slice(0,4),base=seriesBase(e.title),artist=String(e.artist||'').trim().toLocaleLowerCase();
   if(!/^\d{4}$/.test(year)||!base||!artist)return;
-  const id=JSON.stringify([artist,year,base]);
-  if(!groups.has(id))groups.set(id,{id,artist:e.artist,year,base,titles:new Map(),keys:new Set()});
+  const names=normalizedArtists(e);
+  const groupArtist=names.length>1?names.map(n=>n.toLocaleLowerCase()).sort().join('、'):artist;
+  const id=JSON.stringify([groupArtist,year,base]);
+  if(!groups.has(id))groups.set(id,{id,artist:names.length>1?names.join('、'):e.artist,year,base,titles:new Map(),keys:new Set()});
   const g=groups.get(id);g.titles.set(e.title,(g.titles.get(e.title)||0)+1);g.keys.add(activityKey(e));
  });
  return [...groups.values()].filter(g=>g.titles.size>=2).map(g=>({id:g.id,artist:g.artist,year:g.year,base:g.base,titles:[...g.titles.keys()],keys:[...g.keys],count:[...g.titles.values()].reduce((a,b)=>a+b,0),accepted:g.keys.every(k=>confirmedSeries.value[k]===g.id),rejected:!!rejectedSeries.value[g.id]})).filter(g=>!g.accepted&&!g.rejected);
@@ -381,7 +383,10 @@ const seriesStatsKey=e=>{
  const id=confirmedSeries.value[key];
  if(!id)return key;
  // Keep confirmations scoped to the original artist and year.
- try {const [artist,year,base]=JSON.parse(id);if(artist===String(e.artist||'').trim().toLocaleLowerCase()&&year===String(e.date||'').slice(0,4)&&base===seriesBase(e.title)&&seriesDay(e.title))return id;}catch(_){}
+ try {const [artist,year,base]=JSON.parse(id);const names=normalizedArtists(e);
+  const canonical=names.length>1?names.map(n=>n.toLocaleLowerCase()).sort().join('、'):String(e.artist||'').trim().toLocaleLowerCase();
+  // Accept both earlier primary-artist confirmations and new complete-lineup confirmations.
+  if((artist===canonical||artist===String(e.artist||'').trim().toLocaleLowerCase())&&year===String(e.date||'').slice(0,4)&&base===seriesBase(e.title)&&seriesDay(e.title))return id;}catch(_){}
  return key;
 };
 
