@@ -250,7 +250,7 @@ const mapDistanceDetails = computed(() => {
     if (!home) return { km: null, missing, homeMissing: true };
     const years = new Map();
     for (const event of rows) {
-        if (!valid(event) || !/^\\d{4}-/.test(String(event.date || ''))) continue;
+        if (!valid(event) || !/^\d{4}-/.test(String(event.date || ''))) continue;
         const year = String(event.date).slice(0, 4);
         if (!years.has(year)) years.set(year, []);
         years.get(year).push(event);
