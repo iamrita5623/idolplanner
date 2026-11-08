@@ -1101,6 +1101,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                    
   
                         <div class="space-y-4">
+                            <div class="space-y-2 mb-4"><button type="button" @click="lookupExpanded=!lookupExpanded" :style="{color:themeColor,borderColor:themeColor}" class="text-xs border rounded-xl px-3 py-2"><i class="ph ph-magnifying-glass"></i> 查找活動資料</button><div v-if="lookupExpanded" class="rounded-xl border bg-slate-50 p-3 space-y-3"><p class="text-xs text-slate-500">先輸入活動名稱，再查詢官方來源並選擇帶入欄位。自動查詢 API 尚待串接。</p><button type="button" @click="openActivitySearch" :style="{backgroundColor:themeColor}" class="text-white rounded-lg px-3 py-2 text-xs">開啟網頁搜尋 <i class="ph ph-arrow-square-out"></i></button><div class="grid grid-cols-2 gap-2"><label class="text-xs"><input type="checkbox" v-model="lookupFields.date"> 日期<input type="date" v-model="lookupDraft.date" class="w-full rounded-lg bg-white p-2 mt-1"></label><label class="text-xs"><input type="checkbox" v-model="lookupFields.time"> 時間<input type="time" v-model="lookupDraft.time" class="w-full rounded-lg bg-white p-2 mt-1"></label></div><label class="block text-xs"><input type="checkbox" v-model="lookupFields.location"> 場館／地點<input v-model="lookupDraft.location" placeholder="場館名稱" class="w-full rounded-lg bg-white p-2 mt-1"></label><label class="block text-xs"><input type="checkbox" v-model="lookupFields.coverUrl"> 海報網址（請確認使用授權）<input type="url" v-model="lookupDraft.coverUrl" placeholder="https://..." class="w-full rounded-lg bg-white p-2 mt-1"></label><button type="button" @click="applyLookupDraft" class="w-full rounded-lg border bg-white p-2 text-sm">帶入勾選資料</button><p v-if="lookupMessage" class="text-xs text-slate-600">{{lookupMessage}}</p></div></div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">活動名稱</label><input v-model="form.title" type="text" placeholder="例如: 2024 世界巡迴演唱會" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">活動類型（同偶像、同名稱一起套用）</label><select v-model="formActivityCategory" @change="formCategoryTouched = true" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800"><option value="">依名稱自動建議（未確認）</option><option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option></select><p class="text-xs text-slate-400 mt-1">不確定可先選「尚未分類」，之後到設定批次整理。</p></div>
                             
@@ -1131,16 +1132,16 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                                 </div>
                                 <p class="text-xs text-slate-400 mt-1">上傳圖片檔案，將其轉換為 Base64 儲存，豐富你的行程卡片！</p>
                             </div>
-                            <div class="grid grid-cols-[1fr,60px] gap-3">
+                            <div class="grid grid-cols-[minmax(0,1fr)_96px] gap-3 items-end">
                                 <div><label class="block text-sm font-medium text-slate-500 mb-1">歌手/團體</label><div class="w-full bg-slate-50 rounded-xl p-2 flex flex-wrap items-center gap-1 min-h-[46px]"><span v-for="a in (form.artists||[])" :key="a" class="text-xs bg-white border rounded-lg px-2 py-1 inline-flex gap-1 items-center">{{a}}<button type="button" @click="removeFormArtist(a)" aria-label="移除藝人"><i class="ph ph-x"></i></button></span><input v-model="artistDraft" @keydown.enter.prevent="addFormArtist" placeholder="輸入藝人按 Enter" class="min-w-[90px] flex-1 bg-transparent border-none p-1 text-sm focus:ring-0"><button type="button" @click="addFormArtist" :style="{color:themeColor}" aria-label="加入藝人"><i class="ph ph-plus-circle"></i></button></div></div>
     
        
-                                <div><label class="block text-sm font-medium text-slate-500 mb-1">應援色</label><div class="h-[46px] w-full relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50"><input v-model="form.color" type="color" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] cursor-pointer p-0 border-0"></div></div>
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">應援色</label><div class="h-[46px] w-full relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50"><input v-model="form.color" type="color" class="absolute inset-0 w-full h-full cursor-pointer p-0 border-0"></div></div>
                             </div>
                 
                        
       
-                            <div class="space-y-2"><button type="button" @click="lookupExpanded=!lookupExpanded" :style="{color:themeColor,borderColor:themeColor}" class="text-xs border rounded-xl px-3 py-2"><i class="ph ph-magnifying-glass"></i> 查找活動資料</button><div v-if="lookupExpanded" class="rounded-xl border bg-slate-50 p-3 space-y-3"><p class="text-xs text-slate-500">目前提供網頁搜尋與確認後帶入；尚未自動擷取演出資料。請優先核對官方公告。</p><button type="button" @click="openActivitySearch" :style="{backgroundColor:themeColor}" class="text-white rounded-lg px-3 py-2 text-xs">開啟網頁搜尋 <i class="ph ph-arrow-square-out"></i></button><div class="grid grid-cols-2 gap-2"><label class="text-xs"><input type="checkbox" v-model="lookupFields.date"> 日期<input type="date" v-model="lookupDraft.date" class="w-full rounded-lg bg-white p-2 mt-1"></label><label class="text-xs"><input type="checkbox" v-model="lookupFields.time"> 時間<input type="time" v-model="lookupDraft.time" class="w-full rounded-lg bg-white p-2 mt-1"></label></div><label class="block text-xs"><input type="checkbox" v-model="lookupFields.location"> 場館／地點<input v-model="lookupDraft.location" placeholder="場館名稱" class="w-full rounded-lg bg-white p-2 mt-1"></label><label class="block text-xs"><input type="checkbox" v-model="lookupFields.coverUrl"> 海報網址（請確認使用授權）<input type="url" v-model="lookupDraft.coverUrl" placeholder="https://..." class="w-full rounded-lg bg-white p-2 mt-1"></label><button type="button" @click="applyLookupDraft" class="w-full rounded-lg border bg-white p-2 text-sm">帶入勾選資料</button><p v-if="lookupMessage" class="text-xs text-slate-600">{{lookupMessage}}</p></div></div>
+                            
                              <div><label class="block text-sm font-medium text-slate-500 mb-1">心情貼紙 (Emoji)</label><input v-model="form.sticker" type="text" placeholder="輸入一個 Emoji" maxlength="3" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800 text-xl text-center"></div>
 
                             <div class="grid grid-cols-2 gap-4">
@@ -1306,7 +1307,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.46"></script>
+<script src="./js/app-222.js?v=1.1.47"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
