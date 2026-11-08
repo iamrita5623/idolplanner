@@ -238,26 +238,38 @@ const filteredMapEventsCount = computed(() => {
 
 
 // 更新：totalDistance 也要隨著年份變動
-const totalDistance = computed(() => {
-    // 根據統計頁面選擇的年份過濾
-    const targetYear = selectedMapYear.value; 
-    const baseEvents = targetYear === 'ALL' 
-        ? events.value 
-        : events.value.filter(e => e.date && e.date.startsWith(targetYear));
-
-    const validPoints = [...baseEvents]
-        .filter(e => e.lat && e.lng)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    let dist = 0;
-    for (let i = 0; i < validPoints.length - 1; i++) {
-        dist += calculateKm(
-            validPoints[i].lat, validPoints[i].lng,
-            validPoints[i+1].lat, validPoints[i+1].lng
-        );
+// Annual route estimate: home -> chronologically ordered geocoded events -> home.
+// Each calendar year is a separate round trip, including in ALL view.
+const mapDistanceDetails = computed(() => {
+    const selected = selectedMapYear.value;
+    const rows = events.value.filter(e => selected === 'ALL' || String(e.date || '').startsWith(String(selected)));
+    const valid = e => Number.isFinite(Number(e.lat)) && Number.isFinite(Number(e.lng)) && e.lat !== null && e.lng !== null && e.lat !== '' && e.lng !== '';
+    const missing = rows.filter(e => !valid(e)).length;
+    const homeKey = recapNormalizeCity(recapHomeCity.value);
+    const home = recapCityCoordinates[homeKey];
+    if (!home) return { km: null, missing, homeMissing: true };
+    const years = new Map();
+    for (const event of rows) {
+        if (!valid(event) || !/^\\d{4}-/.test(String(event.date || ''))) continue;
+        const year = String(event.date).slice(0, 4);
+        if (!years.has(year)) years.set(year, []);
+        years.get(year).push(event);
     }
-    return Math.round(dist); // 依照您的要求取整數位
+    let distance = 0;
+    for (const points of years.values()) {
+        points.sort((a,b) => String(a.date).localeCompare(String(b.date)) || String(a.time || '').localeCompare(String(b.time || '')));
+        let previous = home;
+        for (const point of points) {
+            const current = [Number(point.lat), Number(point.lng)];
+            distance += calculateKm(previous[0],previous[1],current[0],current[1]);
+            previous = current;
+        }
+        distance += calculateKm(previous[0],previous[1],home[0],home[1]);
+    }
+    return { km: Math.round(distance), missing, homeMissing: false };
 });
+const totalDistance = computed(() => mapDistanceDetails.value.km);
+
 
 
                 const defaultForm = {
@@ -2061,7 +2073,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
