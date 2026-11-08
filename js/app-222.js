@@ -1524,6 +1524,7 @@ const initMap = (preserveView = false) => {
 
 // 年度足跡重播：只讀取現有活動，不變更原始行程、地圖路線或里程公式。
 const replayPlaying = ref(false);
+const replayPaused = ref(false);
 const replayIndex = ref(-1);
 const replayEvent = ref(null);
 let replayTimer = null;
@@ -1540,6 +1541,7 @@ const clearReplayMarker = () => { if (map && replayMarker) map.removeLayer(repla
 const stopReplay = () => {
     clearReplayTimer();
     replayPlaying.value = false;
+    replayPaused.value = false;
     replayIndex.value = -1;
     replayEvent.value = null;
     clearReplayMarker();
@@ -1564,9 +1566,22 @@ const advanceReplay = () => {
     showReplayStop(next);
     replayTimer = setTimeout(advanceReplay, 2500);
 };
+const pauseReplay = () => {
+    if (!replayPlaying.value) return;
+    clearReplayTimer();
+    replayPlaying.value = false;
+    replayPaused.value = true;
+    if (map) map.stop();
+};
 const startReplay = () => {
+    if (replayPlaying.value || !replayStops.value.length || !map) return;
+    if (replayPaused.value && replayIndex.value >= 0) {
+        replayPaused.value = false;
+        replayPlaying.value = true;
+        replayTimer = setTimeout(advanceReplay, 2500);
+        return;
+    }
     stopReplay();
-    if (!replayStops.value.length || !map) return;
     replayPlaying.value = true;
     advanceReplay();
 };
@@ -2140,7 +2155,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-replayPlaying, replayIndex, replayEvent, replayStops, startReplay, stopReplay, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
