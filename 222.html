@@ -1136,7 +1136,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                                 <div><label class="block text-sm font-medium text-slate-500 mb-1">歌手/團體</label><div class="w-full bg-slate-50 rounded-xl p-2 flex flex-wrap items-center gap-1 min-h-[46px]"><span v-for="a in (form.artists||[])" :key="a" class="text-xs bg-white border rounded-lg px-2 py-1 inline-flex gap-1 items-center">{{a}}<button type="button" @click="removeFormArtist(a)" aria-label="移除藝人"><i class="ph ph-x"></i></button></span><input v-model="artistDraft" @keydown.enter.prevent="addFormArtist" placeholder="輸入藝人按 Enter" class="min-w-[90px] flex-1 bg-transparent border-none p-1 text-sm focus:ring-0"><button type="button" @click="addFormArtist" :style="{color:themeColor}" aria-label="加入藝人"><i class="ph ph-plus-circle"></i></button></div></div>
     
        
-                                <div><label class="block text-sm font-medium text-slate-500 mb-1">應援色</label><div class="h-[46px] w-full relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50"><input v-model="form.color" type="color" class="absolute inset-0 w-full h-full cursor-pointer p-0 border-0"></div></div>
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">應援色</label><div class="h-[46px] w-[46px] mx-auto relative overflow-hidden rounded-full border border-slate-200 bg-slate-50"><input v-model="form.color" type="color" aria-label="選擇應援色" class="absolute inset-0 w-full h-full cursor-pointer p-0 border-0 rounded-full"></div></div>
                             </div>
                 
                        
