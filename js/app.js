@@ -100,6 +100,7 @@ const checkUserAndFetchData = async () => {
             if (typeof raw.customTitle === 'string') customTitle.value = raw.customTitle;
             if (typeof raw.themeColor === 'string') themeColor.value = raw.themeColor;
             if (Number(raw.yearlyBudget) > 0) yearlyBudget.value = Number(raw.yearlyBudget);
+            if (raw.activityCategories && typeof raw.activityCategories==='object' && !Array.isArray(raw.activityCategories)) activityCategoryMap.value=raw.activityCategories;
         }
         cloudReady.value = true;
         return { status: 'loaded' };
@@ -264,6 +265,47 @@ const totalDistance = computed(() => {
                     useUrl: false
                 };
                 const form = ref({ ...defaultForm });
+
+const activityTypes=[['concert','專場演唱會'],['festival','拼盤演唱會／音樂節'],['fanmeeting','見面會'],['birthday','生日會'],['fansign','簽售會／簽名會'],['prerecord','事前錄製'],['broadcast','生放／公開放送'],['other','其他活動'],['unknown','尚未分類']].map(([value,label])=>({value,label}));
+const activityCategoryMap=ref({});
+const activityCategoryQuery=ref('');
+const activityCategoryFilter=ref('all');
+const showActivityCategories=ref(false);
+const showCategoryPreview=ref(false);
+const activityKey=e=>JSON.stringify([String(e.artist||'').trim().toLocaleLowerCase(),String(e.title||'').trim().toLocaleLowerCase()]);
+const suggestActivityCategory=title=>{
+ const t=String(title||'').toLocaleLowerCase();
+ if(/fan.?sign|팬사인|簽售|签售|簽名會|签名会/.test(t))return 'fansign';
+ if(/사전녹화|事前錄製|事前录制|預錄|pre.?record/.test(t))return 'prerecord';
+ if(/생방송|生放|公開放送|live broadcast/.test(t))return 'broadcast';
+ if(/birthday|생일파티|生日會|生日会/.test(t))return 'birthday';
+ if(/fan.?meeting|팬미팅|見面會|见面会/.test(t))return 'fanmeeting';
+ if(/festival|music fest|音樂節|音乐节|拼盤|拼盘|페스티벌/.test(t))return 'festival';
+ if(/concert|콘서트|演唱會|演唱会|world tour/.test(t))return 'concert';
+ return 'unknown';
+};
+const categoryFor=e=>activityCategoryMap.value[activityKey(e)]||suggestActivityCategory(e.title);
+const activityGroups=computed(()=>{
+ const map=new Map();
+ events.value.forEach(e=>{const key=activityKey(e);if(!map.has(key))map.set(key,{key,artist:e.artist||'其他',title:e.title||'',count:0,suggested:suggestActivityCategory(e.title)});map.get(key).count++});
+ return [...map.values()].sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
+});
+const filteredActivityGroups=computed(()=>activityGroups.value.filter(g=>{
+ const category=activityCategoryMap.value[g.key]||g.suggested,q=activityCategoryQuery.value.trim().toLocaleLowerCase();
+ return (!q||(g.artist+' '+g.title).toLocaleLowerCase().includes(q))&&(activityCategoryFilter.value==='all'||(activityCategoryFilter.value==='unknown'?category==='unknown':category!=='unknown'));
+}));
+const setActivityGroupCategory=(key,value)=>{if(activityTypes.some(t=>t.value===value))activityCategoryMap.value={...activityCategoryMap.value,[key]:value};};
+const activityCategoryPending=computed(()=>activityGroups.value.filter(g=>(activityCategoryMap.value[g.key]||g.suggested)==='unknown').reduce((sum,g)=>sum+g.count,0));
+const categoryPreview=computed(()=>{
+ const included=new Set(['concert','festival','fanmeeting','birthday']),excluded=['사전녹화','事前錄製','簽售會','簽名會','錄製'];
+ const list=selectedYear.value==='ALL'?events.value:events.value.filter(e=>String(e.date||'').startsWith(String(selectedYear.value)));
+ const old={},next={};
+ list.forEach(e=>{const t=String(e.title||'').trim();if(!excluded.some(k=>t.includes(k)))old[t]=(old[t]||0)+1;if(included.has(categoryFor(e)))next[t]=(next[t]||0)+1;});
+ const rows=obj=>Object.keys(obj).filter(k=>obj[k]>1).map(title=>({title,count:obj[title]}));
+ return {old:rows(old),next:rows(next)};
+});
+watch(activityCategoryMap,map=>{localStorage.setItem('idolActivityCategories',JSON.stringify(map));syncToCloud();},{deep:true});
+
                 const presetColors = ['#63b3b0', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#1dd1a1'];
                 const customTitle = ref(localStorage.getItem('appTitle') || '追星日記 ✨');
                 const appVersion = ref('v1.0.7'); // 更新版本號
@@ -465,7 +507,8 @@ const syncToCloud = () => {
         if (isInitializing.value || !cloudReady.value || !currentUser.value) return;
         const userId = currentUser.value.id;
         const snapshot = {
-            schemaVersion: 2,
+            schemaVersion: 3,
+            activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value)),
             events: JSON.parse(JSON.stringify(events.value)),
             fandoms: JSON.parse(JSON.stringify(fandoms.value)),
             customTitle: customTitle.value,
@@ -510,6 +553,7 @@ onMounted(async () => {
         }
     }
 
+    if (!currentUser.value) {try {activityCategoryMap.value=JSON.parse(localStorage.getItem('idolActivityCategories')||'{}')} catch(e){console.warn(e)}}
     // 3. 🌟 關鍵：資料載入完成後，等待 0.5 秒再解除防護，防止自動覆蓋！
     setTimeout(() => {
         isInitializing.value = false;
@@ -1450,7 +1494,8 @@ const initMap = (preserveView = false) => {
                                 fandoms: JSON.parse(JSON.stringify(fandoms.value)),
                                 customTitle: customTitle.value,
                                 themeColor: themeColor.value,
-                                yearlyBudget: yearlyBudget.value
+                                yearlyBudget: yearlyBudget.value,
+                                activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value))
                             }
                         };
                         const json = JSON.stringify(snapshot, null, 2);
@@ -1505,11 +1550,13 @@ const initMap = (preserveView = false) => {
                                 customTitle: customTitle.value,
                                 themeColor: themeColor.value,
                                 yearlyBudget: yearlyBudget.value,
+                                activityCategories: activityCategoryMap.value,
                                 savedAt: new Date().toISOString()
                             }));
                             events.value = restoreData.events;
                             if (isFull) {
                                 fandoms.value = restoreData.fandoms;
+                                activityCategoryMap.value = restoreData.activityCategories && typeof restoreData.activityCategories==='object' && !Array.isArray(restoreData.activityCategories) ? restoreData.activityCategories : {};
                                 if (typeof restoreData.customTitle === 'string') customTitle.value = restoreData.customTitle;
                                 if (typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor)) {
                                     themeColor.value = restoreData.themeColor;
@@ -1921,6 +1968,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
+                    activityTypes,activityCategoryMap,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
