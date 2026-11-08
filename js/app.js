@@ -277,11 +277,11 @@ const activityCategoryQuery=ref('');
 const activityCategoryFilter=ref('all');
 const showActivityCategories=ref(false);
 const showCategoryPreview=ref(false);
-const useCategoryStats=ref(false);
+const useCategoryStats=ref(true);
 const formActivityCategory=ref('');
 const formCategoryTouched=ref(false);
-const confirmCategoryStats=()=>{if(!confirm('確定改用活動分類計算大型演出？尚未分類的行程不會計入。可隨時切回原本統計。'))return;useCategoryStats.value=true;localStorage.setItem('idolUseCategoryStats','true');};
-const revertCategoryStats=()=>{useCategoryStats.value=false;localStorage.setItem('idolUseCategoryStats','false');};
+const confirmCategoryStats=()=>{useCategoryStats.value=true;};
+const revertCategoryStats=()=>{useCategoryStats.value=true;};
 const activityKey=e=>JSON.stringify([String(e.artist||'').trim().toLocaleLowerCase(),String(e.title||'').trim().toLocaleLowerCase()]);
 const suggestActivityCategory=title=>{
  const t=String(title||'').toLocaleLowerCase();
@@ -305,7 +305,7 @@ const activityGroups=computed(()=>{
  return [...map.values()].sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
 });
 const filteredActivityGroups=computed(()=>activityGroups.value.filter(g=>{
- const category=activityCategoryMap.value[g.key]||g.suggested,q=activityCategoryQuery.value.trim().toLocaleLowerCase();
+ const category=categoryFor({artist:g.artist,title:g.title}),q=activityCategoryQuery.value.trim().toLocaleLowerCase();
  return (!q||(g.artist+' '+g.title).toLocaleLowerCase().includes(q))&&(activityCategoryFilter.value==='all'||(activityCategoryFilter.value==='unknown'?category==='unknown':category!=='unknown'));
 }));
 const setActivityGroupCategory=(key,value)=>{if(activityTypes.some(t=>t.value===value))activityCategoryMap.value={...activityCategoryMap.value,[key]:value};};
@@ -337,7 +337,10 @@ const acceptSeries=g=>{
 const rejectSeries=g=>{rejectedSeries.value={...rejectedSeries.value,[g.id]:true};};
 const resetSeries=()=>{if(confirm('清除所有系列合併確認與略過紀錄？原始行程不受影響。')){confirmedSeries.value={};rejectedSeries.value={};}};
 const seriesStatsKey=e=>{
- const key=activityKey(e),id=confirmedSeries.value[key];
+ const key=activityKey(e);
+ // Festivals are event-led: different idols attending the same named festival share a recap group.
+ if(categoryFor(e)==='festival')return JSON.stringify(['festival',String(e.title||'').trim().toLocaleLowerCase()]);
+ const id=confirmedSeries.value[key];
  if(!id)return key;
  // Keep confirmations scoped to the original artist and year.
  try {const [artist,year]=JSON.parse(id);if(artist===String(e.artist||'').trim().toLocaleLowerCase()&&year===String(e.date||'').slice(0,4))return id;}catch(_){}
@@ -345,12 +348,16 @@ const seriesStatsKey=e=>{
 };
 
 const categoryPreview=computed(()=>{
- const included=new Set(['concert','festival','fanmeeting','birthday']),excluded=['사전녹화','事前錄製','簽售會','簽名會','錄製'];
+ const included=new Set(['concert','festival','fanmeeting','birthday']);
  const list=selectedYear.value==='ALL'?events.value:events.value.filter(e=>String(e.date||'').startsWith(String(selectedYear.value)));
- const old={},next={};
- list.forEach(e=>{const t=String(e.title||'').trim();if(!excluded.some(k=>t.includes(k)))old[t]=(old[t]||0)+1;if(included.has(categoryFor(e))){const key=seriesStatsKey(e);if(!next[key])next[key]={title:confirmedSeries.value[activityKey(e)]?seriesBase(t):t,artist:e.artist||'其他',count:0};next[key].count++;}});
- const rows=obj=>Object.keys(obj).filter(k=>obj[k]>1).map(title=>({title,count:obj[title]}));
- return {old:rows(old),next:Object.values(next).filter(item=>item.count>1).sort((a,b)=>b.count-a.count)};
+ const groups=new Map();
+ list.forEach(e=>{
+  if(!included.has(categoryFor(e)))return;
+  const key=seriesStatsKey(e);
+  if(!groups.has(key))groups.set(key,{title:confirmedSeries.value[activityKey(e)]&&categoryFor(e)!=='festival'?seriesBase(e.title):String(e.title||'').trim(),artist:categoryFor(e)==='festival'?'':e.artist||'其他',count:0});
+  groups.get(key).count++;
+ });
+ return {next:[...groups.values()].filter(g=>g.count>1).sort((a,b)=>b.count-a.count)};
 });
 watch(activityCategoryMap,map=>{localStorage.setItem('idolActivityCategories',JSON.stringify(map));syncToCloud();},{deep:true});
 watch(confirmedSeries,map=>{localStorage.setItem('idolConfirmedSeries',JSON.stringify(map));syncToCloud();},{deep:true});
@@ -608,7 +615,8 @@ onMounted(async () => {
     if (!currentUser.value) {try {activityCategoryMap.value=JSON.parse(localStorage.getItem('idolActivityCategories')||'{}')} catch(e){console.warn(e)}}
     if (!currentUser.value) {try {confirmedSeries.value=JSON.parse(localStorage.getItem('idolConfirmedSeries')||'{}');rejectedSeries.value=JSON.parse(localStorage.getItem('idolRejectedSeries')||'{}')}catch(e){console.warn(e)}}
     // New category-based recap is enabled by default; users can still switch back in Settings.
-    useCategoryStats.value=localStorage.getItem('idolUseCategoryStats')!=='false';
+    useCategoryStats.value=true;
+    localStorage.setItem('idolUseCategoryStats','true');
     // 3. 🌟 關鍵：資料載入完成後，等待 0.5 秒再解除防護，防止自動覆蓋！
     setTimeout(() => {
         isInitializing.value = false;
@@ -1027,13 +1035,14 @@ const availableYears = computed(() => {
                         locationMap[name].count++;
                     });
                     const sortedLocations = Object.keys(locationMap).map(key => ({ name: key, ...locationMap[key] })).sort((a, b) => b.count - a.count).slice(0, 3);
-                    const titleMap = {};
-                    const excludeKeywords = ['사전녹화', '事前錄製', '簽售會', '簽名會', '錄製'];
-                    targetEvents.forEach(e => {
-                        const t = e.title.trim();
-                        if (!excludeKeywords.some(k => t.includes(k))) titleMap[t] = (titleMap[t] || 0) + 1;
+                    const m=new Map();
+                    targetEvents.forEach(e=>{
+                        if(!['concert','festival','fanmeeting','birthday'].includes(categoryFor(e)))return;
+                        const key=seriesStatsKey(e);
+                        if(!m.has(key))m.set(key,{title:confirmedSeries.value[activityKey(e)]&&categoryFor(e)!=='festival'?seriesBase(e.title):String(e.title||'').trim(),artist:categoryFor(e)==='festival'?'':e.artist||'其他',count:0});
+                        m.get(key).count++;
                     });
-                    const series = useCategoryStats.value ? (()=>{const m=new Map();targetEvents.forEach(e=>{if(['concert','festival','fanmeeting','birthday'].includes(categoryFor(e))){const key=seriesStatsKey(e);if(!m.has(key))m.set(key,{title:confirmedSeries.value[activityKey(e)]?seriesBase(e.title):String(e.title||'').trim(),artist:e.artist||'其他',count:0});m.get(key).count++;}});return [...m.values()].filter(item=>item.count>1).sort((a,b)=>b.count-a.count);})() : Object.keys(titleMap).map(key => ({ title:key,count:titleMap[key] })).filter(item=>item.count>1).sort((a,b)=>b.count-a.count);
+                    const series=[...m.values()].filter(item=>item.count>1).sort((a,b)=>b.count-a.count);
                     return { 
                         count, 
                         totalSpent, 
