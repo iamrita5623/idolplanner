@@ -1537,7 +1537,7 @@ const replayStops = computed(() => events.value
     .slice().sort((a,b) => String(a.date || '').localeCompare(String(b.date || ''))
         || String(a.time || '').localeCompare(String(b.time || ''))));
 const clearReplayTimer = () => { if (replayTimer !== null) clearTimeout(replayTimer); replayTimer = null; };
-const clearReplayMarker = () => { if (map && replayMarker) map.removeLayer(replayMarker); replayMarker = null; };
+const clearReplayMarker = () => { if (map && replayMarker) { replayMarker.closePopup(); map.removeLayer(replayMarker); } replayMarker = null; };
 const stopReplay = () => {
     clearReplayTimer();
     replayPlaying.value = false;
@@ -1557,7 +1557,25 @@ const showReplayStop = (index) => {
         radius: 13, color: '#fff', weight: 4, fillColor: getEventColor(stop),
         fillOpacity: 1, interactive: false
     }).addTo(map);
-    // 保持全年足跡在同一畫面；逐站高亮，不再強制放大或移動地圖。
+    // 每站放大，將活動點留在畫面偏上方，為原有地圖字卡及底部控制列預留空間。
+    const zoom = Math.max(map.getZoom(), 11);
+    const target = map.project(L.latLng(coords), zoom).add([0, 95]);
+    const shiftedCenter = map.unproject(target, zoom);
+    const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
+    const sameLocation = replayStops.value.filter(e =>
+        Number(e.lat).toFixed(4) === Number(stop.lat).toFixed(4) &&
+        Number(e.lng).toFixed(4) === Number(stop.lng).toFixed(4));
+    let popup = '<div style="min-width:210px;max-width:280px;"><div style="max-height:min(35dvh,260px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;">';
+    [...sameLocation].reverse().forEach(ev => {
+        popup += '<div style="border-bottom:1px dashed #eee;margin-bottom:5px;padding-bottom:5px;">'
+            + '<b style="color:' + getEventColor(ev) + '">' + escapeText(ev.artist) + '</b><br>'
+            + '<small>' + escapeText(ev.title) + '</small><br>'
+            + '<small style="color:#666">📅 ' + escapeText(ev.date) + '</small></div>';
+    });
+    popup += '</div></div>';
+    replayMarker.bindPopup(popup, { maxWidth: 320, autoPan: false, className: 'event-map-popup', offset: [0, -9] });
+    map.flyTo(shiftedCenter, zoom, { duration: 0.7 });
+    replayMarker.openPopup();
 };
 const advanceReplay = () => {
     if (!replayPlaying.value) return;
@@ -1582,12 +1600,7 @@ const startReplay = () => {
         return;
     }
     stopReplay();
-    const bounds = L.latLngBounds(replayStops.value.map(e => [Number(e.lat), Number(e.lng)]));
     map.invalidateSize();
-    if (bounds.isValid()) {
-        // 保留底部控制列空間；縮放至當年度所有活動都看得見。
-        map.fitBounds(bounds, { paddingTopLeft: [28, 28], paddingBottomRight: [28, 105], maxZoom: 11, animate: false });
-    }
     replayPlaying.value = true;
     advanceReplay();
 };
