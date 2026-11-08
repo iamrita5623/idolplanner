@@ -273,7 +273,7 @@ const activityCategoryFilter=ref('all');
 const showActivityCategories=ref(false);
 const showCategoryPreview=ref(false);
 const useCategoryStats=ref(false);
-const formActivityCategory=ref('unknown');
+const formActivityCategory=ref('');
 const formCategoryTouched=ref(false);
 const confirmCategoryStats=()=>{if(!confirm('確定改用活動分類計算大型演出？尚未分類的行程不會計入。可隨時切回原本統計。'))return;useCategoryStats.value=true;localStorage.setItem('idolUseCategoryStats','true');};
 const revertCategoryStats=()=>{useCategoryStats.value=false;localStorage.setItem('idolUseCategoryStats','false');};
@@ -1270,7 +1270,7 @@ const idolNagging = computed(() => {
                 const openModal = () => {
                     isEditing.value = false;
                     form.value = { ...defaultForm, date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
-                    formActivityCategory.value='unknown';
+                    formActivityCategory.value='';
                     formCategoryTouched.value=false;
                     searchError.value = '';
                     showModal.value = true;
