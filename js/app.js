@@ -352,11 +352,11 @@ const resetSeries=()=>{if(confirm('清除所有系列合併確認與略過紀錄
 const seriesStatsKey=e=>{
  const key=activityKey(e);
  // Festivals are event-led: different idols attending the same named festival share a recap group.
- if(categoryFor(e)==='festival')return JSON.stringify(['festival',String(e.title||'').trim().toLocaleLowerCase()]);
+ if(categoryFor(e)==='festival')return JSON.stringify(['festival',String(e.date||'').slice(0,4),String(e.title||'').trim().toLocaleLowerCase()]);
  const id=confirmedSeries.value[key];
  if(!id)return key;
  // Keep confirmations scoped to the original artist and year.
- try {const [artist,year]=JSON.parse(id);if(artist===String(e.artist||'').trim().toLocaleLowerCase()&&year===String(e.date||'').slice(0,4))return id;}catch(_){}
+ try {const [artist,year,base]=JSON.parse(id);if(artist===String(e.artist||'').trim().toLocaleLowerCase()&&year===String(e.date||'').slice(0,4)&&base===seriesBase(e.title)&&seriesDay(e.title))return id;}catch(_){}
  return key;
 };
 
