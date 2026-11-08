@@ -534,9 +534,11 @@
 
         <div class="text-right shrink-0 border-l border-slate-100 pl-3 ml-1">
             <div class="text-lg font-bold leading-none" :style="{ color: themeColor }">
-                {{ totalDistance }} <span class="text-[10px] font-normal text-slate-400">km</span>
+                {{ totalDistance === null ? "—" : totalDistance }} <span v-if="totalDistance !== null" class="text-[10px] font-normal text-slate-400">km</span>
             </div>
-            <div class="text-[9px] text-slate-400 font-medium mt-1">累積里程</div>
+            <div class="text-[9px] text-slate-400 font-medium mt-1">年度來回直線里程</div>
+            <div v-if="mapDistanceDetails.homeMissing" class="text-[9px] text-orange-500 mt-1">請至設定填寫出發城市</div>
+            <div v-else-if="mapDistanceDetails.missing > 0" class="text-[9px] text-orange-500 mt-1">{{ mapDistanceDetails.missing }} 筆未定位，未計入</div>
         </div>
     </div>
 </div>
@@ -1280,7 +1282,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app.js?v=1.1.34"></script>
+<script src="./js/app.js?v=1.1.35"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
