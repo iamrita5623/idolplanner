@@ -1521,6 +1521,65 @@ const initMap = (preserveView = false) => {
 
 
 
+
+// 年度足跡重播：只讀取現有活動，不變更原始行程、地圖路線或里程公式。
+const replayPlaying = ref(false);
+const replayIndex = ref(-1);
+const replayEvent = ref(null);
+let replayTimer = null;
+let replayMarker = null;
+const replayStops = computed(() => events.value
+    .filter(e => (selectedMapYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedMapYear.value)))
+        && e.lat !== null && e.lng !== null && e.lat !== '' && e.lng !== ''
+        && Number.isFinite(Number(e.lat)) && Number.isFinite(Number(e.lng))
+        && Math.abs(Number(e.lat)) <= 90 && Math.abs(Number(e.lng)) <= 180)
+    .slice().sort((a,b) => String(a.date || '').localeCompare(String(b.date || ''))
+        || String(a.time || '').localeCompare(String(b.time || ''))));
+const clearReplayTimer = () => { if (replayTimer !== null) clearTimeout(replayTimer); replayTimer = null; };
+const clearReplayMarker = () => { if (map && replayMarker) map.removeLayer(replayMarker); replayMarker = null; };
+const stopReplay = () => {
+    clearReplayTimer();
+    replayPlaying.value = false;
+    replayIndex.value = -1;
+    replayEvent.value = null;
+    clearReplayMarker();
+};
+const showReplayStop = (index) => {
+    const stop = replayStops.value[index];
+    if (!stop || !map) { stopReplay(); return; }
+    clearReplayMarker();
+    replayIndex.value = index;
+    replayEvent.value = stop;
+    const coords = [Number(stop.lat), Number(stop.lng)];
+    replayMarker = L.circleMarker(coords, {
+        radius: 13, color: '#fff', weight: 4, fillColor: getEventColor(stop),
+        fillOpacity: 1, interactive: false
+    }).addTo(map);
+    map.flyTo(coords, Math.max(map.getZoom(), 9), { duration: 0.8 });
+};
+const advanceReplay = () => {
+    if (!replayPlaying.value) return;
+    const next = replayIndex.value + 1;
+    if (next >= replayStops.value.length) { replayPlaying.value = false; clearReplayTimer(); return; }
+    showReplayStop(next);
+    replayTimer = setTimeout(advanceReplay, 2500);
+};
+const startReplay = () => {
+    stopReplay();
+    if (!replayStops.value.length || !map) return;
+    replayPlaying.value = true;
+    advanceReplay();
+};
+const openReplayEvent = () => {
+    const event = replayEvent.value;
+    if (!event) return;
+    stopReplay();
+    editEvent(event);
+};
+watch(selectedMapYear, stopReplay);
+watch(activeTab, tab => { if (tab !== 'map') stopReplay(); });
+watch(events, stopReplay, { deep: true });
+
                 // Calendar
                 const showCalendarOptions = (event) => {
                     calendarEvent.value = event;
@@ -2073,7 +2132,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+replayPlaying, replayIndex, replayEvent, replayStops, startReplay, stopReplay, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
