@@ -274,21 +274,26 @@ const showActivityCategories=ref(false);
 const showCategoryPreview=ref(false);
 const useCategoryStats=ref(false);
 const formActivityCategory=ref('unknown');
+const formCategoryTouched=ref(false);
 const confirmCategoryStats=()=>{if(!confirm('確定改用活動分類計算大型演出？尚未分類的行程不會計入。可隨時切回原本統計。'))return;useCategoryStats.value=true;localStorage.setItem('idolUseCategoryStats','true');};
 const revertCategoryStats=()=>{useCategoryStats.value=false;localStorage.setItem('idolUseCategoryStats','false');};
 const activityKey=e=>JSON.stringify([String(e.artist||'').trim().toLocaleLowerCase(),String(e.title||'').trim().toLocaleLowerCase()]);
 const suggestActivityCategory=title=>{
  const t=String(title||'').toLocaleLowerCase();
- if(/fan.?sign|팬사인|簽售|签售|簽名會|签名会/.test(t))return 'fansign';
- if(/사전녹화|事前錄製|事前录制|預錄|pre.?record/.test(t))return 'prerecord';
- if(/생방송|生放|公開放送|live broadcast/.test(t))return 'broadcast';
- if(/birthday|생일파티|生日會|生日会/.test(t))return 'birthday';
- if(/fan.?meeting|팬미팅|見面會|见面会/.test(t))return 'fanmeeting';
- if(/festival|music fest|音樂節|音乐节|拼盤|拼盘|페스티벌/.test(t))return 'festival';
- if(/concert|콘서트|演唱會|演唱会|world tour/.test(t))return 'concert';
+ // Exclusions take priority over broad concert/fanmeeting keywords.
+ if(/fan[\s-]?sign|fansign|팬사인|サイン会|簽售|签售|簽名會|签名会/.test(t))return 'fansign';
+ if(/사전녹화|事前錄製|事前录制|預錄|预录|pre[\s-]?record|prerecord/.test(t))return 'prerecord';
+ if(/생방송|生放|公開放送|公开放送|live[\s-]?broadcast|음악방송/.test(t))return 'broadcast';
+ if(/birthday|b[\s-]?day|생일|生日會|生日会|生日派對|生日派对|誕生日/.test(t))return 'birthday';
+ if(/fan[\s-]?meeting|팬미팅|見面會|见面会|ファンミ|팬콘|fan[\s-]?con/.test(t))return 'fanmeeting';
+ if(/festival|music[\s-]?fest|音樂節|音乐节|拼盤|拼盘|페스티벌/.test(t))return 'festival';
+ if(/concert|콘서트|演唱會|演唱会|コンサート|world[\s-]?tour/.test(t))return 'concert';
  return 'unknown';
 };
-const categoryFor=e=>activityCategoryMap.value[activityKey(e)]||suggestActivityCategory(e.title);
+const categoryFor=e=>{
+ const key=activityKey(e);
+ return Object.prototype.hasOwnProperty.call(activityCategoryMap.value,key)?activityCategoryMap.value[key]:suggestActivityCategory(e.title);
+};
 const activityGroups=computed(()=>{
  const map=new Map();
  events.value.forEach(e=>{const key=activityKey(e);if(!map.has(key))map.set(key,{key,artist:e.artist||'其他',title:e.title||'',count:0,suggested:suggestActivityCategory(e.title)});map.get(key).count++});
@@ -299,14 +304,14 @@ const filteredActivityGroups=computed(()=>activityGroups.value.filter(g=>{
  return (!q||(g.artist+' '+g.title).toLocaleLowerCase().includes(q))&&(activityCategoryFilter.value==='all'||(activityCategoryFilter.value==='unknown'?category==='unknown':category!=='unknown'));
 }));
 const setActivityGroupCategory=(key,value)=>{if(activityTypes.some(t=>t.value===value))activityCategoryMap.value={...activityCategoryMap.value,[key]:value};};
-const activityCategoryPending=computed(()=>activityGroups.value.filter(g=>(activityCategoryMap.value[g.key]||g.suggested)==='unknown').reduce((sum,g)=>sum+g.count,0));
+const activityCategoryPending=computed(()=>activityGroups.value.filter(g=>categoryFor({artist:g.artist,title:g.title})==='unknown').reduce((sum,g)=>sum+g.count,0));
 const categoryPreview=computed(()=>{
  const included=new Set(['concert','festival','fanmeeting','birthday']),excluded=['사전녹화','事前錄製','簽售會','簽名會','錄製'];
  const list=selectedYear.value==='ALL'?events.value:events.value.filter(e=>String(e.date||'').startsWith(String(selectedYear.value)));
  const old={},next={};
- list.forEach(e=>{const t=String(e.title||'').trim();if(!excluded.some(k=>t.includes(k)))old[t]=(old[t]||0)+1;if(included.has(categoryFor(e)))next[t]=(next[t]||0)+1;});
+ list.forEach(e=>{const t=String(e.title||'').trim();if(!excluded.some(k=>t.includes(k)))old[t]=(old[t]||0)+1;if(included.has(categoryFor(e))){const key=activityKey(e);if(!next[key])next[key]={title:t,artist:e.artist||'其他',count:0};next[key].count++;}});
  const rows=obj=>Object.keys(obj).filter(k=>obj[k]>1).map(title=>({title,count:obj[title]}));
- return {old:rows(old),next:rows(next)};
+ return {old:rows(old),next:Object.values(next).filter(item=>item.count>1).sort((a,b)=>b.count-a.count)};
 });
 watch(activityCategoryMap,map=>{localStorage.setItem('idolActivityCategories',JSON.stringify(map));syncToCloud();},{deep:true});
 
@@ -984,8 +989,7 @@ const availableYears = computed(() => {
                         const t = e.title.trim();
                         if (!excludeKeywords.some(k => t.includes(k))) titleMap[t] = (titleMap[t] || 0) + 1;
                     });
-                    const selectedTitleMap = useCategoryStats.value ? (()=>{const m={};targetEvents.forEach(e=>{if(['concert','festival','fanmeeting','birthday'].includes(categoryFor(e))){const t=String(e.title||'').trim();m[t]=(m[t]||0)+1;}});return m;})() : titleMap;
-                    const series = Object.keys(selectedTitleMap).map(key => ({ title: key, count: selectedTitleMap[key] })).filter(item => item.count > 1).sort((a, b) => b.count - a.count);
+                    const series = useCategoryStats.value ? (()=>{const m=new Map();targetEvents.forEach(e=>{if(['concert','festival','fanmeeting','birthday'].includes(categoryFor(e))){const key=activityKey(e);if(!m.has(key))m.set(key,{title:String(e.title||'').trim(),artist:e.artist||'其他',count:0});m.get(key).count++;}});return [...m.values()].filter(item=>item.count>1).sort((a,b)=>b.count-a.count);})() : Object.keys(titleMap).map(key => ({ title:key,count:titleMap[key] })).filter(item=>item.count>1).sort((a,b)=>b.count-a.count);
                     return { 
                         count, 
                         totalSpent, 
@@ -1267,6 +1271,7 @@ const idolNagging = computed(() => {
                     isEditing.value = false;
                     form.value = { ...defaultForm, date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
                     formActivityCategory.value='unknown';
+                    formCategoryTouched.value=false;
                     searchError.value = '';
                     showModal.value = true;
                 };
@@ -1281,7 +1286,8 @@ const idolNagging = computed(() => {
                         coverUrl: evt.coverUrl || '',
                         sticker: evt.sticker || ''
                     };
-                    formActivityCategory.value=categoryFor(evt); 
+                    formActivityCategory.value=categoryFor(evt);
+                    formCategoryTouched.value=false; 
                     form.value.useUrl = (evt.coverUrl && !evt.coverUrl.startsWith('data:')) || false;
                     searchError.value = '';
                     showModal.value = true;
@@ -1296,7 +1302,7 @@ const idolNagging = computed(() => {
 
                     const eventToSave = JSON.parse(JSON.stringify(form.value));
                     const key=activityKey(eventToSave);
-                    if(formActivityCategory.value!=='unknown' && activityTypes.some(t=>t.value===formActivityCategory.value))setActivityGroupCategory(key,formActivityCategory.value);
+                    if(formCategoryTouched.value && activityTypes.some(t=>t.value===formActivityCategory.value))setActivityGroupCategory(key,formActivityCategory.value);
                     delete eventToSave.useUrl;
 
                     if (isEditing.value) {
@@ -1567,7 +1573,7 @@ const initMap = (preserveView = false) => {
                             events.value = restoreData.events;
                             if (isFull) {
                                 fandoms.value = restoreData.fandoms;
-                                activityCategoryMap.value = restoreData.activityCategories && typeof restoreData.activityCategories==='object' && !Array.isArray(restoreData.activityCategories) ? restoreData.activityCategories : {};
+                                if (restoreData.activityCategories && typeof restoreData.activityCategories==='object' && !Array.isArray(restoreData.activityCategories)) activityCategoryMap.value = restoreData.activityCategories;
                                 if (typeof restoreData.customTitle === 'string') customTitle.value = restoreData.customTitle;
                                 if (typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor)) {
                                     themeColor.value = restoreData.themeColor;
@@ -1979,7 +1985,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle,
-                    activityTypes,activityCategoryMap,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,confirmCategoryStats,revertCategoryStats,
+                    activityTypes,activityCategoryMap,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, importJson, importMode, readImportFile, searchQuery,
                   
