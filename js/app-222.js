@@ -1573,8 +1573,16 @@ const startReplay = () => {
 const openReplayEvent = () => {
     const event = replayEvent.value;
     if (!event) return;
-    stopReplay();
-    editEvent(event);
+    if (!map) return;
+    const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
+    const html = '<div style="min-width:170px;max-width:250px;">'
+        + '<b style="color:' + getEventColor(event) + '">' + escapeText(event.artist) + '</b><br>'
+        + '<small>' + escapeText(event.title) + '</small><br>'
+        + '<small style="color:#666">📅 ' + escapeText(event.date) + '</small>'
+        + (event.location ? '<br><small style="color:#666">📍 ' + escapeText(event.location) + '</small>' : '')
+        + '</div>';
+    L.popup({ maxWidth: 280, autoPan: true, keepInView: true, className: 'event-map-popup' })
+        .setLatLng([Number(event.lat), Number(event.lng)]).setContent(html).openOn(map);
 };
 watch(selectedMapYear, stopReplay);
 watch(activeTab, tab => { if (tab !== 'map') stopReplay(); });
