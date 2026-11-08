@@ -317,6 +317,7 @@ const showCategoryPreview=ref(false);
 const useCategoryStats=ref(true);
 const formActivityCategory=ref('');
 const formCategoryTouched=ref(false);
+const formCustomCategory=ref('');
 const confirmCategoryStats=()=>{useCategoryStats.value=true;};
 const revertCategoryStats=()=>{useCategoryStats.value=true;};
 const activityKey=e=>JSON.stringify([String(e.artist||'').trim().toLocaleLowerCase(),String(e.title||'').trim().toLocaleLowerCase()]);
@@ -1364,8 +1365,9 @@ const idolNagging = computed(() => {
                     isEditing.value = false;
                     artistDraft.value='';lookupExpanded.value=false;lookupMessage.value='';lookupDraft.value={date:'',time:'',location:'',coverUrl:''};
                     form.value = { ...defaultForm, artists:[], date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
-                    formActivityCategory.value='unknown';
-                    formCategoryTouched.value=true;
+                    formActivityCategory.value='';
+                    formCustomCategory.value='';
+                    formCategoryTouched.value=false;
                     searchError.value = '';
                     showModal.value = true;
                 };
@@ -1382,6 +1384,7 @@ const idolNagging = computed(() => {
                     };
                     form.value.artists=normalizedArtists(evt);artistDraft.value='';lookupExpanded.value=false;lookupMessage.value='';lookupDraft.value={date:'',time:'',location:'',coverUrl:''};
                     formActivityCategory.value=categoryFor(evt);
+                    formCustomCategory.value=String(evt.customCategory||'');
                     formCategoryTouched.value=false; 
                     form.value.useUrl = (evt.coverUrl && !evt.coverUrl.startsWith('data:')) || false;
                     searchError.value = '';
@@ -1392,11 +1395,13 @@ const idolNagging = computed(() => {
                 const saveEvent = () => {
                     if(artistDraft.value.trim())addFormArtist();form.value.artists=normalizedArtists(form.value);form.value.artist=form.value.artists[0]||'';
                     if (!form.value.title || !form.value.date) return alert('請填寫活動名稱與日期 🥺');
+                    if(formActivityCategory.value==='other'&&!formCustomCategory.value.trim())return alert('請填寫自訂活動類型');
                     form.value.expenses = form.value.expenses.filter(e => e.item && e.item.trim() !== '');
                     form.value.checklist = form.value.checklist.filter(c => c.text && c.text.trim() !== '');
                     if (form.value.color === themeColor.value) form.value.color = '';
 
                     const eventToSave = JSON.parse(JSON.stringify(form.value));
+                    eventToSave.customCategory=formActivityCategory.value==='other'?formCustomCategory.value.trim():'';
                     const key=activityKey(eventToSave);
                     if(formCategoryTouched.value && activityTypes.some(t=>t.value===formActivityCategory.value))setActivityGroupCategory(key,formActivityCategory.value);
                     delete eventToSave.useUrl;
@@ -2198,7 +2203,7 @@ const generateShareImageLegacy = () => {
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
                     events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle, 
-                    activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,confirmSuggestedCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
+                    activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,confirmSuggestedCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCustomCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, artistDraft, addFormArtist, removeFormArtist, lookupExpanded, lookupMessage, lookupDraft, lookupFields, lookupQuery, lookupCountry, lookupLoading, lookupApiMessage, lookupResults, lookupSelected, lookupChosenArtists, searchActivityApi, selectLookupResult, applySelectedLookup, activitySearchUrl, openActivitySearch, applyLookupDraft, importJson, importMode, readImportFile, searchQuery,
                   
