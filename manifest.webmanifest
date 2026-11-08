@@ -1,0 +1,19 @@
+{
+  "name": "追星日記｜IDOL PLANNER",
+  "short_name": "追星日記",
+  "description": "收藏每一次追星的行程與回憶",
+  "start_url": "./222.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#568f87",
+  "lang": "zh-TW",
+  "icons": [
+    {
+      "src": "./icons/idolplanner.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
