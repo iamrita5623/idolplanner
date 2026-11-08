@@ -1001,11 +1001,11 @@ watch(activeTab, (newTab) => {
                     let sorted = [...events.value].sort((a, b) => new Date(a.date) - new Date(b.date));
                     
                     if (searchQuery.value) {
-                        const query = searchQuery.value.toLowerCase();
-                        return sorted.filter(e => 
-                            e.title.toLowerCase().includes(query) || 
-                            e.artist.toLowerCase().includes(query) || 
-                            e.location.toLowerCase().includes(query)
+                        const query = searchQuery.value.trim().toLocaleLowerCase();
+                        return sorted.filter(e =>
+                            String(e.title || '').toLocaleLowerCase().includes(query) ||
+                            normalizedArtists(e).some(name => name.toLocaleLowerCase().includes(query)) ||
+                            String(e.location || '').toLocaleLowerCase().includes(query)
                         ).sort((a, b) => { 
                             const diffA = Math.abs(new Date(a.date) - new Date(today));
                             const diffB = Math.abs(new Date(b.date) - new Date(today));
