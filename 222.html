@@ -544,30 +544,23 @@
 </div>
 
 
-<!-- 緊湊型年度足跡重播：資訊與操作同一張卡，保留地圖可視範圍 -->
+<!-- 年度足跡：極簡播放列，不遮住地圖 -->
 <div class="absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
-  <div class="pointer-events-auto bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-100 px-3 py-2.5">
-    <div class="flex items-center gap-2">
-      <div class="flex items-center gap-1 shrink-0">
-        <button type="button" @click="startReplay" :disabled="!replayStops.length || replayPlaying"
-          :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#263238' : '#fff' }"
-          class="rounded-lg w-9 h-9 text-sm font-bold disabled:opacity-40" aria-label="播放或繼續" title="播放或繼續">▶</button>
-        <button type="button" @click="pauseReplay" :disabled="!replayPlaying"
-          class="rounded-lg w-9 h-9 text-sm font-bold border border-slate-200 disabled:opacity-40"
-          :style="{ color: themeColor }" aria-label="暫停" title="暫停">⏸</button>
-        <button type="button" @click="stopReplay" :disabled="replayIndex < 0"
-          class="rounded-lg w-9 h-9 text-sm font-bold border border-slate-200 disabled:opacity-40"
-          :style="{ color: themeColor }" aria-label="停止" title="停止">■</button>
-      </div>
-      <button v-if="replayEvent" type="button" @click="openReplayEvent" class="flex-1 min-w-0 text-left" title="查看地圖活動小字卡">
-        <div class="text-[10px] text-slate-500">第 {{ replayIndex + 1 }} / {{ replayStops.length }} 站 · {{ replayPlaying ? '播放中 · 每站 2.5 秒' : (replayPaused ? '已暫停' : '播放完成') }} · 點擊查看</div>
-        <div class="text-xs font-bold text-slate-800 truncate">{{ replayEvent.title || '未命名活動' }}</div>
-        <div class="text-[10px] text-slate-500 truncate">{{ replayEvent.artist || '未填歌手' }} · {{ replayEvent.date || '未填日期' }}</div>
-      </button>
-      <div v-else class="flex-1 min-w-0 text-xs text-slate-600">年度足跡重播 <span class="text-[10px] text-slate-400">· {{ replayStops.length }} 站</span></div>
-      <button v-if="replayEvent && !replayPlaying" type="button" @click="stopReplay" class="shrink-0 text-slate-400 text-xs px-1" aria-label="關閉重播資訊">✕</button>
+  <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
+    <div class="flex items-center gap-1 shrink-0" :style="{ color: themeColor }">
+      <button type="button" @click="startReplay" :disabled="!replayStops.length || replayPlaying"
+        class="w-7 h-7 flex items-center justify-center text-base disabled:opacity-30" aria-label="播放或繼續" title="播放或繼續">▶</button>
+      <button type="button" @click="pauseReplay" :disabled="!replayPlaying"
+        class="w-7 h-7 flex items-center justify-center text-base disabled:opacity-30" aria-label="暫停" title="暫停">Ⅱ</button>
+      <button type="button" @click="stopReplay" :disabled="replayIndex < 0"
+        class="w-7 h-7 flex items-center justify-center text-sm disabled:opacity-30" aria-label="停止" title="停止">■</button>
     </div>
-    <div v-if="!replayStops.length" class="text-[10px] text-slate-500 mt-1">此年度尚無可定位的活動</div>
+    <div class="h-6 w-px bg-slate-200 shrink-0"></div>
+    <button v-if="replayEvent" type="button" @click="openReplayEvent" class="flex-1 min-w-0 text-left" title="點擊顯示地圖活動小字卡">
+      <div class="text-[10px] text-slate-500">第 {{ replayIndex + 1 }}/{{ replayStops.length }} 站 · {{ replayPlaying ? '播放中' : (replayPaused ? '已暫停' : '已結束') }}</div>
+      <div class="text-xs text-slate-800 font-semibold truncate">{{ replayEvent.title || '未命名活動' }}</div>
+    </button>
+    <div v-else class="flex-1 min-w-0 text-xs text-slate-600 truncate">{{ replayStops.length ? '年度足跡 · ' + replayStops.length + ' 站' : '此年度沒有可定位活動' }}</div>
   </div>
 </div>
    </div> <div v-if="activeTab === 'stats'" class="space-y-6 p-5 pb-32">
@@ -1309,7 +1302,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.40"></script>
+<script src="./js/app-222.js?v=1.1.41"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
