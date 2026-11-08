@@ -300,13 +300,17 @@ const normalizedArtists=e=>{
     return Array.from(new Set(repaired));
 };
 const legacyArtistRepairPreview=ref([]);
+const legacyArtistRepairStatus=ref('');
 const previewLegacyArtistRepair=()=>{
-    legacyArtistRepairPreview.value=events.value.map((event,index)=>{
+    legacyArtistRepairStatus.value='檢查中…';
+    try { legacyArtistRepairPreview.value=events.value.map((event,index)=>{
         const raw=Array.isArray(event.artists)&&event.artists.length?event.artists:[];
         const pairs=[];
         for(let i=0;i<raw.length-1;i++)if(String(raw[i]).trim()==='Mi'&&String(raw[i+1]).trim()==='ho')pairs.push(i);
         return pairs.length?{index,title:String(event.title||'未命名活動'),date:String(event.date||''),before:raw.join('、'),after:normalizedArtists(event).join('、')}:null;
     }).filter(Boolean);
+    legacyArtistRepairStatus.value=legacyArtistRepairPreview.value.length?'檢查完成：找到 '+legacyArtistRepairPreview.value.length+' 筆待確認紀錄':'檢查完成：目前沒有找到 Mi、ho 相鄰的舊紀錄（共檢查 '+events.value.length+' 場活動）';
+    }catch(err){legacyArtistRepairStatus.value='檢查失敗：'+String(err.message||err);}
 };
 const downloadLegacyArtistBackup=()=>{
     const data=JSON.stringify(events.value,null,2);
@@ -2206,7 +2210,7 @@ const generateShareImageLegacy = () => {
                 const getMapLink = (l) => l ?
                     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l)}` : '#';
                 return {
-                    events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle, legacyArtistRepairPreview, previewLegacyArtistRepair, downloadLegacyArtistBackup,
+                    events, activeTab, viewMode, themeColor, selectedYear, expandedEventId, customTitle, legacyArtistRepairPreview, legacyArtistRepairStatus, previewLegacyArtistRepair, downloadLegacyArtistBackup,
                     activityTypes,activityCategoryMap,confirmedSeries,rejectedSeries,showSeriesReview,seriesCandidateGroups,acceptSeries,rejectSeries,resetSeries,activityCategoryQuery,activityCategoryFilter,showActivityCategories,showCategoryPreview,activityGroups,filteredActivityGroups,setActivityGroupCategory,confirmSuggestedCategory,activityCategoryPending,categoryPreview,categoryFor,suggestActivityCategory,useCategoryStats,formActivityCategory,formCategoryTouched,confirmCategoryStats,revertCategoryStats,
                     showModal, showSettingsModal, showImportModal, openImportModal, diagnoseImport, showTicketModal, showCalendarModal, showChangelogModal, showFandomModal, fandomForm, isFandomEditing, editFandomIndex,
                     calendarEvent, ticketEvent, isEditing, form, artistDraft, addFormArtist, removeFormArtist, lookupExpanded, lookupMessage, lookupDraft, lookupFields, lookupQuery, lookupCountry, lookupLoading, lookupApiMessage, lookupResults, lookupSelected, lookupChosenArtists, searchActivityApi, selectLookupResult, applySelectedLookup, activitySearchUrl, openActivitySearch, applyLookupDraft, importJson, importMode, readImportFile, searchQuery,
