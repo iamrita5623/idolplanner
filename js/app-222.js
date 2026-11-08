@@ -334,7 +334,7 @@ const suggestActivityCategory=title=>{
 };
 const categoryFor=e=>{
  const key=activityKey(e);
- return Object.prototype.hasOwnProperty.call(activityCategoryMap.value,key)?activityCategoryMap.value[key]:suggestActivityCategory(e.title);
+ return Object.prototype.hasOwnProperty.call(activityCategoryMap.value,key)?activityCategoryMap.value[key]:'unknown';
 };
 const activityGroups=computed(()=>{
  const map=new Map();
@@ -1364,8 +1364,8 @@ const idolNagging = computed(() => {
                     isEditing.value = false;
                     artistDraft.value='';lookupExpanded.value=false;lookupMessage.value='';lookupDraft.value={date:'',time:'',location:'',coverUrl:''};
                     form.value = { ...defaultForm, artists:[], date: new Date().toLocaleDateString('sv-SE'), color: themeColor.value, expenses: [{item:'門票', amount:''}], checklist:[], memo:'', useUrl: false };
-                    formActivityCategory.value='';
-                    formCategoryTouched.value=false;
+                    formActivityCategory.value='unknown';
+                    formCategoryTouched.value=true;
                     searchError.value = '';
                     showModal.value = true;
                 };
