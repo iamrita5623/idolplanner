@@ -1047,11 +1047,12 @@ const availableYears = computed(() => {
                     const artistMap = {};
                 
                     targetEvents.forEach(e => {
-                        const name = e.artist || '其他';
-                        const color = getEventColor(e); 
-                        if (!artistMap[name]) artistMap[name] = { count: 0, color: color };
-    
-                        artistMap[name].count++;
+                        const names = normalizedArtists(e);
+                        const color = getEventColor(e);
+                        (names.length ? names : ['其他']).forEach(name => {
+                            if (!artistMap[name]) artistMap[name] = { count: 0, color };
+                            artistMap[name].count++;
+                        });
                     });
                     const sortedArtists = Object.keys(artistMap).map(key => ({ name: key, ...artistMap[key] })).sort((a, b) => b.count - a.count).slice(0, 3);
                     const maxArtistCount = sortedArtists.length > 0 ? sortedArtists[0].count : 1;
