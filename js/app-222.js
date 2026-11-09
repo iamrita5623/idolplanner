@@ -410,7 +410,7 @@ watch(activityCategoryMap,map=>{localStorage.setItem('idolActivityCategories',JS
 watch(confirmedSeries,map=>{localStorage.setItem('idolConfirmedSeries',JSON.stringify(map));syncToCloud();},{deep:true});
 watch(rejectedSeries,map=>{localStorage.setItem('idolRejectedSeries',JSON.stringify(map));syncToCloud();},{deep:true});
 
-                const presetColors = ['#63b3b0', '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#1dd1a1'];
+                const presetColors = ['#27243B', '#63B3B0', '#C5F442', '#C9A1FF'];
                 const customTitle = ref(localStorage.getItem('appTitle') || '追星日記 ✨');
                 const appVersion = ref('v1.0.7'); // 更新版本號
                 
