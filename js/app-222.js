@@ -126,7 +126,7 @@ const loadError = ref(false); // 🌟 開機防護：剛開機時禁止自動上
                 const selectedMapYear = ref('ALL');
                 const activeTab = ref('home');
                 const viewMode = ref('upcoming');
-                const themeColor = ref('#63b3b0'); 
+                const themeColor = ref(localStorage.getItem('idolTheme') || '#27243B'); 
           
  
              const selectedYear = ref(new Date().getFullYear().toString());
