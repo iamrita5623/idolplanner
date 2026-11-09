@@ -65,7 +65,7 @@
         <!-- 啟動時遮住暫時的 0 筆畫面，避免誤認資料被清空 -->
         <div v-if="isInitializing || loadError" class="absolute inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center px-8 text-center" role="status" aria-live="polite">
             <template v-if="isInitializing">
-                <div class="w-12 h-12 rounded-full border-4 border-slate-200 border-t-teal-500 animate-spin mb-5" aria-hidden="true"></div>
+                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
                 <p class="font-bold text-lg text-slate-700">正在載入追星日記 ✨</p>
                 <p class="text-sm text-slate-500 mt-2">正在確認雲端行程與紀念日</p>
             </template>
