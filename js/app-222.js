@@ -72,17 +72,22 @@ const checkUserAndFetchData = async () => {
 
 
 */
+let cloudRevision = null;
+let cloudBaselineCount = 0;
 const checkUserAndFetchData = async () => {
+    cloudReady.value = false;
+    cloudRevision = null;
     try {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (!user) return { status: 'signed_out' };
         if (authError) throw authError;
         currentUser.value = user;
         const { data, error } = await supabase.from('idol_events')
-            .select('event_data').eq('user_id', user.id).maybeSingle();
+            .select('event_data,updated_at').eq('user_id', user.id).maybeSingle();
         if (error) throw error;
         if (!data || data.event_data == null) {
-            cloudReady.value = true;
+            // No confirmed cloud baseline: never create an empty backup automatically.
+            cloudReady.value = false;
             return { status: 'empty' };
         }
         const raw = data.event_data;
@@ -107,6 +112,9 @@ const checkUserAndFetchData = async () => {
             if (raw.confirmedSeries && typeof raw.confirmedSeries==='object' && !Array.isArray(raw.confirmedSeries)) confirmedSeries.value=raw.confirmedSeries;
             if (raw.rejectedSeries && typeof raw.rejectedSeries==='object' && !Array.isArray(raw.rejectedSeries)) rejectedSeries.value=raw.rejectedSeries;
         }
+        if (!data.updated_at) throw new Error('雲端備份缺少版本時間，已禁止覆寫');
+        cloudRevision = data.updated_at;
+        cloudBaselineCount = events.value.length;
         cloudReady.value = true;
         return { status: 'loaded' };
     } catch (error) {
@@ -622,18 +630,45 @@ const syncToCloud = () => {
             yearlyBudget: yearlyBudget.value
         };
         cloudWriteQueue = cloudWriteQueue.catch(console.error).then(async () => {
-            if (!cloudReady.value || !currentUser.value || currentUser.value.id !== userId) return;
-            const now = new Date().toISOString();
-            const { error } = await supabase.from('idol_events').upsert({
-                user_id: userId, event_data: snapshot, updated_at: now
-            }, { onConflict: 'user_id' });
-            if (error) {
-                console.error('雲端同步失敗:', error);
-                alert('雲端儲存失敗，請先保留本機資料。');
-            } else {
-                lastSyncTime.value = new Date(now).toLocaleString('zh-TW');
+            if (!cloudReady.value || !cloudRevision || !currentUser.value || currentUser.value.id !== userId) return;
+            // A zero-event snapshot must never silently replace an existing populated backup.
+            if (cloudBaselineCount > 0 && snapshot.events.length === 0) {
+                cloudReady.value = false;
+                alert('已停止同步：目前行程為 0 筆，雲端原有資料不會被清空。請重新載入雲端資料。');
+                return;
             }
-        });
+            try {
+                const expectedRevision = cloudRevision;
+                const now = new Date().toISOString();
+                // Compare-and-swap: only update the exact revision loaded by this device.
+                const { data: updated, error } = await supabase.from('idol_events')
+                    .update({ event_data: snapshot, updated_at: now })
+                    .eq('user_id', userId).eq('updated_at', expectedRevision)
+                    .select('updated_at').maybeSingle();
+                if (error) throw error;
+                if (!updated) throw new Error('其他裝置已更新備份，或雲端版本已改變');
+                // Read back and compare the full snapshot, not just the displayed timestamp.
+                const { data: confirmed, error: readError } = await supabase.from('idol_events')
+                    .select('event_data,updated_at').eq('user_id', userId).maybeSingle();
+                if (readError) throw readError;
+                const canonical = value => JSON.stringify(value, (key, v) =>
+                    v && typeof v === 'object' && !Array.isArray(v)
+                        ? Object.fromEntries(Object.keys(v).sort().map(k => [k, v[k]])) : v);
+                const actual = typeof confirmed?.event_data === 'string'
+                    ? JSON.parse(confirmed.event_data) : confirmed?.event_data;
+                if (!confirmed || confirmed.updated_at !== updated.updated_at ||
+                    canonical(actual) !== canonical(snapshot)) {
+                    throw new Error('寫入後讀回驗證不一致，可能有其他裝置更新');
+                }
+                cloudRevision = updated.updated_at;
+                cloudBaselineCount = snapshot.events.length;
+                lastSyncTime.value = new Date(updated.updated_at).toLocaleString('zh-TW');
+            } catch (error) {
+                cloudReady.value = false;
+                console.error('雲端備份已停止，請重新讀取:', error);
+                alert('雲端同步未確認成功，已停止後續覆寫。請保留本機資料並重新載入雲端。');
+            }
+        });;
     }, 1200);
 };
 /* 舊版重複監聽，已停用
