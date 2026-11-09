@@ -86,7 +86,8 @@ const checkUserAndFetchData = async () => {
             return { status: 'empty' };
         }
         const raw = data.event_data;
-        let parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        const cloudSnapshot = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        let parsed = cloudSnapshot;
         for (let i = 0; i < 8 && parsed && !Array.isArray(parsed); i++) {
             if (typeof parsed !== 'object') break;
             if (Object.prototype.hasOwnProperty.call(parsed, 'events')) parsed = parsed.events;
@@ -95,12 +96,14 @@ const checkUserAndFetchData = async () => {
         }
         if (!Array.isArray(parsed)) throw new Error('雲端 event_data 格式無法辨識');
         events.value = parsed;
-        if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+        if (cloudSnapshot && typeof cloudSnapshot === 'object' && !Array.isArray(cloudSnapshot)) {
+            const raw = cloudSnapshot;
             if (Array.isArray(raw.fandoms)) fandoms.value = raw.fandoms;
             if (typeof raw.customTitle === 'string') customTitle.value = raw.customTitle;
             if (typeof raw.themeColor === 'string') themeColor.value = raw.themeColor;
             if (Number(raw.yearlyBudget) > 0) yearlyBudget.value = Number(raw.yearlyBudget);
             if (raw.activityCategories && typeof raw.activityCategories==='object' && !Array.isArray(raw.activityCategories)) activityCategoryMap.value=raw.activityCategories;
+            else { try { const localCategories=JSON.parse(localStorage.getItem('idolActivityCategories')||'{}'); if(localCategories && typeof localCategories==='object' && !Array.isArray(localCategories)) activityCategoryMap.value=localCategories; } catch(e) { console.warn('本機分類設定讀取失敗',e); } }
             if (raw.confirmedSeries && typeof raw.confirmedSeries==='object' && !Array.isArray(raw.confirmedSeries)) confirmedSeries.value=raw.confirmedSeries;
             if (raw.rejectedSeries && typeof raw.rejectedSeries==='object' && !Array.isArray(raw.rejectedSeries)) rejectedSeries.value=raw.rejectedSeries;
         }
@@ -1800,6 +1803,8 @@ watch(events, stopReplay, { deep: true });
                                     yearlyBudget.value = Number(restoreData.yearlyBudget);
                                 }
                             }
+                            // Explicitly queue the complete restored snapshot, including category settings.
+                            syncToCloud();
                             showSettingsModal.value = false;
                             alert('備份已載入。若已登入且同步正常，系統會自動儲存至雲端。');
                         } catch (error) {
