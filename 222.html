@@ -52,6 +52,7 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
+    <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
@@ -73,7 +74,7 @@
                 <i class="ph ph-warning-circle text-4xl text-amber-500 mb-3" aria-hidden="true"></i>
                 <p class="font-bold text-lg text-slate-700">雲端資料讀取失敗</p>
                 <p class="text-sm text-slate-500 mt-2">為保護原有紀錄，已暫停雲端寫入。這不代表行程已被刪除。</p>
-                <button @click="retryCloudLoad" class="mt-5 px-5 py-2.5 bg-teal-600 text-white font-bold rounded-xl">重新讀取</button>
+                <button @click="retryCloudLoad" class="mt-5 px-5 py-2.5 bg-primary text-white font-bold rounded-xl">重新讀取</button>
             </template>
         </div>
 
