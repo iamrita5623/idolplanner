@@ -1,4 +1,4 @@
-const CACHE = 'idolplanner-static-v40';
+const CACHE = 'idolplanner-static-v41';
 const ASSETS = ['./222.html','./css/main.css','./js/app.js','./js/app-222.js','./js/events.js','./js/recap.js','./js/map.js','./js/venues.js','./icons/idolplanner.svg','./icons/idolplanner-180.png','./icons/idolplanner-192.png','./icons/idolplanner-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).catch(()=>{}));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('idolplanner-static-')&&key!==CACHE).map(key=>caches.delete(key)))));self.clients.claim();});
