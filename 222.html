@@ -55,68 +55,9 @@
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
-<!-- SCRAPBOOK_TEST_THEME_V2 : removable visual-only stylesheet -->
-<style id="scrapbook-test-theme">
-/* Match 444's centered scrapbook page on desktop without altering Vue or data. */
-#app{
-  --scrap-paper:color-mix(in srgb,var(--primary-color) 5%,white);
-  --scrap-edge:color-mix(in srgb,var(--primary-color) 18%,white);
-  --scrap-shadow:color-mix(in srgb,var(--primary-color) 20%,#e8e8ec);
-  --scrap-ink:color-mix(in srgb,var(--primary-color) 50%,#34303a);
-  background:var(--scrap-paper);
-}
-body{background:color-mix(in srgb,var(--primary-color) 16%,white)}
-#app > main{background:var(--scrap-paper)}
-#app .concert-header{
-  border-radius:0 0 19px 19px;
-  box-shadow:0 5px 16px color-mix(in srgb,var(--primary-color) 17%,transparent);
-}
-#app .app-bottom-nav{
-  background:#fffdfb;
-  border-top:1px solid var(--scrap-edge);
-  box-shadow:0 -3px 14px var(--scrap-shadow);
-}
-/* Keep event-specific color strips, category labels, icon colors and alert colors intact. */
-#app > main .bg-white.rounded-2xl,
-#app > main .rounded-2xl.bg-white,
-#app > main .bg-white.rounded-xl,
-#app > main .rounded-xl.bg-white{
-  border-color:var(--scrap-edge);
-  box-shadow:3px 4px 0 var(--scrap-shadow);
-}
-#app > main .border-slate-100,
-#app > main .border-slate-200{border-color:var(--scrap-edge)}
-/* The main list retains its existing structure and functional controls. */
-@media (min-width:760px){
-  #app{width:min(100%,600px);max-width:600px;margin:0 auto;box-shadow:0 0 55px #241a3420}
-  #app > main{width:100%}
-  #app .concert-header{border-radius:0 0 20px 20px}
-}
-@supports not (color:color-mix(in srgb,red,white)){
-  #app{--scrap-paper:#f8f5fa;--scrap-edge:#e9e3f0;--scrap-shadow:#e5ddec;--scrap-ink:#654c57}
-}
-
-/* Scrapbook statistics: replace the original cold gray-blue gradient. */
-#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
- background:linear-gradient(145deg,#fff,var(--scrap-paper))!important;
- border:1px solid var(--scrap-edge)!important;
- box-shadow:3px 4px 0 var(--scrap-shadow);
-}
-#app > main .bg-white.rounded-2xl,
-#app > main .bg-white.rounded-xl{
- background-color:#fff;
-}
-#app > main .bg-slate-50:not([role="status"]){
- background-color:var(--scrap-paper);
-}
-#app > main .bg-slate-100{
- background-color:var(--scrap-edge);
-}
-#app > main select.bg-white{
- background-color:#fff;
- border-color:var(--scrap-edge);
- box-shadow:3px 4px 0 var(--scrap-shadow);
-}
+<!-- Desktop width only; original 222 styling and event cards restored -->
+<style id="desktop-width-only">
+@media(min-width:760px){#app{width:min(100%,760px);max-width:760px;margin:0 auto;box-shadow:0 0 36px #22222218}}
 </style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
