@@ -106,6 +106,25 @@ body{background:color-mix(in srgb,var(--primary-color) 16%,#eee7dd)!important;co
 #app .map-tab-panel #map-container{z-index:1}
 @media(min-width:600px){#app{border-radius:25px 25px 0 0;overflow:visible;margin-top:20px;min-height:calc(100vh - 20px)!important}}
 @media(max-width:599px){#app{width:100%;max-width:none;box-shadow:none}#app>.concert-header{padding-top:20px!important}}
+
+/* 444 refinement: unified theme, readable hero and scrapbook surfaces. */
+#app>.concert-header{color:var(--scrap-on)!important}
+#app>.concert-header h1,#app>.concert-header p,#app>.concert-header .text-slate-800,#app>.concert-header .text-slate-600,#app>.concert-header .text-white{color:var(--scrap-on)!important}
+#app>.concert-header>div:first-child>div:first-child:before{color:var(--scrap-on)!important}
+#app>.concert-header .opacity-90{opacity:.88}
+#app>main .bg-gradient-to-br.from-slate-50,#app>main .bg-slate-50.rounded-xl,#app>main .bg-slate-50.rounded-2xl{background:var(--scrap-tint)!important;border-color:var(--scrap-edge)!important}
+#app>main .bg-white.rounded-2xl,#app>main .bg-white.rounded-xl{border-color:var(--scrap-edge)!important;border-radius:12px!important;box-shadow:4px 5px 0 var(--scrap-shadow)!important}
+#app>main .bg-white.rounded-xl.shadow-sm.border-l-4{border-left-color:var(--primary-color)!important}
+#app>main .bg-slate-100{background-color:var(--scrap-tint)}
+#app>main .text-purple-400,#app>main .text-purple-500,#app>main .text-violet-400,#app>main .text-violet-500{color:var(--primary-color)!important}
+#app>main .bg-purple-300,#app>main .bg-purple-400,#app>main .bg-purple-500,#app>main .bg-violet-400,#app>main .bg-violet-500{background-color:var(--primary-color)!important}
+#app>main .bg-primary,#app>main .bg-primary-light{background-color:var(--primary-color)!important}
+#app>main .text-primary-light{color:var(--primary-color)!important}
+#app>main .rounded-full[style*="background-color"],#app>main .rounded-full[style*="backgroundColor"]{color:var(--scrap-on)!important}
+#app>.app-bottom-nav{position:fixed!important;left:50%!important;right:auto!important;bottom:0!important;transform:translateX(-50%)!important;width:min(490px,100vw)!important;max-width:490px!important;margin:0!important;border-radius:0!important;box-sizing:border-box!important;z-index:40}
+#app>.app-bottom-nav button{min-width:0;flex:1 1 0;align-items:center;justify-content:center}
+#app>.app-bottom-nav button[aria-current="page"]{background:var(--scrap-tint);border-radius:12px;color:var(--primary-color)!important}
+@media(max-width:599px){#app>.app-bottom-nav{width:100vw!important}}
 </style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
@@ -1363,7 +1382,15 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/venues.js?v=1.0.0"></script>
 <script src="./js/app-222.js?v=1.1.75"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
-</body>
+<script id="rita-theme-sync">
+(function(){
+ const app=document.getElementById('app');if(!app)return;
+ const root=document.documentElement;
+ const lum=c=>{let rgb=(c.match(/[\da-f]{2}/gi)||[]).slice(0,3).map(x=>parseInt(x,16)/255);return rgb.length===3?rgb.map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)).reduce((v,n,i)=>v+n*[.2126,.7152,.0722][i],0):0};
+ const sync=()=>{const color=getComputedStyle(app).getPropertyValue('--primary-color').trim();if(!/^#[0-9a-f]{6}$/i.test(color))return;root.style.setProperty('--primary-color',color);app.style.setProperty('--scrap-on',lum(color)>.38?'#25232b':'#ffffff');document.querySelector('meta[name="theme-color"]')?.setAttribute('content',color)};
+ new MutationObserver(sync).observe(app,{attributes:true,attributeFilter:['style']});sync();
+})();
+</script></body>
 </html>
 
 
