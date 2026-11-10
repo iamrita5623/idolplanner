@@ -107,9 +107,17 @@
 #app.rita-gray-test :is(input,textarea,select):not(#share-template *){border-color:#006dff!important}
 
 /* Explicit diagnostic targets for uncolored neutral controls. */
-#app.rita-gray-test .rita-gray-expense{background-color:#ffb3df!important;border:2px solid #006dff!important;color:#9b00dc!important}
-#app.rita-gray-test .rita-gray-logout{background-color:#ffb3df!important;border:2px solid #006dff!important;color:#9b00dc!important}
-#app.rita-gray-test .rita-gray-coordinate{background-color:#ffb3df!important;border:2px solid #006dff!important;color:#9b00dc!important}
+#app.rita-gray-test .rita-gray-expense{background-color:#ffb3df!important;border-color:#006dff!important;border-style:solid!important;color:#9b00dc!important}
+#app.rita-gray-test .rita-gray-logout{background-color:#ffb3df!important;border-color:#006dff!important;border-style:solid!important;color:#9b00dc!important}
+#app.rita-gray-test .rita-gray-coordinate{background-color:#ffb3df!important;border-color:#006dff!important;border-style:solid!important;color:#9b00dc!important}
+
+/* Additional uncovered neutral surfaces; only when diagnostic is enabled. */
+#app.rita-gray-test :is(.bg-slate-200,.bg-slate-300,.bg-gray-200,.bg-gray-300,.bg-neutral-200,.bg-neutral-300):not(#share-template):not(#share-template *){background-color:#ffb3df!important}
+#app.rita-gray-test :is(.from-slate-50,.from-slate-100,.from-gray-50,.from-gray-100):not(#share-template):not(#share-template *){--tw-gradient-from:#ffe56d var(--tw-gradient-from-position)!important;--tw-gradient-to:rgb(255 229 109 / 0) var(--tw-gradient-to-position)!important;--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)!important}
+#app.rita-gray-test :is(.to-slate-100,.to-slate-200,.to-gray-100,.to-gray-200):not(#share-template):not(#share-template *){--tw-gradient-to:#ffb3df var(--tw-gradient-to-position)!important}
+#app.rita-gray-test :is(.bg-gradient-to-br,.bg-gradient-to-r):is(.from-slate-50,.from-slate-100,.from-gray-50,.from-gray-100):not(#share-template):not(#share-template *){background-image:linear-gradient(to bottom right,#ffe56d,#ffb3df)!important}
+#app.rita-gray-test .map-replay-controls>div,#app.rita-gray-test .map-tab-panel>.bg-white{background-color:#ffe56d!important}
+#app.rita-gray-test .map-replay-controls .border-slate-100{border-color:#006dff!important}
 </style>
 <script id="rita-gray-test-control">
 (function(){
