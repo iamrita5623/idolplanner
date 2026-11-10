@@ -52,7 +52,7 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
-<link rel="stylesheet" href="./css/theme-444.css?v=3">
+<link rel="stylesheet" href="./css/theme-444.css?v=4">
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
@@ -177,16 +177,16 @@
                     </button>
                 </div>
 
-                <div class="flex bg-slate-200 p-1 rounded-full relative mb-2">
-                    <div class="w-1/2 h-full absolute bg-white rounded-full shadow-sm transition-all duration-300 transform"
+                <div class="rita-segmented flex bg-slate-200 p-1 rounded-full relative mb-2">
+                    <div class="rita-segmented-indicator w-1/2 h-full absolute bg-white rounded-full shadow-sm transition-all duration-300 transform"
                          :class="viewMode === 'upcoming' ? 'translate-x-0' : 'translate-x-full'"></div>
                     <button @click="viewMode = 'upcoming'" class="flex-1 py-2 text-sm font-medium z-10 transition-colors duration-300 text-center"
-                            :style="{ color: viewMode === 'upcoming' ? themeColor : '' }"
+                            :aria-pressed="viewMode === 'upcoming'"
                             :class="viewMode === 'upcoming' ? '' : 'text-slate-500'">
                         即將到來 🚀
                     </button>
                     <button @click="viewMode = 'history'" class="flex-1 py-2 text-sm font-medium z-10 transition-colors duration-300 text-center"
-                        :style="{ color: viewMode === 'history' ? themeColor : '' }"
+                        :aria-pressed="viewMode === 'history'"
                             :class="viewMode === 'history' ? '' : 'text-slate-500'">
                         美好回憶 📸
                     </button>
@@ -784,23 +784,23 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
         <nav aria-label="主要分頁導覽" class="app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
             <button @click="activeTab = 'home'" :aria-current="activeTab === 'home' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16" 
-                :class="activeTab === 'home' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'home' ? themeColor : '' }">
+                :class="activeTab === 'home' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-calendar-check" :class="{ 'ph-fill': activeTab === 'home', 'ph-bold': activeTab !== 'home' }"></i>
                 <span class="text-[10px] font-medium">行程</span>
             </button>
             <button @click="activeTab = 'fandom'" :aria-current="activeTab === 'fandom' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16"
-                :class="activeTab === 'fandom' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'fandom' ? themeColor : '' }">
+                :class="activeTab === 'fandom' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-heart-straight" :class="{ 'ph-fill': activeTab === 'fandom', 'ph-bold': activeTab !== 'fandom' }"></i>
                 <span class="text-[10px] font-medium">紀念日</span>
             </button>
 
             <button @click="activeTab = 'map'" :aria-current="activeTab === 'map' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16"
-                :class="activeTab === 'map' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'map' ? themeColor : '' }">
+                :class="activeTab === 'map' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-map-trifold" :class="{ 'ph-fill': activeTab === 'map', 'ph-bold': activeTab !== 'map' }"></i>
                 <span class="text-[10px] font-medium">地圖</span>
             </button>
             <button @click="activeTab = 'stats'" :aria-current="activeTab === 'stats' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16"
-                :class="activeTab === 'stats' ? '' : 'text-slate-400'" :style="{ color: activeTab === 'stats' ? themeColor : '' }">
+                :class="activeTab === 'stats' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-chart-bar" :class="{ 'ph-fill': activeTab === 'stats', 'ph-bold': activeTab !== 'stats' }"></i>
                 <span class="text-[10px] font-medium">回顧</span>
             </button>
@@ -1352,7 +1352,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
 <script src="./js/app-444.js?v=1"></script>
-<script src="./js/theme-444.js?v=3"></script>
+<script src="./js/theme-444.js?v=4"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
