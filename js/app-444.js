@@ -851,10 +851,60 @@ watch(activeTab, (newTab) => {
                     return hsp > 180;
                 };
 
+                // 444: generate all theme tokens inside Vue's reactive style binding.
+                // Never write these to #app.style from an external MutationObserver:
+                // Vue can replace those external properties on the next render.
+                const ritaThemeTokens = (value) => {
+                    const match = /^#([0-9a-f]{6})$/i.exec(String(value || ''));
+                    const p = match ? [0, 2, 4].map(i => parseInt(match[1].slice(i, i + 2), 16)) : [99, 179, 176];
+                    const white = [255, 255, 255], dark = [24, 28, 38];
+                    const blend = (a, b, t) => a.map((v, i) => v * (1 - t) + b[i] * t);
+                    const hex = a => '#' + a.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+                    const luminance = a => a.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); })
+                        .reduce((total, v, i) => total + v * [.2126, .7152, .0722][i], 0);
+                    const contrast = (a, b) => {
+                        const x = luminance(a), y = luminance(b);
+                        return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
+                    };
+                    const darkenFor = (color, background, min) => {
+                        let result = color.slice();
+                        for (let i = 0; i < 60 && contrast(result, background) < min; i++) result = blend(result, [0, 0, 0], .92);
+                        return result;
+                    };
+                    const page = blend(p, white, .975);
+                    const card = blend(p, white, .935);
+                    const soft = blend(p, white, .89);
+                    const line = blend(p, white, .77);
+                    const accent = darkenFor(p, white, 4.5);
+                    let action = p.slice();
+                    let actionText = contrast(action, white) >= contrast(action, dark) ? white : dark;
+                    for (let i = 0; i < 60 && contrast(action, actionText) < 4.5; i++) {
+                        action = blend(action, actionText === white ? [0, 0, 0] : white, .93);
+                        actionText = contrast(action, white) >= contrast(action, dark) ? white : dark;
+                    }
+                    const header = darkenFor(p, white, 7);
+                    const muted = darkenFor(blend(p, dark, .56), card, 4.5);
+                    return {
+                        '--rita-page': hex(page),
+                        '--rita-card': hex(card),
+                        '--rita-soft': hex(soft),
+                        '--rita-line': hex(line),
+                        '--rita-ink': hex(dark),
+                        '--rita-muted': hex(muted),
+                        '--rita-placeholder': hex(muted),
+                        '--rita-accent': hex(accent),
+                        '--rita-action-bg': hex(action),
+                        '--rita-on-primary': hex(actionText),
+                        '--rita-header-bg': hex(header),
+                        '--rita-on-header': '#ffffff',
+                        '--rita-on-control': hex(dark)
+                    };
+                };
                 const cssVars = computed(() => ({
                     '--primary-color': themeColor.value,
                     '--primary-dark': adjustColor(themeColor.value, -30),
-                    '--primary-light': adjustColor(themeColor.value, 150)
+                    '--primary-light': adjustColor(themeColor.value, 150),
+                    ...ritaThemeTokens(themeColor.value)
                 }));
                 const getEventColor = (event) => (!event.color || event.color === '') ? themeColor.value : event.color;
                 const isThemeColorLight = computed(() => isColorLight(themeColor.value));
