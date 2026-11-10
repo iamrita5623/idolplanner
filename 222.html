@@ -92,6 +92,30 @@ body{background:color-mix(in srgb,var(--primary-color) 17%,white)}
 }
 #app > main .group.overflow-hidden:has(>div>img[src])>div.p-5{padding:18px 12px 12px}
 @media(min-width:760px){#app{width:min(100%,680px);max-width:680px}}
+
+/* All surfaces derive from the selected theme, including recap and unframed panels. */
+#app{
+ --book-bg:color-mix(in srgb,var(--primary-color) 8%,#fff);
+ --book-surface:color-mix(in srgb,var(--primary-color) 3%,#fff);
+ --book-soft:color-mix(in srgb,var(--primary-color) 12%,#fff);
+ --book-border:color-mix(in srgb,var(--primary-color) 25%,#fff);
+ --book-shadow:color-mix(in srgb,var(--primary-color) 23%,#e9e9ed);
+}
+#app > main .bg-white{background-color:var(--book-surface)}
+#app > main .bg-slate-50,#app > main .bg-gray-50,
+#app > main .bg-slate-100,#app > main .bg-gray-100{background-color:var(--book-soft)}
+#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
+ background:linear-gradient(145deg,var(--book-surface),var(--book-soft))!important
+}
+#app > main .rounded-2xl,#app > main .rounded-xl{
+ border-color:var(--book-border)
+}
+#app > main .rounded-2xl.bg-white,#app > main .rounded-xl.bg-white{
+ background:var(--book-surface)
+}
+#app > main .border-slate-200,#app > main .border-slate-100,
+#app > main .border-gray-200{border-color:var(--book-border)}
+#app > main .bg-slate-200,#app > main .bg-gray-200{background-color:var(--book-soft)}
 </style>
 <!-- Centered desktop width for scrapbook trial -->
 <style id="desktop-width-only">
@@ -1351,7 +1375,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap.js?v=1.1.4"></script>
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
-<script src="./js/app-222.js?v=1.1.72"></script>
+<script src="./js/app-222.js?v=1.1.73"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
