@@ -157,6 +157,63 @@
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
+
+<style id="rita-theme-coverage-444">
+/* Color-only coverage for the user's approved rules. Never override event-specific
+   inline colors, photos, map tiles/routes, or semantic danger/success states. */
+#app{
+ --theme-paper:color-mix(in srgb,var(--primary-color) 5%,white);
+ --theme-card:color-mix(in srgb,var(--primary-color) 2%,white);
+ --theme-muted:color-mix(in srgb,var(--primary-color) 12%,white);
+ --theme-line:color-mix(in srgb,var(--primary-color) 24%,white);
+ --theme-ink:color-mix(in srgb,var(--primary-color) 20%,#181818);
+ --theme-secondary:color-mix(in srgb,var(--primary-color) 28%,#414141);
+ --theme-shadow:color-mix(in srgb,var(--primary-color) 13%,transparent);
+ --theme-on-accent:var(--journal-on-primary);
+ color:var(--theme-ink);
+ background-color:var(--theme-paper);
+}
+body:has(#app){background-color:color-mix(in srgb,var(--primary-color,#27243B) 7%,white)}
+#app>main,#app>main>.space-y-6{background-color:var(--theme-paper)}
+#app .bg-white:not(.leaflet-container):not(.leaflet-popup-content-wrapper){background-color:var(--theme-card)!important}
+#app .bg-white\/90,#app .bg-white\/95,#app .bg-white\/80{background-color:color-mix(in srgb,var(--primary-color) 4%,white)!important}
+#app .bg-slate-50,#app .bg-gray-50,#app .bg-blue-50,#app .bg-purple-50,#app .bg-pink-50,#app .bg-teal-50{background-color:var(--theme-paper)!important}
+#app .bg-slate-100,#app .bg-gray-100,#app .bg-blue-100,#app .bg-purple-100,#app .bg-pink-100,#app .bg-teal-100{background-color:var(--theme-muted)!important}
+#app .bg-slate-200,#app .bg-gray-200{background-color:var(--theme-line)!important}
+#app .border-slate-100,#app .border-slate-200,#app .border-slate-300,#app .border-gray-100,#app .border-gray-200,#app .border-gray-300,#app .border-blue-100,#app .border-blue-200,#app .border-purple-200,#app .border-pink-200,#app .border-teal-200{border-color:var(--theme-line)!important}
+#app .text-slate-300,#app .text-slate-400,#app .text-slate-500,#app .text-slate-600,#app .text-gray-400,#app .text-gray-500,#app .text-blue-500,#app .text-blue-600,#app .text-purple-500,#app .text-purple-600,#app .text-pink-500,#app .text-pink-600,#app .text-teal-500,#app .text-teal-600{color:var(--theme-secondary)!important}
+#app .text-slate-700,#app .text-slate-800,#app .text-slate-900,#app .text-gray-700,#app .text-gray-800{color:var(--theme-ink)!important}
+#app .hover\:bg-slate-100:hover,#app .hover\:bg-slate-200:hover,#app .hover\:bg-gray-100:hover{background-color:var(--theme-muted)!important}
+#app input:not([type=color]):not([type=checkbox]):not([type=radio]),#app select,#app textarea{
+ border-color:var(--theme-line);accent-color:var(--primary-color);
+}
+#app input:focus-visible,#app textarea:focus-visible,#app select:focus-visible,#app button:focus-visible{
+ outline-color:var(--primary-color);
+}
+#app input[type=checkbox],#app input[type=radio],#app input[type=range]{accent-color:var(--primary-color)}
+#app input::placeholder,#app textarea::placeholder{color:var(--theme-secondary);opacity:.72}
+#app>.app-bottom-nav{background-color:var(--theme-card)!important;border-top-color:var(--theme-line)!important;box-shadow:0 -4px 16px var(--theme-shadow)!important}
+#app>.app-bottom-nav button[aria-current=page]{color:var(--primary-color)}
+#app>.app-bottom-nav button[aria-current=page] i{color:var(--primary-color)!important}
+#app>.app-bottom-nav button:not([aria-current=page]){color:var(--theme-secondary)}
+#app .event-editor-sheet,#app .settings-modal-panel,#app .changelog-modal-panel,#app .ticket-stub{
+ background-color:var(--theme-card)!important;
+}
+#app .ticket-divider{border-color:var(--theme-line)!important}
+#app .ticket-divider::before,#app .ticket-divider::after{background-color:var(--theme-paper)!important}
+#app .rounded-2xl.shadow-sm,#app .rounded-xl.shadow-sm,#app .rounded-3xl.shadow-sm{box-shadow:0 3px 14px var(--theme-shadow)!important}
+#app .map-tab-panel .bg-white,#app .map-replay-controls>div{background-color:var(--theme-card)!important}
+#app .map-replay-controls button{accent-color:var(--primary-color)}
+#app .leaflet-popup-content-wrapper{background-color:var(--theme-card);color:var(--theme-ink)}
+#app .leaflet-popup-tip{background-color:var(--theme-card)}
+#app .custom-popup-scroll{scrollbar-color:var(--theme-line) var(--theme-paper)}
+#app .custom-popup-scroll::-webkit-scrollbar-track{background:var(--theme-paper)}
+#app .custom-popup-scroll::-webkit-scrollbar-thumb{background:var(--theme-line)}
+#app #share-template{background:var(--theme-paper)!important;color:var(--theme-ink)!important}
+#app #share-template .text-slate-700,#app #share-template .text-slate-800{color:var(--theme-ink)!important}
+#app .bg-primary,#app .bg-primary-dark{color:var(--theme-on-accent)}
+/* Status reds, yellows, greens, custom event colors and map markers are intentionally excluded. */
+</style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
