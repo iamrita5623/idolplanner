@@ -871,10 +871,10 @@ watch(activeTab, (newTab) => {
                         for (let i = 0; i < 60 && contrast(result, background) < min; i++) result = blend(result, [0, 0, 0], .92);
                         return result;
                     };
-                    const page = blend(p, white, .975);
-                    const card = blend(p, white, .935);
-                    const soft = blend(p, white, .89);
-                    const line = blend(p, white, .77);
+                    const page = blend(p, white, .94);
+                    const card = blend(p, white, .88);
+                    const soft = blend(p, white, .78);
+                    const line = blend(p, white, .65);
                     const accent = darkenFor(p, white, 4.5);
                     let action = p.slice();
                     let actionText = contrast(action, white) >= contrast(action, dark) ? white : dark;
