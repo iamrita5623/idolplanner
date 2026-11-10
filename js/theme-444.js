@@ -1,7 +1,7 @@
 /* 444-only theme tokens. No changes to app state, storage or shared scripts. */
 (function(){
  'use strict';
- function rgb(s){var m=s.match(/^#([0-9a-f]{6})$/i);if(m){return [0,2,4].map(function(i){return parseInt(m[1].slice(i,i+2),16)})}var n=s.match(/rgba?\\(\\s*([\\d.]+)[,\\s]+([\\d.]+)[,\\s]+([\\d.]+)/i);return n?[+n[1],+n[2],+n[3]]:null}
+ function rgb(s){var m=s.match(/^#([0-9a-f]{6})$/i);if(m){return [0,2,4].map(function(i){return parseInt(m[1].slice(i,i+2),16)})}var n=s.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/i);return n?[+n[1],+n[2],+n[3]]:null}
  function lum(v){return v.map(function(x){x/=255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4)}).reduce(function(a,x,i){return a+x*[.2126,.7152,.0722][i]},0)}
  function init(){
   var app=document.getElementById('app');if(!app)return;
