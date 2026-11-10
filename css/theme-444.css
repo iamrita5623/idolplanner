@@ -5,7 +5,7 @@
  --rita-control:#ebe8f0;--rita-control-hover:#e3dfeb;
  --rita-line:#ddd8e5;--rita-ink:#20202b;--rita-muted:#5b5869;
  --rita-placeholder:#706c7a;--rita-on-primary:#fff;--rita-on-header:#fff;
- --rita-on-control:#20202b;--rita-active:var(--primary-color);
+ --rita-on-control:#20202b;--rita-active:var(--primary-color);--rita-action-bg:var(--primary-color);
 }
 #app>main {background:var(--rita-page)}
 #app>.app-bottom-nav {background:var(--rita-card);border-color:var(--rita-line)}
@@ -45,7 +45,7 @@
 #app .rita-series-count{color:var(--rita-on-primary)}
 #app .rita-primary-button{color:var(--rita-on-primary)}
 #app .rita-import-mode{background:var(--rita-control);color:var(--rita-on-control);border:1px solid var(--rita-line)}
-#app .rita-import-mode[aria-pressed=true]{background:var(--primary-color);color:var(--rita-on-primary)}
+#app .rita-import-mode[aria-pressed=true]{background:var(--rita-action-bg);color:var(--rita-on-primary)}
 #app .rita-map-control{background:var(--rita-card);color:var(--rita-ink);border-color:var(--rita-line)}
 /* Preserve event/artist colors, leaflet tiles/markers, exported recap/share image,
    semantic red/green warnings and inline colors used for individual event cards. */
@@ -55,5 +55,3 @@
 #app .rita-theme-map-replay :is(.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700){color:var(--rita-muted)}
 #app .rita-theme-map-replay :is(.bg-slate-50,.bg-slate-100,.bg-white){background:var(--rita-card-soft)}
 #app .rita-theme-map-replay :is(.border-slate-100,.border-slate-200){border-color:var(--rita-line)}
-/* Prevent generated share art from inheriting 444 UI palette. */
-#app #share-template,#app #share-template-legacy{color:initial}
