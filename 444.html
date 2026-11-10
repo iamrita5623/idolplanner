@@ -589,7 +589,7 @@
 
 
 <!-- 年度足跡：極簡播放列，不遮住地圖 -->
-<div v-show="!showSettingsModal" class="map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
+<div v-show="!showSettingsModal" class="rita-theme-map-replay map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
   <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
     <div class="flex items-center gap-1 shrink-0" :style="{ color: themeColor }">
       <button type="button" @click="previousReplayStop" :disabled="!replayStops.length || replayIndex <= 0"
@@ -615,10 +615,10 @@
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
 <div class="flex gap-2">
-    <button @click="openSharePreview" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button @click="openSharePreview" :style="{ backgroundColor: themeColor }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
     </button>
-    <button type="button" @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs text-white px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button type="button" @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-download-simple text-lg"></i> 匯入
     </button>
 </div>
@@ -777,7 +777,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
        </main>
 
         <button @click="openModal()" :style="{ backgroundColor: themeColor }"
-            class="absolute bottom-24 right-6 w-14 h-14 text-white rounded-full shadow-lg shadow-primary/40 flex items-center justify-center transform transition-transform hover:scale-110 active:scale-95 z-30 mb-safe"
+            class="absolute bottom-24 right-6 w-14 h-14 rita-primary-button rounded-full shadow-lg shadow-primary/40 flex items-center justify-center transform transition-transform hover:scale-110 active:scale-95 z-30 mb-safe"
             v-if="activeTab === 'home'">
             <i class="ph ph-plus text-2xl font-bold"></i>
         </button>
@@ -890,7 +890,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
         <transition name="slide-up">
   
-            <div v-if="showChangelogModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+            <div v-if="showChangelogModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="showChangelogModal = false"></div>
                 <div class="changelog-modal-panel bg-white w-full max-w-md max-h-[70vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                     <div class="flex justify-between items-center mb-4 shrink-0">
@@ -916,7 +916,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </div>
                     <div class="shrink-0 pt-4">
             
-                        <button @click="showChangelogModal = false" :style="{ backgroundColor: themeColor }" class="w-full text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-transform">返回</button>
+                        <button @click="showChangelogModal = false" :style="{ backgroundColor: themeColor }" class="w-full rita-primary-button font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-transform">返回</button>
                     </div>
                 </div>
             </div>
@@ -1067,7 +1067,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 </div>
         
         <transition name="slide-up">
-            <div v-if="showFandomModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+            <div v-if="showFandomModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeFandomModal"></div>
                 <div class="fandom-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                     <div class="flex justify-between items-center mb-4 shrink-0">
@@ -1125,7 +1125,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
           
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
-                        <button @click="addFandom" :style="{ backgroundColor: themeColor }" class="w-full text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
+                        <button @click="addFandom" :style="{ backgroundColor: themeColor }" class="w-full rita-primary-button font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
                     </div>
                 </div>
             </div>
@@ -1134,7 +1134,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
 
         <transition name="slide-up">
-            <div v-if="showModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+            <div v-if="showModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModal"></div>
                 <div class="event-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                    
@@ -1240,7 +1240,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <div><label class="block text-sm font-medium text-slate-700 mb-1">心得筆記 📝</label><textarea v-model="form.memo" placeholder="寫下你的應援心情、觀後感..." class="w-full h-24 bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/50 text-slate-800 resize-none"></textarea></div>
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
-                        <button @click="saveEvent" :style="{ backgroundColor: themeColor }" class="w-full text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
+                        <button @click="saveEvent" :style="{ backgroundColor: themeColor }" class="w-full rita-primary-button font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
                     </div>
                 </div>
             </div>
@@ -1324,7 +1324,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" data-rita-dialog class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
-                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="rita-ui-control flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="rita-ui-control flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="rita-ui-control flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
+                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="rita-import-mode flex-1 p-2 rounded-lg bg-slate-100" :aria-pressed="importMode === 'table'">貼上表格</button><button @click="importMode = 'file'" class="rita-import-mode flex-1 p-2 rounded-lg bg-slate-100" :aria-pressed="importMode === 'file'">上傳檔案</button><button @click="importMode = 'json'" class="rita-import-mode flex-1 p-2 rounded-lg bg-slate-100" :aria-pressed="importMode === 'json'">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
                 
                 <div v-if="importMode === 'json'" class="bg-slate-50 p-3 rounded-xl mb-3 text-xs text-slate-500 leading-relaxed border border-slate-100">
                     <p class="font-bold mb-1 text-slate-700">💡 如何使用：</p>
