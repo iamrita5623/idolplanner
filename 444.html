@@ -108,12 +108,12 @@
  --ui-accent:var(--primary-color);
  --ui-strong:color-mix(in srgb,var(--primary-color) 70%,black);
  --ui-ink:color-mix(in srgb,var(--primary-color) 12%,#181818);
- --ui-secondary:color-mix(in srgb,var(--primary-color) 24%,#444444);
- --ui-page:color-mix(in srgb,var(--primary-color) 13%,white);
- --ui-card:color-mix(in srgb,var(--primary-color) 9%,white);
- --ui-control:color-mix(in srgb,var(--primary-color) 23%,white);
- --ui-hover:color-mix(in srgb,var(--primary-color) 34%,white);
- --ui-border:color-mix(in srgb,var(--primary-color) 38%,white);
+ --ui-secondary:color-mix(in srgb,var(--primary-color) 45%,#222222);
+ --ui-page:color-mix(in srgb,var(--primary-color) 22%,white);
+ --ui-card:color-mix(in srgb,var(--primary-color) 18%,white);
+ --ui-control:color-mix(in srgb,var(--primary-color) 40%,white);
+ --ui-hover:color-mix(in srgb,var(--primary-color) 50%,white);
+ --ui-border:color-mix(in srgb,var(--primary-color) 55%,white);
  --ui-shadow:color-mix(in srgb,var(--primary-color) 22%,transparent);
  --ui-on-accent:#fff;
  accent-color:var(--ui-accent);
@@ -151,8 +151,6 @@ body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,whi
 #app .custom-popup-scroll{scrollbar-color:var(--ui-border) var(--ui-page)}
 #app .custom-popup-scroll::-webkit-scrollbar-track{background:var(--ui-page)}
 #app .custom-popup-scroll::-webkit-scrollbar-thumb{background:var(--ui-border)}
-#app #share-template{background:var(--ui-card)!important;color:var(--ui-ink)!important}
-#app #share-template .rita-share-themed{background:var(--ui-control)!important;color:var(--ui-ink)!important}
 #app .bg-primary,#app .bg-primary-dark{color:var(--ui-on-accent)!important}
 
 /* Danger, success, D-DAY, event colors, photographs and map tile/route colors remain semantic. */
@@ -1306,7 +1304,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: 'var(
             </div>
         </transition>
 
-        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0 rita-share-themed" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:'var(--ui-card)',color:'var(--ui-ink)',position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
+        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
   <div style="position:absolute;left:0;right:0;top:213px;bottom:0;height:427px;overflow:hidden"
     :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse at 30% 10%,#ff9cae,transparent 62%),radial-gradient(ellipse at 80% 15%,#e64c75,transparent 60%),#772c49' : selectedYear === '2024' ? 'radial-gradient(ellipse at 30% 10%,#ffe0a9,transparent 62%),radial-gradient(ellipse at 80% 15%,#ff9e8a,transparent 60%),#97536c' : selectedYear === '2025' ? 'radial-gradient(ellipse at 30% 10%,#dcb4a1,transparent 62%),radial-gradient(ellipse at 80% 15%,#a87a6c,transparent 60%),#573d42' : selectedYear === '2026' ? 'radial-gradient(ellipse at 30% 10%,#f9e7e2,transparent 62%),radial-gradient(ellipse at 80% 15%,#c4b9c5,transparent 60%),#79717c' : 'radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439'}">
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.18) 8deg,transparent 20deg,transparent 38deg);opacity:.55"></div>
@@ -1342,30 +1340,30 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: 'var(
   <h2 style="position:absolute;top:35px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:58px;font-weight:500;line-height:68px;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
   <p style="position:absolute;top:110px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:1.7px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
   <div style="position:absolute;top:137px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
-    <div style="height:88px;background:var(--ui-control);border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:var(--ui-ink);display:flex;flex-direction:column;align-items:stretch;min-width:0">
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
       <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4V6Z M12 6v3 M12 12v1 M12 16v2"/></svg><span>追星回憶</span></div>
       <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;line-height:29px;overflow:hidden;overflow-wrap:anywhere">{{ statsData.count }}</div>
       <div style="height:15px;min-height:15px;margin-top:2px;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">場回憶</div>
     </div>
-    <div style="height:88px;background:var(--ui-control);border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:var(--ui-ink);display:flex;flex-direction:column;align-items:stretch;min-width:0">
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
       <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg><span>最遠追星</span></div>
       <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-weight:900;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;padding:0 2px" :style="{fontSize:(String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 4 ? 23 : String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 8 ? 18 : String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 13 ? 14 : 11)+'px'}">{{ recapFarthestCity ? recapFarthestCity.city : '—' }}</div>
       <div style="height:15px;min-height:15px;margin-top:2px;font-size:9px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ recapFarthestCity ? recapFarthestCity.km.toLocaleString() + ' km' : (recapHomeCity ? '尚無城市資料' : '請先設定出發城市') }}</div>
     </div>
-    <div style="height:88px;background:var(--ui-control);border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:var(--ui-ink);display:flex;flex-direction:column;align-items:stretch;min-width:0">
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
       <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 21V8l9-5 9 5v13H3Z M3 10h18 M9 21v-7h6v7"/></svg><span>最常去</span></div>
       <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-weight:900;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;padding:0 2px" :style="{fontSize:(String(recapTopVenue ? recapTopVenue.name : '—').length <= 4 ? 23 : String(recapTopVenue ? recapTopVenue.name : '—').length <= 8 ? 15 : String(recapTopVenue ? recapTopVenue.name : '—').length <= 13 ? 11 : 9)+'px'}">{{ recapTopVenue ? recapTopVenue.name : '—' }}</div>
       <div style="height:15px;min-height:15px;margin-top:2px;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '尚無資料' }}</div>
     </div>
   </div>
-    <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:var(--ui-control);border-radius:17px;padding:14px 17px;box-sizing:border-box;color:var(--ui-ink)">
+    <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
     <h3 style="font-size:15px;font-weight:900;line-height:20px;margin:0 0 12px;letter-spacing:.5px">TOP 3 ARTISTS</h3>
     <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
     <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="height:43px;box-sizing:border-box">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;height:22px;line-height:20px">
         <span style="display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto;font-weight:800"><span :style="{background:i===0?'#d9bc79':i===1?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ i+1 }}</span><span style="display:block;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap;flex:0 0 auto">{{ a.count }} 次見面</span>
       </div>
-      <div style="height:6px;margin-top:3px;background:var(--ui-border);border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'var(--ui-strong)',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
+      <div style="height:6px;margin-top:3px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
     </div>
   </div>
   <div style="position:absolute;top:434px;left:22px;right:22px;height:77px">
