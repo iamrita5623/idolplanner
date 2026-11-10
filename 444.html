@@ -96,26 +96,6 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<style id="rita-theme-fixed-surfaces-444">
-/* Theme fixed-white interface surfaces only. Recap image (#share-template) is excluded. */
-#app{--rita-surface:color-mix(in srgb,var(--primary-color,#8b5cf6) 20%,white);--rita-surface-strong:color-mix(in srgb,var(--primary-color,#8b5cf6) 32%,white);--rita-surface-line:color-mix(in srgb,var(--primary-color,#8b5cf6) 48%,white);--rita-surface-ink:color-mix(in srgb,var(--primary-color,#8b5cf6) 52%,#172033)}
-#app .rita-theme-map-info,#app .rita-theme-map-playback,#app .rita-theme-import-surface,#app .rita-theme-share-action{background:var(--rita-surface)!important;border-color:var(--rita-surface-line)!important}
-#app .rita-theme-import-surface :is(input,textarea,select),#app .rita-theme-import-surface :is(.bg-slate-50,.bg-slate-100,.bg-white){background-color:var(--rita-surface-strong)!important;border-color:var(--rita-surface-line)!important}
-#app .rita-theme-import-surface button.bg-slate-100{background:var(--rita-surface-strong)!important}
-#app .rita-theme-stat-grid>.bg-gradient-to-br{background:linear-gradient(135deg,var(--rita-surface),var(--rita-surface-strong))!important;border-color:var(--rita-surface-line)!important}
-#app .rita-theme-map-info select{background-color:var(--rita-surface-strong)!important}
-#app .rita-theme-share-action{color:var(--rita-surface-ink)!important}
-
-/* Consolidated budget, series and import theme rules. */
-#app .rita-budget-reminder{color:inherit!important}
-#app .rita-series-row{border-bottom-color:color-mix(in srgb,var(--primary-color) 35%,transparent)!important}
-#app .rita-series-count{color:var(--rita-action-ink,#172033)!important}
-#app .rita-theme-import-surface{color:var(--rita-surface-ink)!important}
-#app .rita-theme-import-surface :is(.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700){color:var(--rita-surface-ink)!important}
-#app .rita-theme-import-surface button.bg-slate-100{color:var(--rita-surface-ink)!important;border:1px solid var(--rita-surface-line)!important}
-#app .rita-theme-import-surface .rita-import-submit{color:var(--rita-action-ink,#172033)!important}
-</style>
-
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
@@ -128,7 +108,7 @@
         <!-- 啟動時遮住暫時的 0 筆畫面，避免誤認資料被清空 -->
         <div v-if="isInitializing || loadError" class="absolute inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center px-8 text-center" role="status" aria-live="polite">
             <template v-if="isInitializing">
-                <div class="rita-gray-loading-spinner w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
+                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
                 <p class="font-bold text-lg text-slate-700">正在載入追星日記 ✨</p>
                 <p class="text-sm text-slate-500 mt-2">正在確認雲端行程與紀念日</p>
             </template>
@@ -176,7 +156,7 @@
                 <div class="h-full bg-white transition-all duration-500" 
                      :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></div>
             </div>
-            <div class="rita-budget-reminder text-[8px] font-medium leading-none truncate">
+            <div class="text-[8px] font-medium leading-none truncate" :style="{ color: isThemeColorLight ? '#475569' : '#f1f5f9' }">
                 {{ budgetNagging }}
             </div>
         </div>
@@ -196,7 +176,7 @@
                     </button>
                 </div>
 
-                <div class="rita-gray-view-toggle flex bg-slate-200 p-1 rounded-full relative mb-2">
+                <div class="flex bg-slate-200 p-1 rounded-full relative mb-2">
                     <div class="w-1/2 h-full absolute bg-white rounded-full shadow-sm transition-all duration-300 transform"
                          :class="viewMode === 'upcoming' ? 'translate-x-0' : 'translate-x-full'"></div>
                     <button @click="viewMode = 'upcoming'" class="flex-1 py-2 text-sm font-medium z-10 transition-colors duration-300 text-center"
@@ -569,7 +549,7 @@
 
             <div v-show="activeTab === 'map'" class="map-tab-panel w-full h-full relative">
                 <div id="map-container" class="w-full h-full bg-slate-200"></div>
-<div class="rita-theme-map-info absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
+<div class="absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
     <div class="flex justify-between items-start">
         <div class="flex flex-col gap-1.5 flex-1 min-w-0">
             <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
@@ -609,7 +589,7 @@
 
 <!-- 年度足跡：極簡播放列，不遮住地圖 -->
 <div v-show="!showSettingsModal" class="map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
-  <div class="rita-theme-map-playback pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
+  <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
     <div class="flex items-center gap-1 shrink-0" :style="{ color: themeColor }">
       <button type="button" @click="previousReplayStop" :disabled="!replayStops.length || replayIndex <= 0"
         class="w-9 h-9 flex items-center justify-center rounded-full disabled:opacity-30" aria-label="上一站" title="上一站"><i class="ph ph-skip-back text-lg"></i></button>
@@ -747,7 +727,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </div>
                 </div>
          
-                <div class="rita-theme-stat-grid grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-2xl border border-slate-100">
                         <div class="text-xs text-slate-500 mb-1">累計場次</div>
                         <div class="text-2xl font-bold text-slate-800">{{ statsData.count }} <span class="text-xs font-normal text-slate-400">場</span></div>
@@ -787,7 +767,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                   
                     <p class="text-xs text-slate-400 mb-3 bg-slate-50 p-2 rounded-lg"><i class="ph ph-info"></i> 僅計入：演唱會、音樂節、見面會、生日會（拼盤依活動名稱合併，不限偶像）</p>
                     <div v-if="statsData.series.length > 0" class="space-y-3">
-                        <div v-for="item in statsData.series" :key="item.title" class="rita-series-row flex items-center justify-between border-b border-slate-50 pb-2 last:border-0"><span class="text-sm text-slate-600 truncate flex-1 pr-2 font-medium">{{ item.title }}</span><span class="rita-series-count text-xs font-bold px-2 py-1 rounded-full" :style="{ backgroundColor: themeColor }">{{ item.count }} 場</span></div>
+                        <div v-for="item in statsData.series" :key="item.title" class="flex items-center justify-between border-b border-slate-50 pb-2 last:border-0"><span class="text-sm text-slate-600 truncate flex-1 pr-2 font-medium">{{ item.title }}</span><span class="text-white text-xs font-bold px-2 py-1 rounded-full" :style="{ backgroundColor: themeColor }">{{ item.count }} 場</span></div>
                     </div>
                     <div v-else class="text-center text-slate-400 text-sm py-4">區間內無資料</div>
                 </div>
@@ -966,7 +946,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <div class="flex flex-col items-center gap-1 w-full">
                 <div class="flex items-center justify-center gap-2">
                     <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-                    <button @click="logout" class="rita-gray-logout text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+                    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
                 </div>
                 <!-- 📍 新增：顯示最後備份時間 -->
                 <p v-if="lastSyncTime" class="text-[10px] text-slate-400 mt-1">
@@ -1216,7 +1196,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                        
                             </div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
-                            <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="rita-gray-coordinate bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
                             <div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
                                 <p class="text-xs text-slate-500 px-2 pb-1">常見場館搜尋建議 · 最多 5 筆</p>
                                 <button v-for="venue in windowVenueMatches(form.location)" :key="venue.country + venue.label" type="button"
@@ -1248,12 +1228,12 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <hr class="border-slate-100 my-2">
                         
                         <div><div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">詳細支出記帳 💰</label><span class="text-xs font-bold" :style="{ color: themeColor }">總計: ${{ formatMoney(calculateTotal(form.expenses)) }}</span></div><div class="space-y-2 mb-2"><div v-for="(exp, index) in form.expenses" :key="index" class="grid grid-cols-[1fr,1fr,auto] gap-2 items-center"><input v-model="exp.item" type="text" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm"><input v-model.number="exp.amount" type="number" placeholder="金額" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm text-right"><button @click="removeExpenseItem(index)" class="text-slate-400 hover:text-red-500"><i class="ph ph-minus-circle text-lg"></i></button></div><div class="flex gap-2 overflow-x-auto items-center">
-    <button @click="addExpenseItem('門票')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
-    <button @click="addExpenseItem('交通')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
-    <button @click="addExpenseItem('住宿')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
-    <button @click="addExpenseItem('周邊')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
+    <button @click="addExpenseItem('門票')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
+    <button @click="addExpenseItem('交通')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
+    <button @click="addExpenseItem('住宿')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
+    <button @click="addExpenseItem('周邊')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
     <!-- 🌟 樣式跟旁邊完全一樣的自訂按鈕 -->
-    <button @click="addExpenseItem('')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border shrink-0">+ 自訂</button>
+    <button @click="addExpenseItem('')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border shrink-0">+ 自訂</button>
 </div>
 </div>
                         <div><label class="block text-sm font-medium text-slate-700 mb-1">心得筆記 📝</label><textarea v-model="form.memo" placeholder="寫下你的應援心情、觀後感..." class="w-full h-24 bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/50 text-slate-800 resize-none"></textarea></div>
@@ -1266,7 +1246,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </div>
         </transition>
 
-        <div v-if="showShareModal" class="rita-gray-share-dialog fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
+        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
   <div style="position:absolute;left:0;right:0;top:213px;bottom:0;height:427px;overflow:hidden"
     :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse at 30% 10%,#ff9cae,transparent 62%),radial-gradient(ellipse at 80% 15%,#e64c75,transparent 60%),#772c49' : selectedYear === '2024' ? 'radial-gradient(ellipse at 30% 10%,#ffe0a9,transparent 62%),radial-gradient(ellipse at 80% 15%,#ff9e8a,transparent 60%),#97536c' : selectedYear === '2025' ? 'radial-gradient(ellipse at 30% 10%,#dcb4a1,transparent 62%),radial-gradient(ellipse at 80% 15%,#a87a6c,transparent 60%),#573d42' : selectedYear === '2026' ? 'radial-gradient(ellipse at 30% 10%,#f9e7e2,transparent 62%),radial-gradient(ellipse at 80% 15%,#c4b9c5,transparent 60%),#79717c' : 'radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439'}">
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.18) 8deg,transparent 20deg,transparent 38deg);opacity:.55"></div>
@@ -1340,8 +1320,8 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   <p style="position:absolute;top:586px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0;color:#fff;z-index:2;text-shadow:0 1px 4px rgba(20,15,28,.75)">{{ recapQuote }}</p>
   <p style="position:absolute;top:611px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0;color:#fff;z-index:2;text-shadow:0 1px 4px rgba(20,15,28,.75)">EVERY MOMENT MATTERS · IDOL PLANNER</p>
 </div>
-<div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="rita-theme-share-action w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
-            <div class="rita-theme-import-surface bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
+<div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+            <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
                 <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
                 
@@ -1360,7 +1340,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
 
                 <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期,歌手,活動名稱,地點,金額），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期,歌手,活動名稱,地點,金額\n2026-11-22,BTS, BTS WORLD TOUR ’ARIRANG’,高雄國家體育場,5000' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : 'JSON 範例：\n[\n  { &quot;日期&quot;: &quot;2026-11-22&quot;, &quot;歌手&quot;: &quot;BTS&quot;, &quot;活動名稱&quot;: &quot;BTS WORLD TOUR ’ARIRANG’&quot;, &quot;地點&quot;: &quot;高雄國家體育場&quot;, &quot;expenses&quot;: [{&quot;項目&quot;: &quot;門票&quot;, &quot;金額&quot;: 5000}] }\n]'"></textarea>
-                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="rita-import-submit flex-1 py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
+                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
 
