@@ -57,63 +57,63 @@
 
 <!-- Clean 444-inspired palette; all shades derive only from the user's theme color. -->
 <style id="scrapbook-theme-clean">
-/* 444 palette: bright tinted paper, WHITE cards, softly colored edges. */
+/* Directly matched to 444: 490px shell, light paper, white cards, 170px flush cover. */
 #app{
- --paper:color-mix(in srgb,var(--primary-color) 7%,white);
- --surface:#fff;
- --soft:color-mix(in srgb,var(--primary-color) 11%,white);
- --outline:color-mix(in srgb,var(--primary-color) 22%,white);
- --lift:color-mix(in srgb,var(--primary-color) 17%,white);
- background:var(--paper)!important;
+ --book-paper:color-mix(in srgb,var(--primary-color) 9%,#fff8ee);
+ --book-outer:color-mix(in srgb,var(--primary-color) 16%,#eee7dd);
+ --book-edge:color-mix(in srgb,var(--primary-color) 22%,white);
+ --book-shadow:color-mix(in srgb,var(--primary-color) 20%,#e5ddd4);
+ --book-tint:color-mix(in srgb,var(--primary-color) 18%,white);
+ background:var(--book-paper)!important;
 }
 body{background:#fafafa}
-#app>main{background:var(--paper)!important}
+#app>main{background:var(--book-paper)!important}
 #app .scrapbook-stats{background:transparent!important}
 #app .scrapbook-stats .bg-white,
 #app .scrapbook-stats .bg-gradient-to-br,
 #app .scrapbook-stats .bg-slate-50,
 #app .scrapbook-stats .bg-gray-50{
  background:#fff!important;
- border-color:var(--outline)!important;
+ border-color:var(--book-edge)!important;
 }
 #app .scrapbook-stats .bg-slate-100,
 #app .scrapbook-stats .bg-gray-100,
 #app .scrapbook-stats .bg-slate-200,
-#app .scrapbook-stats .bg-gray-200{background:var(--soft)!important}
+#app .scrapbook-stats .bg-gray-200{background:var(--book-tint)!important}
 #app .scrapbook-stats .rounded-2xl.bg-white,
 #app .scrapbook-stats .rounded-xl.bg-white,
 #app .scrapbook-stats .bg-gradient-to-br{
- box-shadow:4px 5px 0 var(--lift)!important;
- border:1px solid var(--outline)!important;
+ box-shadow:3px 4px 0 var(--book-shadow)!important;
+ border:1px solid var(--book-edge)!important;
+ border-radius:12px!important;
 }
 #app .scrapbook-stats .border-slate-100,
-#app .scrapbook-stats .border-slate-200{border-color:var(--outline)!important}
-/* 444 photo frame: the OUTER white card is rounded; the inset image is square. */
-#app>main .group.overflow-hidden:has(>div>img[src]){
- padding:7px!important;
+#app .scrapbook-stats .border-slate-200{border-color:var(--book-edge)!important}
+#app>main .scrapbook-event-card{
+ padding:0!important;
  background:#fff!important;
- border:1px solid var(--outline)!important;
- box-shadow:4px 5px 0 var(--lift)!important;
- border-radius:20px!important;
-}
-#app>main .group.overflow-hidden:has(>div>img[src])>div:first-child{
- height:clamp(155px,28vw,235px);
- border-radius:0!important;
- margin:0!important;
- width:100%;
+ border:1px solid var(--book-edge)!important;
+ border-radius:12px!important;
+ box-shadow:3px 4px 0 var(--book-shadow)!important;
  overflow:hidden;
 }
-#app>main .group.overflow-hidden:has(>div>img[src])>div:first-child img{
+#app>main .scrapbook-event-cover{
+ height:170px!important;
+ padding:0!important;
+ margin:0!important;
+ width:100%!important;
  border-radius:0!important;
+ overflow:hidden;
+}
+#app>main .scrapbook-event-cover img{
  display:block;
+ width:100%;
+ height:100%;
+ border-radius:0!important;
 }
-#app>main .group.overflow-hidden:has(>div>img[src])>div:not(:first-child){
- margin-left:-7px;
- margin-right:-7px;
-}
-#app .app-bottom-nav{border-color:var(--outline)}
-@media(min-width:760px){
- #app{width:min(100%,490px);max-width:490px;margin-inline:auto;box-shadow:0 0 30px #00000012}
+#app .app-bottom-nav{border-color:var(--book-edge)}
+@media(min-width:600px){
+ #app{width:min(100%,490px);max-width:490px;margin:20px auto 0;box-shadow:0 0 55px #241a3420}
 }
 </style>
 </head>
@@ -237,11 +237,11 @@ body{background:#fafafa}
 
                 <transition-group name="fade" tag="div" class="space-y-4">
                     <div v-for="event in filteredEvents" :key="event.id" 
-                        class="bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
+                        class="scrapbook-event-card bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
                          :class="{'ring-2 ring-primary/30': expandedEventId === event.id}">
                         
                  
-                       <div v-if="event.coverUrl" class="h-32 w-full bg-slate-100 relative overflow-hidden cursor-pointer" @click="toggleExpand(event.id)">
+                       <div v-if="event.coverUrl" class="scrapbook-event-cover h-32 w-full bg-slate-100 relative overflow-hidden cursor-pointer" @click="toggleExpand(event.id)">
                            <img :src="event.coverUrl" class="w-full h-full object-cover opacity-95 hover:opacity-100 transition-opacity" alt="Event Cover" onerror="this.style.display='none'">
                            <div v-if="getDaysDiff(event.date) >= 0 && viewMode === 'upcoming'" class="absolute top-2 right-2 z-10">
                                <span class="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-lg font-bold">
