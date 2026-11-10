@@ -122,6 +122,35 @@ body{background:#eeeef1}
 #app > main .bg-gradient-to-br.from-slate-50.to-slate-100{background:linear-gradient(145deg,var(--book-surface),var(--book-soft))!important}
 #app > main .bg-white.rounded-2xl,#app > main .bg-white.rounded-xl{background-color:var(--book-surface)!important}
 #app > main .bg-slate-100,#app > main .bg-gray-100{background-color:var(--book-soft)!important}
+
+/* Scoped recap palette: previous rules missed the actual nested recap cards. */
+#app .scrapbook-stats{background:transparent!important}
+#app .scrapbook-stats > .bg-white,
+#app .scrapbook-stats > .bg-gradient-to-br,
+#app .scrapbook-stats > .grid > .bg-white,
+#app .scrapbook-stats > .grid > .bg-gradient-to-br,
+#app .scrapbook-stats > div.bg-white{
+ background:var(--book-surface)!important;
+ border-color:var(--book-border)!important;
+ box-shadow:4px 5px 0 var(--book-shadow)!important;
+}
+#app .scrapbook-stats .bg-slate-50,
+#app .scrapbook-stats .bg-gray-50,
+#app .scrapbook-stats .bg-slate-100,
+#app .scrapbook-stats .bg-gray-100{
+ background:var(--book-soft)!important
+}
+#app .scrapbook-stats .border-slate-100,
+#app .scrapbook-stats .border-slate-200{border-color:var(--book-border)!important}
+#app .scrapbook-stats .bg-white.rounded-2xl{
+ background:var(--book-surface)!important;
+ border:1px solid var(--book-border)!important;
+ box-shadow:4px 5px 0 var(--book-shadow)!important
+}
+@media(min-width:760px){
+ #app{margin-inline:auto!important;overflow:hidden}
+ #app > main{width:100%;min-width:0}
+}
 </style>
 <!-- Centered desktop width for scrapbook trial -->
 <style id="desktop-width-only">
@@ -640,7 +669,7 @@ body{background:#eeeef1}
     <div v-else class="flex-1 min-w-0 text-xs text-slate-600 truncate">{{ replayStops.length ? '年度足跡 · ' + replayStops.length + ' 站' : '此年度沒有可定位活動' }}</div>
   </div>
 </div>
-   </div> <div v-if="activeTab === 'stats'" class="space-y-6 p-5 pb-32">
+   </div> <div v-if="activeTab === 'stats'" class="scrapbook-stats space-y-6 p-5 pb-32">
                  <div class="flex justify-between items-center mb-2">
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
