@@ -96,7 +96,33 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-</head>
+<style id="rita-gray-test-444">
+/* Temporary, opt-in gray color test. Default appearance is unchanged. */
+#app.rita-gray-test .bg-white:not(#share-template):not(#share-template *):not(.leaflet-container){background-color:#ffe56d!important}
+#app.rita-gray-test :is(.bg-slate-50,.bg-gray-50,.bg-neutral-50,.bg-slate-100,.bg-gray-100,.bg-neutral-100):not(#share-template):not(#share-template *){background-color:#ffb3df!important}
+#app.rita-gray-test :is(.border-slate-100,.border-slate-200,.border-slate-300,.border-gray-100,.border-gray-200,.border-gray-300):not(#share-template):not(#share-template *){border-color:#006dff!important}
+#app.rita-gray-test :is(.text-slate-300,.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700,.text-slate-800,.text-gray-400,.text-gray-500,.text-gray-600,.text-gray-700):not(#share-template):not(#share-template *){color:#9b00dc!important}
+#app.rita-gray-test>.app-bottom-nav{background-color:#ffe56d!important;border-top-color:#006dff!important}
+#app.rita-gray-test .ticket-divider{background-color:#ffb3df!important}
+#app.rita-gray-test :is(input,textarea,select):not(#share-template *){border-color:#006dff!important}
+</style>
+<script id="rita-gray-test-control">
+(function(){
+ function ready(){
+  const app=document.getElementById('app');if(!app)return;
+  const b=document.createElement('button');
+  b.type='button';b.id='rita-gray-test-toggle';b.textContent='灰色測試：關';
+  b.setAttribute('aria-pressed','false');
+  b.style.cssText='position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:2147483646;background:#111;color:#fff;border:2px solid #fff;border-radius:999px;padding:8px 12px;font:700 12px/1.3 system-ui;box-shadow:0 2px 10px #0005;cursor:pointer';
+  b.addEventListener('click',function(){
+   const on=app.classList.toggle('rita-gray-test');
+   b.textContent=on?'灰色測試：開':'灰色測試：關';b.setAttribute('aria-pressed',String(on));
+  });
+  document.body.appendChild(b);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
+})();
+</script></head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
