@@ -96,65 +96,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-
-
-
-
-
-<style id="rita-444-unified-theme">
-/* 444 independent color system: no modifications to 222 or its shared assets.
-   Color only; no layout, scroll, dimensions, transforms, or Vue state changes. */
-#app{
- --ui-accent:var(--primary-color);
- --ui-strong:color-mix(in srgb,var(--primary-color) 70%,black);
- --ui-ink:color-mix(in srgb,var(--primary-color) 12%,#181818);
- --ui-secondary:color-mix(in srgb,var(--primary-color) 45%,#222222);
- --ui-page:color-mix(in srgb,var(--primary-color) 22%,white);
- --ui-card:color-mix(in srgb,var(--primary-color) 18%,white);
- --ui-control:color-mix(in srgb,var(--primary-color) 40%,white);
- --ui-hover:color-mix(in srgb,var(--primary-color) 50%,white);
- --ui-border:color-mix(in srgb,var(--primary-color) 55%,white);
- --ui-shadow:color-mix(in srgb,var(--primary-color) 22%,transparent);
- --ui-on-accent:#fff;
- accent-color:var(--ui-accent);
- color:var(--ui-ink);
- background:var(--ui-page);
-}
-body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,white)}
-#app>main{background:var(--ui-page)}
-#app :is(.bg-white,.bg-slate-50,.bg-gray-50,.bg-neutral-50,.bg-blue-50,.bg-purple-50,.bg-pink-50,.bg-teal-50):not(.leaflet-container):not(.leaflet-popup-content-wrapper){background-color:var(--ui-card)!important}
-#app :is(.bg-slate-100,.bg-gray-100,.bg-neutral-100,.bg-blue-100,.bg-purple-100,.bg-pink-100,.bg-teal-100){background-color:var(--ui-control)!important}
-#app :is(.bg-slate-200,.bg-gray-200){background-color:var(--ui-hover)!important}
-#app :is(.border-slate-100,.border-slate-200,.border-slate-300,.border-gray-100,.border-gray-200,.border-gray-300,.border-blue-100,.border-blue-200,.border-purple-200,.border-pink-200,.border-teal-200){border-color:var(--ui-border)!important}
-#app :is(.text-slate-300,.text-slate-400,.text-slate-500,.text-slate-600,.text-gray-400,.text-gray-500,.text-blue-500,.text-blue-600,.text-purple-500,.text-purple-600,.text-pink-500,.text-pink-600,.text-teal-500,.text-teal-600){color:var(--ui-secondary)!important}
-#app :is(.text-slate-700,.text-slate-800,.text-slate-900,.text-gray-700,.text-gray-800){color:var(--ui-ink)!important}
-#app :is(.hover\\:bg-slate-100,.hover\\:bg-slate-200,.hover\\:bg-gray-100):hover{background-color:var(--ui-hover)!important}
-#app .bg-white\\/90,#app .bg-white\\/95,#app .bg-white\\/80{background-color:var(--ui-card)!important}
-#app input:not([type=color]):not([type=checkbox]):not([type=radio]),#app select,#app textarea{border-color:var(--ui-border);accent-color:var(--ui-accent);background-color:var(--ui-card)}
-#app input:focus-visible,#app textarea:focus-visible,#app select:focus-visible,#app button:focus-visible{outline-color:var(--ui-accent)}
-#app :is(input[type=checkbox],input[type=radio],input[type=range]){accent-color:var(--ui-accent)}
-#app :is(input,textarea)::placeholder{color:var(--ui-secondary);opacity:.8}
-#app .rounded-2xl.shadow-sm,#app .rounded-xl.shadow-sm,#app .rounded-3xl.shadow-sm{box-shadow:0 3px 14px var(--ui-shadow)!important}
-#app>.app-bottom-nav{background:var(--ui-card)!important;border-top-color:var(--ui-border)!important;box-shadow:0 -4px 16px var(--ui-shadow)!important;background-image:none!important}
-#app>.app-bottom-nav button[aria-current=page]{color:var(--ui-accent);background:var(--ui-control)!important}
-#app>.app-bottom-nav button[aria-current=page] i{color:var(--ui-accent)!important}
-#app>.app-bottom-nav button:not([aria-current=page]){color:var(--ui-secondary)}
-#app>.app-bottom-nav button:focus-visible{outline-color:var(--ui-accent)}
-#app>.concert-header :is(.text-slate-600,.text-slate-700){color:inherit!important}
-#app .event-editor-sheet,#app .fandom-editor-sheet,#app .settings-modal-panel,#app .changelog-modal-panel,#app .ticket-stub{background-color:var(--ui-card)!important}
-#app .ticket-divider,#app .ticket-stub .rita-ticket-paper{background-color:var(--ui-control)!important;border-color:var(--ui-border)}
-#app .ticket-divider::before,#app .ticket-divider::after{background-color:var(--ui-page)!important}
-#app .ticket-barcode-graphic{background:repeating-linear-gradient(90deg,var(--ui-strong) 0 2px,transparent 2px 4px,var(--ui-strong) 4px 5px,transparent 5px 8px,var(--ui-strong) 8px 12px,transparent 12px 15px)!important}
-#app .ticket-barcode-number{color:var(--ui-ink)}
-#app .map-replay-controls>div,#app .map-tab-panel .bg-white{background-color:var(--ui-card)!important}
-#app .leaflet-popup-content-wrapper,#app .leaflet-popup-tip{background-color:var(--ui-card);color:var(--ui-ink)}
-#app .custom-popup-scroll{scrollbar-color:var(--ui-border) var(--ui-page)}
-#app .custom-popup-scroll::-webkit-scrollbar-track{background:var(--ui-page)}
-#app .custom-popup-scroll::-webkit-scrollbar-thumb{background:var(--ui-border)}
-#app .bg-primary,#app .bg-primary-dark{color:var(--ui-on-accent)!important}
-
-/* Danger, success, D-DAY, event colors, photographs and map tile/route colors remain semantic. */
-</style><script id="rita-444-theme-bridge">(function(){function luminance(h){if(!/^#[0-9a-f]{6}$/i.test(h))return null;let c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]}function apply(){let a=document.getElementById("app");if(!a)return;let c=getComputedStyle(a).getPropertyValue("--primary-color").trim(),l=luminance(c);if(l===null)return;let ink=l>.179?"#171717":"#ffffff";if(a.style.getPropertyValue("--ui-on-accent")!==ink)a.style.setProperty("--ui-on-accent",ink);document.querySelector('meta[name="theme-color"]')?.setAttribute("content",c)}function start(){let a=document.getElementById("app");if(!a)return;new MutationObserver(apply).observe(a,{attributes:true,attributeFilter:["style"]});apply()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",start,{once:true}):start()})();</script></head>
+</head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
@@ -166,7 +108,7 @@ body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,whi
         <!-- 啟動時遮住暫時的 0 筆畫面，避免誤認資料被清空 -->
         <div v-if="isInitializing || loadError" class="absolute inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center px-8 text-center" role="status" aria-live="polite">
             <template v-if="isInitializing">
-                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: var(--primary-color)" aria-hidden="true"></div>
+                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
                 <p class="font-bold text-lg text-slate-700">正在載入追星日記 ✨</p>
                 <p class="text-sm text-slate-500 mt-2">正在確認雲端行程與紀念日</p>
             </template>
@@ -682,7 +624,7 @@ body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,whi
 
 <div id="share-template-legacy" style="position: fixed;
 top: -9999px; left: 0; width: 375px; padding: 30px; border-radius: 0px;
-z-index: -1; display: flex; flex-direction: column;" :style="{ background: 'var(--ui-control)' }">
+z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8fafc' }">
 
     
     <div class="text-center mb-2">
@@ -914,7 +856,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: 'var(
                         </div>
                         <div class="ticket-divider bg-[#f8fafc] -mx-2"></div>
    
-                        <div class="rita-ticket-paper bg-[#f8fafc] p-6 pt-4 text-center"><div aria-label="紀念票券條碼" class="ticket-barcode-graphic" role="img"></div><div class="ticket-barcode-number">{{ ticketEvent.id ? ticketEvent.id.toString().slice(-8) : '12345678' }}</div><p class="text-[10px] text-slate-400 mt-2">IDOL TRACKER EXCLUSIVE TICKET</p></div>
+                        <div class="bg-[#f8fafc] p-6 pt-4 text-center"><div aria-label="紀念票券條碼" class="ticket-barcode-graphic" role="img"></div><div class="ticket-barcode-number">{{ ticketEvent.id ? ticketEvent.id.toString().slice(-8) : '12345678' }}</div><p class="text-[10px] text-slate-400 mt-2">IDOL TRACKER EXCLUSIVE TICKET</p></div>
                     </div>
                     <div class="flex justify-center pt-4 pb-2">
                         <button @click="showTicketModal = false" aria-label="關閉票券" class="w-11 h-11 rounded-full bg-white/20 text-white flex items-center justify-center text-2xl shadow-lg border border-white/20"><i class="ph ph-x"></i></button>
