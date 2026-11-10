@@ -54,6 +54,22 @@
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
+
+<!-- SCRAPBOOK_TEST_THEME_V1 -->
+<style id="scrapbook-test-theme">
+/* Reversible visual-only trial. No changes to Vue bindings, events or cloud logic. */
+#app{--scrap-paper:color-mix(in srgb,var(--primary-color) 7%,#fff9f0);--scrap-edge:color-mix(in srgb,var(--primary-color) 17%,#f7f1e9);--scrap-shadow:color-mix(in srgb,var(--primary-color) 16%,#e7ded4);--scrap-ink:color-mix(in srgb,var(--primary-color) 50%,#34303a);background:var(--scrap-paper)}
+body{background:color-mix(in srgb,var(--primary-color) 10%,#eee8df)}
+#app .concert-header{border-radius:0 0 19px 19px;box-shadow:0 5px 16px color-mix(in srgb,var(--primary-color) 17%,transparent)}
+#app main,#app .app-main{background:var(--scrap-paper)}
+#app .bg-slate-50:not([role="status"]),#app .bg-gray-50{background-color:var(--scrap-paper)}
+#app .app-bottom-nav{background:#fffdfb;border-top:1px solid var(--scrap-edge);box-shadow:0 -3px 14px var(--scrap-shadow)}
+#app .rounded-2xl.bg-white,#app .bg-white.rounded-2xl,#app .rounded-xl.bg-white,#app .bg-white.rounded-xl{border-color:var(--scrap-edge);box-shadow:3px 4px 0 var(--scrap-shadow)}
+#app .bg-slate-100:not(.absolute),#app .bg-slate-200:not(.absolute){background-color:var(--scrap-edge)}
+#app .border-slate-100,#app .border-slate-200{border-color:var(--scrap-edge)}
+#app .text-slate-500{color:color-mix(in srgb,var(--scrap-ink) 70%,#7a7480)}
+@supports not (color:color-mix(in srgb,red,white)){#app{--scrap-paper:#fbf6f0;--scrap-edge:#ede3dd;--scrap-shadow:#eaddd5;--scrap-ink:#654c57}}
+</style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
