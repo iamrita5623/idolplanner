@@ -64,9 +64,30 @@
  --book-edge:color-mix(in srgb,var(--primary-color) 22%,white);
  --book-shadow:color-mix(in srgb,var(--primary-color) 20%,white);
  --book-tint:color-mix(in srgb,var(--primary-color) 18%,white);
+ --book-secondary:color-mix(in srgb,var(--primary-color) 75%,white);
+ --book-ink:color-mix(in srgb,var(--primary-color) 60%,#101018);
  background:var(--book-paper)!important;
 }
-body{background:var(--book-outer)}
+body{background:var(--book-outer)!important}
+#app>.concert-header{
+ background:linear-gradient(135deg,var(--primary-color),var(--book-secondary))!important;
+ border-radius:0 0 18px 18px!important;
+ box-shadow:none!important;
+}
+#app>.concert-header>div.flex.gap-2>div{
+ border:1px solid color-mix(in srgb,currentColor 25%,transparent);
+ border-radius:9px!important;
+}
+#app>main .scrapbook-event-card:not(:has(.scrapbook-event-cover)){
+ border-color:var(--book-edge)!important;
+}
+#app>main .scrapbook-event-card .p-5{
+ background:#fff;
+}
+#app>main .scrapbook-event-card .bg-slate-100:not(.scrapbook-event-cover){
+ background:var(--book-tint)!important;
+}
+
 #app>main{background:var(--book-paper)!important}
 #app .scrapbook-stats{background:transparent!important}
 #app .scrapbook-stats .bg-white,
