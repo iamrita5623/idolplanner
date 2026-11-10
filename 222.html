@@ -70,7 +70,7 @@
  html{height:auto!important;overflow-y:auto!important}
  body{height:auto!important;min-height:100vh!important;overflow-y:auto!important;overflow-x:hidden!important}
  #app{height:auto!important;min-height:100vh!important}
- #app>main{flex:0 0 auto!important;height:auto!important;min-height:0!important;overflow:visible!important;padding-bottom:90px}
+ #app>main{flex:0 0 auto!important;height:auto!important;min-height:0!important;overflow:visible!important;padding-bottom:90px}\n #app>main:has(>.map-tab-panel:not([style*="display: none"])){padding-bottom:0!important}
  #app>.app-bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,490px);z-index:40}
  #app>button.absolute.bottom-24.right-6{position:fixed;bottom:86px;right:max(24px,calc((100vw - 490px)/2 + 24px))}
 }
@@ -78,7 +78,12 @@
    Leaflet descendants need an explicit viewport-relative containing block.
    Mobile retains its original flex-fill layout. */
 @media (min-width:600px){
- #app>main>.map-tab-panel{height:max(500px,calc(100dvh - 210px))!important;min-height:500px}
+ /* Map desktop layout: flush edges, no floating corner cutouts or extra bottom strip. */
+ #app:has(>.app-bottom-nav)>.concert-header{width:100%;box-sizing:border-box}
+ #app:has(>main>.map-tab-panel:not([style*="display: none"]))>.concert-header{border-radius:0!important}
+ #app>main>.map-tab-panel{height:max(500px,calc(100dvh - 150px))!important;min-height:500px;overflow:hidden}
+ #app>main>.map-tab-panel .leaflet-container{width:100%!important}
+ #app>.app-bottom-nav{box-sizing:border-box;min-height:72px;padding-bottom:max(12px,env(safe-area-inset-bottom));box-shadow:0 -5px 18px #00000010}
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
