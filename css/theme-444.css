@@ -1,0 +1,26 @@
+/* 444-only semantic theme foundation. Never loaded by 222 or index.
+   Keep visual layout, event colors, map tiles and #share-template unchanged. */
+#app {
+ --rita-page: color-mix(in srgb, var(--primary-color) 12%, white);
+ --rita-card: color-mix(in srgb, var(--primary-color) 18%, white);
+ --rita-control: color-mix(in srgb, var(--primary-color) 32%, white);
+ --rita-control-hover: color-mix(in srgb, var(--primary-color) 42%, white);
+ --rita-line: color-mix(in srgb, var(--primary-color) 46%, white);
+ --rita-ink: color-mix(in srgb, var(--primary-color) 24%, #151923);
+ --rita-muted: color-mix(in srgb, var(--primary-color) 48%, #252b35);
+ --rita-on-primary: #ffffff;
+ --rita-on-header: #ffffff;
+ --rita-on-control: #172033;
+}
+#app .rita-ui-card {background-color:var(--rita-card);border-color:var(--rita-line)}
+#app .rita-ui-control {background-color:var(--rita-control);border-color:var(--rita-line);color:var(--rita-on-control)}
+#app .rita-ui-control:hover {background-color:var(--rita-control-hover)}
+#app .rita-ui-line {border-color:var(--rita-line)}
+#app .rita-ui-ink {color:var(--rita-ink)}
+#app .rita-ui-muted {color:var(--rita-muted)}
+#app .rita-ui-placeholder::placeholder {color:var(--rita-muted);opacity:1}
+#app .rita-ui-primary-text {color:var(--rita-on-primary)}
+#app .rita-ui-header-text {color:var(--rita-on-header)}
+#app .rita-ui-focus:focus-visible {outline:2px solid var(--primary-color);outline-offset:2px}
+/* Apply tokens only to explicitly marked interface elements.
+   Do not globally override Tailwind colors or use !important. */
