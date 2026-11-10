@@ -118,6 +118,20 @@
 #app.rita-gray-test :is(.bg-gradient-to-br,.bg-gradient-to-r):is(.from-slate-50,.from-slate-100,.from-gray-50,.from-gray-100):not(#share-template):not(#share-template *){background-image:linear-gradient(to bottom right,#ffe56d,#ffb3df)!important}
 #app.rita-gray-test .map-replay-controls>div,#app.rita-gray-test .map-tab-panel>.bg-white{background-color:#ffe56d!important}
 #app.rita-gray-test .map-replay-controls .border-slate-100{border-color:#006dff!important}
+
+/* Preserve loading spinner contrast and selected-tab slider. */
+#app.rita-gray-test .rita-gray-loading-spinner{border-color:#ffb3df!important;border-top-color:#006dff!important}
+#app.rita-gray-test .rita-gray-view-toggle{background-color:#ffb3df!important}
+#app.rita-gray-test .rita-gray-view-toggle>div:first-child{background-color:#ffe56d!important;box-shadow:0 1px 5px #0002!important}
+/* Test placeholder text separately from entered text, including dynamic form inputs. */
+#app.rita-gray-test :is(input,textarea)::placeholder{color:#9b00dc!important;opacity:1!important}
+#app.rita-gray-test :is(input,textarea)::-webkit-input-placeholder{color:#9b00dc!important;opacity:1!important}
+/* Share dialog controls only: do not change the yearly share artwork. */
+#app.rita-gray-test .rita-gray-share-dialog button.bg-white{background-color:#ffb3df!important;color:#9b00dc!important}
+#app.rita-gray-test [data-import-dialog] .bg-white{background-color:#ffe56d!important}
+#app.rita-gray-test [data-import-dialog] :is(textarea,input){background-color:#ffb3df!important}
+#app.rita-gray-test [data-import-dialog] :is(.bg-slate-50,.bg-slate-100){background-color:#ffb3df!important}
+#app.rita-gray-test [data-import-dialog] button.bg-white{background-color:#ffb3df!important}
 </style>
 <script id="rita-gray-test-control">
 (function(){
@@ -147,7 +161,7 @@
         <!-- 啟動時遮住暫時的 0 筆畫面，避免誤認資料被清空 -->
         <div v-if="isInitializing || loadError" class="absolute inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center px-8 text-center" role="status" aria-live="polite">
             <template v-if="isInitializing">
-                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
+                <div class="rita-gray-loading-spinner w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
                 <p class="font-bold text-lg text-slate-700">正在載入追星日記 ✨</p>
                 <p class="text-sm text-slate-500 mt-2">正在確認雲端行程與紀念日</p>
             </template>
@@ -215,7 +229,7 @@
                     </button>
                 </div>
 
-                <div class="flex bg-slate-200 p-1 rounded-full relative mb-2">
+                <div class="rita-gray-view-toggle flex bg-slate-200 p-1 rounded-full relative mb-2">
                     <div class="w-1/2 h-full absolute bg-white rounded-full shadow-sm transition-all duration-300 transform"
                          :class="viewMode === 'upcoming' ? 'translate-x-0' : 'translate-x-full'"></div>
                     <button @click="viewMode = 'upcoming'" class="flex-1 py-2 text-sm font-medium z-10 transition-colors duration-300 text-center"
@@ -1285,7 +1299,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </div>
         </transition>
 
-        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
+        <div v-if="showShareModal" class="rita-gray-share-dialog fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
   <div style="position:absolute;left:0;right:0;top:213px;bottom:0;height:427px;overflow:hidden"
     :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse at 30% 10%,#ff9cae,transparent 62%),radial-gradient(ellipse at 80% 15%,#e64c75,transparent 60%),#772c49' : selectedYear === '2024' ? 'radial-gradient(ellipse at 30% 10%,#ffe0a9,transparent 62%),radial-gradient(ellipse at 80% 15%,#ff9e8a,transparent 60%),#97536c' : selectedYear === '2025' ? 'radial-gradient(ellipse at 30% 10%,#dcb4a1,transparent 62%),radial-gradient(ellipse at 80% 15%,#a87a6c,transparent 60%),#573d42' : selectedYear === '2026' ? 'radial-gradient(ellipse at 30% 10%,#f9e7e2,transparent 62%),radial-gradient(ellipse at 80% 15%,#c4b9c5,transparent 60%),#79717c' : 'radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439'}">
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.18) 8deg,transparent 20deg,transparent 38deg);opacity:.55"></div>
