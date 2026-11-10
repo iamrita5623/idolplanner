@@ -59,13 +59,13 @@
 <style id="scrapbook-test-theme">
 /* Match 444's centered scrapbook page on desktop without altering Vue or data. */
 #app{
-  --scrap-paper:color-mix(in srgb,var(--primary-color) 7%,#fff9f0);
-  --scrap-edge:color-mix(in srgb,var(--primary-color) 17%,#f7f1e9);
-  --scrap-shadow:color-mix(in srgb,var(--primary-color) 16%,#e7ded4);
+  --scrap-paper:color-mix(in srgb,var(--primary-color) 5%,white);
+  --scrap-edge:color-mix(in srgb,var(--primary-color) 18%,white);
+  --scrap-shadow:color-mix(in srgb,var(--primary-color) 20%,#e8e8ec);
   --scrap-ink:color-mix(in srgb,var(--primary-color) 50%,#34303a);
   background:var(--scrap-paper);
 }
-body{background:color-mix(in srgb,var(--primary-color) 12%,#e9e4db)}
+body{background:color-mix(in srgb,var(--primary-color) 16%,white)}
 #app > main{background:var(--scrap-paper)}
 #app .concert-header{
   border-radius:0 0 19px 19px;
@@ -93,18 +93,18 @@ body{background:color-mix(in srgb,var(--primary-color) 12%,#e9e4db)}
   #app .concert-header{border-radius:0 0 20px 20px}
 }
 @supports not (color:color-mix(in srgb,red,white)){
-  #app{--scrap-paper:#fbf6f0;--scrap-edge:#ede3dd;--scrap-shadow:#eaddd5;--scrap-ink:#654c57}
+  #app{--scrap-paper:#f8f5fa;--scrap-edge:#e9e3f0;--scrap-shadow:#e5ddec;--scrap-ink:#654c57}
 }
 
 /* Scrapbook statistics: replace the original cold gray-blue gradient. */
 #app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
- background:linear-gradient(145deg,#fffefa,var(--scrap-paper))!important;
+ background:linear-gradient(145deg,#fff,var(--scrap-paper))!important;
  border:1px solid var(--scrap-edge)!important;
  box-shadow:3px 4px 0 var(--scrap-shadow);
 }
 #app > main .bg-white.rounded-2xl,
 #app > main .bg-white.rounded-xl{
- background-color:#fffefa;
+ background-color:#fff;
 }
 #app > main .bg-slate-50:not([role="status"]){
  background-color:var(--scrap-paper);
@@ -113,7 +113,7 @@ body{background:color-mix(in srgb,var(--primary-color) 12%,#e9e4db)}
  background-color:var(--scrap-edge);
 }
 #app > main select.bg-white{
- background-color:#fffefa;
+ background-color:#fff;
  border-color:var(--scrap-edge);
  box-shadow:3px 4px 0 var(--scrap-shadow);
 }
