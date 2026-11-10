@@ -52,6 +52,7 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
+<link rel="stylesheet" href="./css/theme-444.css?v=1">
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
@@ -946,7 +947,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <div class="flex flex-col items-center gap-1 w-full">
                 <div class="flex items-center justify-center gap-2">
                     <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-                    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+                    <button @click="logout" class="rita-ui-control text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg transition-colors">登出</button>
                 </div>
                 <!-- 📍 新增：顯示最後備份時間 -->
                 <p v-if="lastSyncTime" class="text-[10px] text-slate-400 mt-1">
@@ -1228,10 +1229,10 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <hr class="border-slate-100 my-2">
                         
                         <div><div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">詳細支出記帳 💰</label><span class="text-xs font-bold" :style="{ color: themeColor }">總計: ${{ formatMoney(calculateTotal(form.expenses)) }}</span></div><div class="space-y-2 mb-2"><div v-for="(exp, index) in form.expenses" :key="index" class="grid grid-cols-[1fr,1fr,auto] gap-2 items-center"><input v-model="exp.item" type="text" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm"><input v-model.number="exp.amount" type="number" placeholder="金額" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm text-right"><button @click="removeExpenseItem(index)" class="text-slate-400 hover:text-red-500"><i class="ph ph-minus-circle text-lg"></i></button></div><div class="flex gap-2 overflow-x-auto items-center">
-    <button @click="addExpenseItem('門票')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
-    <button @click="addExpenseItem('交通')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
-    <button @click="addExpenseItem('住宿')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
-    <button @click="addExpenseItem('周邊')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
+    <button @click="addExpenseItem('門票')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
+    <button @click="addExpenseItem('交通')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
+    <button @click="addExpenseItem('住宿')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
+    <button @click="addExpenseItem('周邊')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
     <!-- 🌟 樣式跟旁邊完全一樣的自訂按鈕 -->
     <button @click="addExpenseItem('')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border shrink-0">+ 自訂</button>
 </div>
@@ -1323,7 +1324,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
             <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
-                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
+                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="rita-ui-control flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="rita-ui-control flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="rita-ui-control flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
                 
                 <div v-if="importMode === 'json'" class="bg-slate-50 p-3 rounded-xl mb-3 text-xs text-slate-500 leading-relaxed border border-slate-100">
                     <p class="font-bold mb-1 text-slate-700">💡 如何使用：</p>
@@ -1351,6 +1352,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
 <script src="./js/app-222.js?v=1.1.74"></script>
+<script src="./js/theme-444.js?v=1"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
