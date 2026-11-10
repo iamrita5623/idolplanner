@@ -74,6 +74,13 @@
  #app>.app-bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,490px);z-index:40}
  #app>button.absolute.bottom-24.right-6{position:fixed;bottom:86px;right:max(24px,calc((100vw - 490px)/2 + 24px))}
 }
+/* Desktop map: the outer-scrolling main has auto height, so percentage-height
+   Leaflet descendants need an explicit viewport-relative containing block.
+   Mobile retains its original flex-fill layout. */
+@media (min-width:600px){
+ #app>main>.map-tab-panel{height:max(500px,calc(100dvh - 210px))!important;min-height:500px}
+ #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
+}
 </style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
@@ -526,7 +533,7 @@
                 </div>
             </div>
 
-            <div v-show="activeTab === 'map'" class="w-full h-full relative">
+            <div v-show="activeTab === 'map'" class="map-tab-panel w-full h-full relative">
                 <div id="map-container" class="w-full h-full bg-slate-200"></div>
 <div class="absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
     <div class="flex justify-between items-start">
