@@ -219,7 +219,7 @@
                 <div class="h-full bg-white transition-all duration-500" 
                      :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></div>
             </div>
-            <div class="text-[8px] font-medium leading-none truncate" :style="{ color: isThemeColorLight ? '#475569' : '#f1f5f9' }">
+            <div class="text-[8px] font-medium leading-none truncate" :style="{ color: isThemeColorLight ? 'color-mix(in srgb, var(--primary-color) 28%, #172033)' : 'color-mix(in srgb, var(--primary-color) 12%, white)' }">
                 {{ budgetNagging }}
             </div>
         </div>
