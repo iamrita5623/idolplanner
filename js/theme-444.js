@@ -1,18 +1,40 @@
-/* 444-only theme tokens. No changes to app state, storage or shared scripts. */
+/* 444 only: compute a single accessible palette from Vue's --primary-color.
+   No storage writes, no app state changes and no global style overrides. */
 (function(){
  'use strict';
- function rgb(s){var m=s.match(/^#([0-9a-f]{6})$/i);if(m){return [0,2,4].map(function(i){return parseInt(m[1].slice(i,i+2),16)})}var n=s.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/i);return n?[+n[1],+n[2],+n[3]]:null}
- function lum(v){return v.map(function(x){x/=255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4)}).reduce(function(a,x,i){return a+x*[.2126,.7152,.0722][i]},0)}
+ function parseHex(s){var m=/^#([a-f\d]{6})$/i.exec(s);return m?[0,2,4].map(function(i){return parseInt(m[1].slice(i,i+2),16)}):null}
+ function luminance(c){return c.map(function(x){x/=255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4)}).reduce(function(a,x,i){return a+x*[.2126,.7152,.0722][i]},0)}
+ function contrast(a,b){var x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+ function mix(a,b,t){return a.map(function(x,i){return Math.round(x*(1-t)+b[i]*t)})}
+ function hex(a){return '#'+a.map(function(x){return Math.max(0,Math.min(255,x)).toString(16).padStart(2,'0')}).join('')}
+ function choose(bg){var dark=[23,27,37],white=[255,255,255];return contrast(bg,dark)>=contrast(bg,white)?hex(dark):hex(white)}
  function init(){
   var app=document.getElementById('app');if(!app)return;
   var last='';
   function update(){
-   var raw=getComputedStyle(app).getPropertyValue('--primary-color').trim(),color=rgb(raw);
-   if(!color||raw===last)return;last=raw;
-   var light=lum(color)>.179,ink=light?'#172033':'#ffffff';
-   app.style.setProperty('--rita-on-primary',ink);
-   app.style.setProperty('--rita-on-header',ink);
-   app.style.setProperty('--rita-on-control',light?'#172033':'#172033');
+   var raw=getComputedStyle(app).getPropertyValue('--primary-color').trim();
+   var primary=parseHex(raw);if(!primary||raw===last)return;last=raw;
+   var white=[255,255,255],dark=[23,27,37],p=primary;
+   var card=mix(p,white,.92),soft=mix(p,white,.85),control=mix(p,white,.76);
+   var tokens={
+    '--rita-page':hex(mix(p,white,.95)),
+    '--rita-card':hex(card),
+    '--rita-card-soft':hex(soft),
+    '--rita-control':hex(control),
+    '--rita-control-hover':hex(mix(p,white,.67)),
+    '--rita-line':hex(mix(p,white,.59)),
+    '--rita-ink':hex(mix(p,dark,.18)),
+    '--rita-muted':hex(mix(p,dark,.46)),
+    '--rita-placeholder':hex(mix(p,dark,.54)),
+    '--rita-on-primary':choose(p),
+    '--rita-on-header':choose(p),
+    '--rita-on-control':choose(control)
+   };
+   /* Text on very light or desaturated tinted surfaces must remain readable. */
+   if(contrast(card,parseHex(tokens['--rita-ink']))<4.5)tokens['--rita-ink']=hex(dark);
+   if(contrast(card,parseHex(tokens['--rita-muted']))<4.5)tokens['--rita-muted']=hex(mix(dark,[70,70,80],.15));
+   if(contrast(card,parseHex(tokens['--rita-placeholder']))<4.5)tokens['--rita-placeholder']=tokens['--rita-muted'];
+   Object.keys(tokens).forEach(function(k){app.style.setProperty(k,tokens[k])});
   }
   update();
   new MutationObserver(update).observe(app,{attributes:true,attributeFilter:['style']});
