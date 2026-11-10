@@ -917,7 +917,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <template v-else>
             <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
                 <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
-                <button @click="loginWithEmail" class="text-xs bg-primary text-white px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                <button @click="loginWithEmail" :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#1f2937' : '#ffffff' }" class="text-xs px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
                     <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
                 </button>
             </div>
