@@ -15,6 +15,11 @@
    var raw=getComputedStyle(app).getPropertyValue('--primary-color').trim();
    var primary=parseHex(raw);if(!primary||raw===last)return;last=raw;
    var white=[255,255,255],dark=[23,27,37],p=primary;
+   var action=p.slice(),onAction=choose(action);
+   for(var n=0;n<16&&contrast(action,parseHex(onAction))<4.5;n++){
+    action=mix(action,onAction==='#ffffff'?[0,0,0]:white,.92);
+    onAction=choose(action);
+   }
    var card=mix(p,white,.92),soft=mix(p,white,.85),control=mix(p,white,.76);
    var tokens={
     '--rita-page':hex(mix(p,white,.95)),
@@ -26,8 +31,9 @@
     '--rita-ink':hex(mix(p,dark,.18)),
     '--rita-muted':hex(mix(p,dark,.46)),
     '--rita-placeholder':hex(mix(p,dark,.54)),
-    '--rita-on-primary':choose(p),
-    '--rita-on-header':choose(p),
+    '--rita-action-bg':hex(action),
+    '--rita-on-primary':onAction,
+    '--rita-on-header':onAction,
     '--rita-on-control':choose(control)
    };
    /* Text on very light or desaturated tinted surfaces must remain readable. */
