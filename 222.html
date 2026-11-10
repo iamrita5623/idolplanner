@@ -69,15 +69,6 @@
  background:var(--book-paper)!important;
 }
 body{background:var(--book-outer)!important}
-#app>.concert-header{
- background:linear-gradient(135deg,var(--primary-color),var(--book-secondary))!important;
- border-radius:0 0 18px 18px!important;
- box-shadow:none!important;
-}
-#app>.concert-header>div.flex.gap-2>div{
- border:1px solid color-mix(in srgb,currentColor 25%,transparent);
- border-radius:9px!important;
-}
 #app>main .scrapbook-event-card:not(:has(.scrapbook-event-cover)){
  border-color:var(--book-edge)!important;
 }
@@ -90,6 +81,25 @@ body{background:var(--book-outer)!important}
 
 #app>main{background:var(--book-paper)!important}
 #app .scrapbook-stats{background:transparent!important}
+#app .concert-header{box-shadow:none!important}
+#app .scrapbook-stats .bg-gradient-to-br{
+ background-image:none!important;
+ background-color:#fff!important;
+}
+#app .scrapbook-stats>div .bg-white{
+ background-color:#fff!important;
+}
+#app .scrapbook-stats select{
+ background-color:#fff!important;
+ border-color:var(--book-edge)!important;
+ box-shadow:3px 4px 0 var(--book-shadow)!important;
+}
+#app .scrapbook-stats .bg-white.border-l-4{
+ border-left-color:var(--primary-color)!important;
+}
+#app .scrapbook-stats .bg-slate-200,
+#app .scrapbook-stats .bg-gray-200{background-color:var(--book-edge)!important}
+
 #app .scrapbook-stats .bg-white,
 #app .scrapbook-stats .bg-gradient-to-br,
 #app .scrapbook-stats .bg-slate-50,
