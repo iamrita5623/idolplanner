@@ -1648,7 +1648,7 @@ const showReplayStop = (index) => {
         fillOpacity: 1, interactive: false
     }).addTo(map);
     // 每站放大，將活動點留在畫面偏上方，為原有地圖字卡及底部控制列預留空間。
-    const zoom = Math.max(map.getZoom(), 11);
+    const zoom = Math.max(map.getZoom(), 16);
     const target = map.project(L.latLng(coords), zoom).add([0, -65]);
     const shiftedCenter = map.unproject(target, zoom);
     const escapeText = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
