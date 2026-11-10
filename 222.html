@@ -80,7 +80,7 @@
 @media (min-width:600px){
  /* Map desktop layout: flush edges, no floating corner cutouts or extra bottom strip. */
  #app:has(>.app-bottom-nav)>.concert-header{width:100%;box-sizing:border-box}
- #app:has(>main>.map-tab-panel:not([style*="display: none"]))>.concert-header{border-radius:0!important}
+ /* Keep the original rounded header corners on the map tab. */
  #app>main>.map-tab-panel{height:max(500px,calc(100dvh - 150px))!important;min-height:500px;overflow:hidden}
  #app>main>.map-tab-panel .leaflet-container{width:100%!important}
  /* Keep replay controls above the fixed navigation during desktop page scrolling. */
