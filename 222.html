@@ -55,106 +55,56 @@
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
-<!-- 444-inspired dynamic scrapbook trial: presentation only -->
-<style id="scrapbook-theme-v3">
-#app{
- --book-bg:color-mix(in srgb,var(--primary-color) 17%,white);
- --book-border:color-mix(in srgb,var(--primary-color) 25%,white);
- --book-shadow:color-mix(in srgb,var(--primary-color) 27%,#f0eff3);
- --book-ink:color-mix(in srgb,var(--primary-color) 55%,#242a38);
- background:var(--book-bg);
+<!-- Clean 444-inspired palette; all shades derive only from the user's theme color. -->
+<style id="scrapbook-theme-clean">
+#app {
+ --paper: color-mix(in srgb,var(--primary-color) 30%,white);
+ --surface: color-mix(in srgb,var(--primary-color) 12%,white);
+ --soft: color-mix(in srgb,var(--primary-color) 21%,white);
+ --outline: color-mix(in srgb,var(--primary-color) 43%,white);
+ --lift: color-mix(in srgb,var(--primary-color) 34%,white);
+ background:var(--paper);
 }
-body{background:#eeeef1}
-#app > main{background:var(--book-bg)}
-#app .concert-header{border-radius:0 0 22px 22px}
-#app > main .bg-white.rounded-2xl,#app > main .rounded-2xl.bg-white,
-#app > main .bg-white.rounded-xl,#app > main .rounded-xl.bg-white{
- background:white;border:1px solid var(--book-border);
- box-shadow:4px 5px 0 var(--book-shadow);
+body {background:#fafafa}
+#app > main {background:var(--paper)!important}
+#app .concert-header {border-radius:0 0 22px 22px}
+#app .scrapbook-stats .bg-white,
+#app .scrapbook-stats .bg-gradient-to-br,
+#app .scrapbook-stats .bg-slate-50,
+#app .scrapbook-stats .bg-gray-50 {
+ background:var(--surface)!important;
+ border-color:var(--outline)!important;
 }
-#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
- background:linear-gradient(140deg,white,var(--book-bg))!important;
- border:1px solid var(--book-border)!important;
- box-shadow:4px 5px 0 var(--book-shadow);
+#app .scrapbook-stats .bg-slate-100,
+#app .scrapbook-stats .bg-gray-100,
+#app .scrapbook-stats .bg-slate-200,
+#app .scrapbook-stats .bg-gray-200 {
+ background:var(--soft)!important;
 }
-#app > main .bg-slate-50:not([role=status]){background-color:var(--book-bg)}
-#app > main .border-slate-100,#app > main .border-slate-200{border-color:var(--book-border)}
-#app .app-bottom-nav{border-color:var(--book-border);box-shadow:0 -2px 12px var(--book-shadow)}
-/* Framed photo cards, preserving the real cover and all existing controls. */
-#app > main .group.overflow-hidden:has(>div>img[src]){
- padding:8px;background:white;
- border:1px solid var(--book-border);
- box-shadow:4px 5px 0 var(--book-shadow);
+#app .scrapbook-stats .rounded-2xl.bg-white,
+#app .scrapbook-stats .rounded-xl.bg-white,
+#app .scrapbook-stats .bg-gradient-to-br {
+ box-shadow:4px 5px 0 var(--lift)!important;
+ border:1px solid var(--outline)!important;
 }
-#app > main .group.overflow-hidden:has(>div>img[src])>div:first-child{
+#app .scrapbook-stats .border-slate-100,
+#app .scrapbook-stats .border-slate-200 {
+ border-color:var(--outline)!important;
+}
+#app > main .group.overflow-hidden:has(>div>img[src]) {
+ padding:7px;
+ background:var(--surface);
+ border:1px solid var(--outline);
+ box-shadow:4px 5px 0 var(--lift);
+}
+#app > main .group.overflow-hidden:has(>div>img[src])>div:first-child {
  height:clamp(155px,28vw,235px);
  border-radius:11px 11px 0 0;
 }
-#app > main .group.overflow-hidden:has(>div>img[src])>div.p-5{padding:18px 12px 12px}
-@media(min-width:760px){#app{width:min(100%,680px);max-width:680px}}
-
-/* All surfaces derive from the selected theme, including recap and unframed panels. */
-#app{
- --book-bg:color-mix(in srgb,var(--primary-color) 17%,#fff);
- --book-surface:color-mix(in srgb,var(--primary-color) 10%,#fff);
- --book-soft:color-mix(in srgb,var(--primary-color) 20%,#fff);
- --book-border:color-mix(in srgb,var(--primary-color) 32%,#fff);
- --book-shadow:color-mix(in srgb,var(--primary-color) 29%,#f0eff3);
+#app .app-bottom-nav {border-color:var(--outline)}
+@media(min-width:760px) {
+ #app {width:min(100%,680px);max-width:680px;margin-inline:auto;box-shadow:0 0 30px #00000012}
 }
-#app > main .bg-white{background-color:var(--book-surface)}
-#app > main .bg-slate-50,#app > main .bg-gray-50,
-#app > main .bg-slate-100,#app > main .bg-gray-100{background-color:var(--book-soft)}
-#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
- background:linear-gradient(145deg,var(--book-surface),var(--book-soft))!important
-}
-#app > main .rounded-2xl,#app > main .rounded-xl{
- border-color:var(--book-border)
-}
-#app > main .rounded-2xl.bg-white,#app > main .rounded-xl.bg-white{
- background:var(--book-surface)
-}
-#app > main .border-slate-200,#app > main .border-slate-100,
-#app > main .border-gray-200{border-color:var(--book-border)}
-#app > main .bg-slate-200,#app > main .bg-gray-200{background-color:var(--book-soft)}
-
-/* 444-style tinted page and recap surfaces, with visible hue across all presets. */
-#app > main,#app > main .bg-slate-50,#app > main .bg-gray-50{background-color:var(--book-bg)!important}
-#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{background:linear-gradient(145deg,var(--book-surface),var(--book-soft))!important}
-#app > main .bg-white.rounded-2xl,#app > main .bg-white.rounded-xl{background-color:var(--book-surface)!important}
-#app > main .bg-slate-100,#app > main .bg-gray-100{background-color:var(--book-soft)!important}
-
-/* Scoped recap palette: previous rules missed the actual nested recap cards. */
-#app .scrapbook-stats{background:transparent!important}
-#app .scrapbook-stats > .bg-white,
-#app .scrapbook-stats > .bg-gradient-to-br,
-#app .scrapbook-stats > .grid > .bg-white,
-#app .scrapbook-stats > .grid > .bg-gradient-to-br,
-#app .scrapbook-stats > div.bg-white{
- background:var(--book-surface)!important;
- border-color:var(--book-border)!important;
- box-shadow:4px 5px 0 var(--book-shadow)!important;
-}
-#app .scrapbook-stats .bg-slate-50,
-#app .scrapbook-stats .bg-gray-50,
-#app .scrapbook-stats .bg-slate-100,
-#app .scrapbook-stats .bg-gray-100{
- background:var(--book-soft)!important
-}
-#app .scrapbook-stats .border-slate-100,
-#app .scrapbook-stats .border-slate-200{border-color:var(--book-border)!important}
-#app .scrapbook-stats .bg-white.rounded-2xl{
- background:var(--book-surface)!important;
- border:1px solid var(--book-border)!important;
- box-shadow:4px 5px 0 var(--book-shadow)!important
-}
-@media(min-width:760px){
- #app{margin-inline:auto!important;overflow:hidden}
- #app > main{width:100%;min-width:0}
-}
-</style>
-<!-- Centered desktop width for scrapbook trial -->
-<style id="desktop-width-only">
-@media(min-width:760px){#app{width:min(100%,680px);max-width:680px;margin:0 auto;box-shadow:0 0 36px #22222218}}
 </style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
