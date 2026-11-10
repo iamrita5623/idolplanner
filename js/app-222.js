@@ -1838,6 +1838,18 @@ watch(events, stopReplay, { deep: true });
                                     yearlyBudget.value = Number(restoreData.yearlyBudget);
                                 }
                             }
+                            // Persist restored guest data synchronously before reporting success.
+                            // Vue watchers may not flush before the user refreshes the page.
+                            localStorage.setItem('idolEvents', JSON.stringify(events.value));
+                            if (isFull) {
+                                localStorage.setItem('fandomFandoms', JSON.stringify(fandoms.value));
+                                localStorage.setItem('idolActivityCategories', JSON.stringify(activityCategoryMap.value));
+                                localStorage.setItem('idolConfirmedSeries', JSON.stringify(confirmedSeries.value));
+                                localStorage.setItem('idolRejectedSeries', JSON.stringify(rejectedSeries.value));
+                                localStorage.setItem('appTitle', customTitle.value);
+                                localStorage.setItem('idolTheme', themeColor.value);
+                                localStorage.setItem('idolYearlyBudget', String(yearlyBudget.value));
+                            }
                             // Explicitly queue the complete restored snapshot, including category settings.
                             syncToCloud();
                             showSettingsModal.value = false;
