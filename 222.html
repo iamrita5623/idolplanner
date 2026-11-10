@@ -126,7 +126,35 @@ body{background:var(--book-outer)}
 #app .app-bottom-nav{background:#fff;border-color:var(--book-edge);box-shadow:0 -4px 16px var(--book-shadow)}
 
 @media(min-width:600px){
- #app{width:min(100%,490px);max-width:490px;margin:20px auto 0;box-shadow:0 0 55px color-mix(in srgb,var(--primary-color) 16%,transparent)}
+ /* Desktop follows 444: the browser scrolls, not a narrow inner panel. */
+ html{height:auto;overflow-y:auto}
+ body{height:auto!important;min-height:100vh;width:100%!important;overflow-y:auto!important;overflow-x:hidden!important}
+ #app{
+  width:min(100%,490px);max-width:490px;
+  height:auto!important;min-height:100vh;
+  margin:20px auto 0;
+  box-shadow:0 0 55px color-mix(in srgb,var(--primary-color) 16%,transparent)
+ }
+ #app>main{
+  flex:0 0 auto!important;
+  height:auto!important;
+  overflow:visible!important;
+  min-height:0;
+  padding-bottom:90px;
+ }
+ #app>.app-bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(100%,490px);
+  z-index:40;
+ }
+ #app>button.absolute.bottom-24.right-6{
+  position:fixed;
+  bottom:86px;
+  right:max(24px,calc((100vw - 490px)/2 + 24px));
+ }
 }
 </style>
 </head>
