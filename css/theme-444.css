@@ -49,3 +49,11 @@
 #app .rita-map-control{background:var(--rita-card);color:var(--rita-ink);border-color:var(--rita-line)}
 /* Preserve event/artist colors, leaflet tiles/markers, exported recap/share image,
    semantic red/green warnings and inline colors used for individual event cards. */
+
+/* Map UI chrome only: never recolor Leaflet map tiles, paths or markers. */
+#app .rita-theme-map-replay>div{background:var(--rita-card);border-color:var(--rita-line);color:var(--rita-ink)}
+#app .rita-theme-map-replay :is(.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700){color:var(--rita-muted)}
+#app .rita-theme-map-replay :is(.bg-slate-50,.bg-slate-100,.bg-white){background:var(--rita-card-soft)}
+#app .rita-theme-map-replay :is(.border-slate-100,.border-slate-200){border-color:var(--rita-line)}
+/* Prevent generated share art from inheriting 444 UI palette. */
+#app #share-template,#app #share-template-legacy{color:initial}
