@@ -97,124 +97,66 @@
 }
 </style>
 
-<style id="rita-theme-tokens">
-/* 444 only: color-system foundation; 222 DOM, layout, JS and map remain untouched. */
-#app{
- --journal-950:color-mix(in srgb,var(--primary-color) 54%,black);
- --journal-800:color-mix(in srgb,var(--primary-color) 76%,black);
- --journal-600:var(--primary-color);
- --journal-300:color-mix(in srgb,var(--primary-color) 34%,white);
- --journal-200:color-mix(in srgb,var(--primary-color) 20%,white);
- --journal-100:color-mix(in srgb,var(--primary-color) 10%,white);
- --journal-50:color-mix(in srgb,var(--primary-color) 4%,white);
- --journal-surface:#fff;
- --journal-on-primary:var(--journal-950);
- --primary-dark:var(--journal-800);
- --primary-light:var(--journal-200);
- accent-color:var(--primary-color);
-}
-/* Color-only substitutions: do not change size, positioning, overflow, stacking or transforms. */
-#app>main{background-color:var(--journal-50)}
-#app .bg-slate-50,#app .bg-gray-50,#app .bg-neutral-50{background-color:var(--journal-50)!important}
-#app .bg-slate-100,#app .bg-gray-100,#app .bg-neutral-100{background-color:var(--journal-100)!important}
-#app .bg-slate-200,#app .bg-gray-200{background-color:var(--journal-200)!important}
-#app .border-slate-100,#app .border-gray-100{border-color:var(--journal-100)!important}
-#app .border-slate-200,#app .border-gray-200,#app .border-gray-300,#app .border-slate-300{border-color:var(--journal-200)!important}
-#app .text-slate-400,#app .text-gray-400{color:var(--journal-800)!important}
-#app .text-slate-500,#app .text-gray-500,#app .text-slate-600,#app .text-gray-600{color:var(--journal-800)!important}
-#app .text-slate-700,#app .text-gray-700{color:var(--journal-950)!important}
-#app .text-purple-500,#app .text-purple-600,#app .text-pink-500,#app .text-pink-600,#app .text-teal-500,#app .text-teal-600{color:var(--primary-color)!important}
-#app .bg-purple-50,#app .bg-pink-50,#app .bg-teal-50{background-color:var(--journal-50)!important}
-#app .bg-purple-100,#app .bg-pink-100,#app .bg-teal-100{background-color:var(--journal-100)!important}
-#app .border-purple-200,#app .border-pink-200,#app .border-teal-200{border-color:var(--journal-200)!important}
-#app input:not([type="checkbox"]):not([type="radio"]),#app textarea,#app select{accent-color:var(--primary-color)}
-#app .custom-checkbox{accent-color:var(--primary-color)}
-#app .ticket-divider{border-color:var(--journal-200)}
-#app .ticket-divider::before,#app .ticket-divider::after{background-color:var(--journal-950)}
-#app .custom-popup-scroll{scrollbar-color:var(--journal-300) var(--journal-50)}
-#app .custom-popup-scroll::-webkit-scrollbar-track{background:var(--journal-50)}
-#app .custom-popup-scroll::-webkit-scrollbar-thumb{background:var(--journal-300)}
-#app>.app-bottom-nav{border-color:var(--journal-200);background-color:var(--journal-surface)}
-/* Leaflet's geographic tiles, artist-specific event colors and warning/success semantics are deliberately preserved. */
-</style>
-<script id="rita-theme-bridge">
-(function(){
- const isHex=s=>/^#[0-9a-f]{6}$/i.test(s);
- function rgb(hex){return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255)}
- function contrastText(hex){const l=rgb(hex).map(x=>x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4)).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);return l>.179?'#171717':'#ffffff'}
- function sync(){
-  const app=document.getElementById('app');if(!app)return;
-  const c=getComputedStyle(app).getPropertyValue('--primary-color').trim();
-  if(!isHex(c))return;
-  app.style.setProperty('--journal-on-primary',contrastText(c));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content',c);
- }
- function start(){
-  const app=document.getElementById('app');if(!app)return;
-  new MutationObserver(sync).observe(app,{attributes:true,attributeFilter:['style']});
-  sync();
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-})();
-</script>
 
-<style id="rita-theme-coverage-444">
-/* Color-only coverage for the user's approved rules. Never override event-specific
-   inline colors, photos, map tiles/routes, or semantic danger/success states. */
+
+
+
+<style id="rita-444-unified-theme">
+/* 444 independent color system: no modifications to 222 or its shared assets.
+   Color only; no layout, scroll, dimensions, transforms, or Vue state changes. */
 #app{
- --theme-paper:color-mix(in srgb,var(--primary-color) 5%,white);
- --theme-card:color-mix(in srgb,var(--primary-color) 2%,white);
- --theme-muted:color-mix(in srgb,var(--primary-color) 12%,white);
- --theme-line:color-mix(in srgb,var(--primary-color) 24%,white);
- --theme-ink:color-mix(in srgb,var(--primary-color) 20%,#181818);
- --theme-secondary:color-mix(in srgb,var(--primary-color) 28%,#414141);
- --theme-shadow:color-mix(in srgb,var(--primary-color) 13%,transparent);
- --theme-on-accent:var(--journal-on-primary);
- color:var(--theme-ink);
- background-color:var(--theme-paper);
+ --ui-accent:var(--primary-color);
+ --ui-strong:color-mix(in srgb,var(--primary-color) 70%,black);
+ --ui-ink:color-mix(in srgb,var(--primary-color) 12%,#181818);
+ --ui-secondary:color-mix(in srgb,var(--primary-color) 24%,#444444);
+ --ui-page:color-mix(in srgb,var(--primary-color) 13%,white);
+ --ui-card:color-mix(in srgb,var(--primary-color) 9%,white);
+ --ui-control:color-mix(in srgb,var(--primary-color) 23%,white);
+ --ui-hover:color-mix(in srgb,var(--primary-color) 34%,white);
+ --ui-border:color-mix(in srgb,var(--primary-color) 38%,white);
+ --ui-shadow:color-mix(in srgb,var(--primary-color) 22%,transparent);
+ --ui-on-accent:#fff;
+ accent-color:var(--ui-accent);
+ color:var(--ui-ink);
+ background:var(--ui-page);
 }
-body:has(#app){background-color:color-mix(in srgb,var(--primary-color,#27243B) 7%,white)}
-#app>main,#app>main>.space-y-6{background-color:var(--theme-paper)}
-#app .bg-white:not(.leaflet-container):not(.leaflet-popup-content-wrapper){background-color:var(--theme-card)!important}
-#app .bg-white\/90,#app .bg-white\/95,#app .bg-white\/80{background-color:color-mix(in srgb,var(--primary-color) 4%,white)!important}
-#app .bg-slate-50,#app .bg-gray-50,#app .bg-blue-50,#app .bg-purple-50,#app .bg-pink-50,#app .bg-teal-50{background-color:var(--theme-paper)!important}
-#app .bg-slate-100,#app .bg-gray-100,#app .bg-blue-100,#app .bg-purple-100,#app .bg-pink-100,#app .bg-teal-100{background-color:var(--theme-muted)!important}
-#app .bg-slate-200,#app .bg-gray-200{background-color:var(--theme-line)!important}
-#app .border-slate-100,#app .border-slate-200,#app .border-slate-300,#app .border-gray-100,#app .border-gray-200,#app .border-gray-300,#app .border-blue-100,#app .border-blue-200,#app .border-purple-200,#app .border-pink-200,#app .border-teal-200{border-color:var(--theme-line)!important}
-#app .text-slate-300,#app .text-slate-400,#app .text-slate-500,#app .text-slate-600,#app .text-gray-400,#app .text-gray-500,#app .text-blue-500,#app .text-blue-600,#app .text-purple-500,#app .text-purple-600,#app .text-pink-500,#app .text-pink-600,#app .text-teal-500,#app .text-teal-600{color:var(--theme-secondary)!important}
-#app .text-slate-700,#app .text-slate-800,#app .text-slate-900,#app .text-gray-700,#app .text-gray-800{color:var(--theme-ink)!important}
-#app .hover\:bg-slate-100:hover,#app .hover\:bg-slate-200:hover,#app .hover\:bg-gray-100:hover{background-color:var(--theme-muted)!important}
-#app input:not([type=color]):not([type=checkbox]):not([type=radio]),#app select,#app textarea{
- border-color:var(--theme-line);accent-color:var(--primary-color);
-}
-#app input:focus-visible,#app textarea:focus-visible,#app select:focus-visible,#app button:focus-visible{
- outline-color:var(--primary-color);
-}
-#app input[type=checkbox],#app input[type=radio],#app input[type=range]{accent-color:var(--primary-color)}
-#app input::placeholder,#app textarea::placeholder{color:var(--theme-secondary);opacity:.72}
-#app>.app-bottom-nav{background-color:var(--theme-card)!important;border-top-color:var(--theme-line)!important;box-shadow:0 -4px 16px var(--theme-shadow)!important}
-#app>.app-bottom-nav button[aria-current=page]{color:var(--primary-color)}
-#app>.app-bottom-nav button[aria-current=page] i{color:var(--primary-color)!important}
-#app>.app-bottom-nav button:not([aria-current=page]){color:var(--theme-secondary)}
-#app .event-editor-sheet,#app .settings-modal-panel,#app .changelog-modal-panel,#app .ticket-stub{
- background-color:var(--theme-card)!important;
-}
-#app .ticket-divider{border-color:var(--theme-line)!important}
-#app .ticket-divider::before,#app .ticket-divider::after{background-color:var(--theme-paper)!important}
-#app .rounded-2xl.shadow-sm,#app .rounded-xl.shadow-sm,#app .rounded-3xl.shadow-sm{box-shadow:0 3px 14px var(--theme-shadow)!important}
-#app .map-tab-panel .bg-white,#app .map-replay-controls>div{background-color:var(--theme-card)!important}
-#app .map-replay-controls button{accent-color:var(--primary-color)}
-#app .leaflet-popup-content-wrapper{background-color:var(--theme-card);color:var(--theme-ink)}
-#app .leaflet-popup-tip{background-color:var(--theme-card)}
-#app .custom-popup-scroll{scrollbar-color:var(--theme-line) var(--theme-paper)}
-#app .custom-popup-scroll::-webkit-scrollbar-track{background:var(--theme-paper)}
-#app .custom-popup-scroll::-webkit-scrollbar-thumb{background:var(--theme-line)}
-#app #share-template{background:var(--theme-paper)!important;color:var(--theme-ink)!important}
-#app #share-template .text-slate-700,#app #share-template .text-slate-800{color:var(--theme-ink)!important}
-#app .bg-primary,#app .bg-primary-dark{color:var(--theme-on-accent)}
-/* Status reds, yellows, greens, custom event colors and map markers are intentionally excluded. */
-</style>
-</head>
+body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,white)}
+#app>main{background:var(--ui-page)}
+#app :is(.bg-white,.bg-slate-50,.bg-gray-50,.bg-neutral-50,.bg-blue-50,.bg-purple-50,.bg-pink-50,.bg-teal-50):not(.leaflet-container):not(.leaflet-popup-content-wrapper){background-color:var(--ui-card)!important}
+#app :is(.bg-slate-100,.bg-gray-100,.bg-neutral-100,.bg-blue-100,.bg-purple-100,.bg-pink-100,.bg-teal-100){background-color:var(--ui-control)!important}
+#app :is(.bg-slate-200,.bg-gray-200){background-color:var(--ui-hover)!important}
+#app :is(.border-slate-100,.border-slate-200,.border-slate-300,.border-gray-100,.border-gray-200,.border-gray-300,.border-blue-100,.border-blue-200,.border-purple-200,.border-pink-200,.border-teal-200){border-color:var(--ui-border)!important}
+#app :is(.text-slate-300,.text-slate-400,.text-slate-500,.text-slate-600,.text-gray-400,.text-gray-500,.text-blue-500,.text-blue-600,.text-purple-500,.text-purple-600,.text-pink-500,.text-pink-600,.text-teal-500,.text-teal-600){color:var(--ui-secondary)!important}
+#app :is(.text-slate-700,.text-slate-800,.text-slate-900,.text-gray-700,.text-gray-800){color:var(--ui-ink)!important}
+#app :is(.hover\\:bg-slate-100,.hover\\:bg-slate-200,.hover\\:bg-gray-100):hover{background-color:var(--ui-hover)!important}
+#app .bg-white\\/90,#app .bg-white\\/95,#app .bg-white\\/80{background-color:var(--ui-card)!important}
+#app input:not([type=color]):not([type=checkbox]):not([type=radio]),#app select,#app textarea{border-color:var(--ui-border);accent-color:var(--ui-accent);background-color:var(--ui-card)}
+#app input:focus-visible,#app textarea:focus-visible,#app select:focus-visible,#app button:focus-visible{outline-color:var(--ui-accent)}
+#app :is(input[type=checkbox],input[type=radio],input[type=range]){accent-color:var(--ui-accent)}
+#app :is(input,textarea)::placeholder{color:var(--ui-secondary);opacity:.8}
+#app .rounded-2xl.shadow-sm,#app .rounded-xl.shadow-sm,#app .rounded-3xl.shadow-sm{box-shadow:0 3px 14px var(--ui-shadow)!important}
+#app>.app-bottom-nav{background:var(--ui-card)!important;border-top-color:var(--ui-border)!important;box-shadow:0 -4px 16px var(--ui-shadow)!important;background-image:none!important}
+#app>.app-bottom-nav button[aria-current=page]{color:var(--ui-accent);background:var(--ui-control)!important}
+#app>.app-bottom-nav button[aria-current=page] i{color:var(--ui-accent)!important}
+#app>.app-bottom-nav button:not([aria-current=page]){color:var(--ui-secondary)}
+#app>.app-bottom-nav button:focus-visible{outline-color:var(--ui-accent)}
+#app>.concert-header :is(.text-slate-600,.text-slate-700){color:inherit!important}
+#app .event-editor-sheet,#app .fandom-editor-sheet,#app .settings-modal-panel,#app .changelog-modal-panel,#app .ticket-stub{background-color:var(--ui-card)!important}
+#app .ticket-divider,#app .ticket-stub .bg-\\[\\#f8fafc\\]{background-color:var(--ui-control)!important;border-color:var(--ui-border)}
+#app .ticket-divider::before,#app .ticket-divider::after{background-color:var(--ui-page)!important}
+#app .ticket-barcode-graphic{background:repeating-linear-gradient(90deg,var(--ui-strong) 0 2px,transparent 2px 4px,var(--ui-strong) 4px 5px,transparent 5px 8px,var(--ui-strong) 8px 12px,transparent 12px 15px)!important}
+#app .ticket-barcode-number{color:var(--ui-ink)}
+#app .map-replay-controls>div,#app .map-tab-panel .bg-white{background-color:var(--ui-card)!important}
+#app .leaflet-popup-content-wrapper,#app .leaflet-popup-tip{background-color:var(--ui-card);color:var(--ui-ink)}
+#app .custom-popup-scroll{scrollbar-color:var(--ui-border) var(--ui-page)}
+#app .custom-popup-scroll::-webkit-scrollbar-track{background:var(--ui-page)}
+#app .custom-popup-scroll::-webkit-scrollbar-thumb{background:var(--ui-border)}
+#app #share-template{background:var(--ui-card)!important;color:var(--ui-ink)!important}
+#app #share-template .rita-share-themed{background:var(--ui-control)!important;color:var(--ui-ink)!important}
+#app .bg-primary,#app .bg-primary-dark{color:var(--ui-on-accent)!important}
+#app .text-white:not(.concert-header .text-white):not(.bg-red-500 .text-white){color:inherit}
+/* Danger, success, D-DAY, event colors, photographs and map tile/route colors remain semantic. */
+</style><script id="rita-444-theme-bridge">(function(){function luminance(h){if(!/^#[0-9a-f]{6}$/i.test(h))return null;let c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]}function apply(){let a=document.getElementById("app");if(!a)return;let c=getComputedStyle(a).getPropertyValue("--primary-color").trim(),l=luminance(c);if(l===null)return;a.style.setProperty("--ui-on-accent",l>.179?"#171717":"#ffffff");document.querySelector('meta[name="theme-color"]')?.setAttribute("content",c)}function start(){let a=document.getElementById("app");if(!a)return;new MutationObserver(apply).observe(a,{attributes:true,attributeFilter:["style"]});apply()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",start,{once:true}):start()})();</script></head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
@@ -226,7 +168,7 @@ body:has(#app){background-color:color-mix(in srgb,var(--primary-color,#27243B) 7
         <!-- 啟動時遮住暫時的 0 筆畫面，避免誤認資料被清空 -->
         <div v-if="isInitializing || loadError" class="absolute inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center px-8 text-center" role="status" aria-live="polite">
             <template v-if="isInitializing">
-                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: #27243B" aria-hidden="true"></div>
+                <div class="w-12 h-12 rounded-full border-4 border-slate-200 animate-spin mb-5" style="border-top-color: var(--primary-color)" aria-hidden="true"></div>
                 <p class="font-bold text-lg text-slate-700">正在載入追星日記 ✨</p>
                 <p class="text-sm text-slate-500 mt-2">正在確認雲端行程與紀念日</p>
             </template>
@@ -742,7 +684,7 @@ body:has(#app){background-color:color-mix(in srgb,var(--primary-color,#27243B) 7
 
 <div id="share-template-legacy" style="position: fixed;
 top: -9999px; left: 0; width: 375px; padding: 30px; border-radius: 0px;
-z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8fafc' }">
+z-index: -1; display: flex; flex-direction: column;" :style="{ background: 'var(--ui-control)' }">
 
     
     <div class="text-center mb-2">
@@ -974,7 +916,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         </div>
                         <div class="ticket-divider bg-[#f8fafc] -mx-2"></div>
    
-                        <div class="bg-[#f8fafc] p-6 pt-4 text-center"><div aria-label="紀念票券條碼" class="ticket-barcode-graphic" role="img"></div><div class="ticket-barcode-number">{{ ticketEvent.id ? ticketEvent.id.toString().slice(-8) : '12345678' }}</div><p class="text-[10px] text-slate-400 mt-2">IDOL TRACKER EXCLUSIVE TICKET</p></div>
+                        <div class="rita-ticket-paper bg-[#f8fafc] p-6 pt-4 text-center"><div aria-label="紀念票券條碼" class="ticket-barcode-graphic" role="img"></div><div class="ticket-barcode-number">{{ ticketEvent.id ? ticketEvent.id.toString().slice(-8) : '12345678' }}</div><p class="text-[10px] text-slate-400 mt-2">IDOL TRACKER EXCLUSIVE TICKET</p></div>
                     </div>
                     <div class="flex justify-center pt-4 pb-2">
                         <button @click="showTicketModal = false" aria-label="關閉票券" class="w-11 h-11 rounded-full bg-white/20 text-white flex items-center justify-center text-2xl shadow-lg border border-white/20"><i class="ph ph-x"></i></button>
@@ -1364,7 +1306,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             </div>
         </transition>
 
-        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
+        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0 rita-share-themed" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:'var(--ui-card)',color:'var(--ui-ink)',position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
   <div style="position:absolute;left:0;right:0;top:213px;bottom:0;height:427px;overflow:hidden"
     :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse at 30% 10%,#ff9cae,transparent 62%),radial-gradient(ellipse at 80% 15%,#e64c75,transparent 60%),#772c49' : selectedYear === '2024' ? 'radial-gradient(ellipse at 30% 10%,#ffe0a9,transparent 62%),radial-gradient(ellipse at 80% 15%,#ff9e8a,transparent 60%),#97536c' : selectedYear === '2025' ? 'radial-gradient(ellipse at 30% 10%,#dcb4a1,transparent 62%),radial-gradient(ellipse at 80% 15%,#a87a6c,transparent 60%),#573d42' : selectedYear === '2026' ? 'radial-gradient(ellipse at 30% 10%,#f9e7e2,transparent 62%),radial-gradient(ellipse at 80% 15%,#c4b9c5,transparent 60%),#79717c' : 'radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439'}">
     <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.18) 8deg,transparent 20deg,transparent 38deg);opacity:.55"></div>
@@ -1400,30 +1342,30 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   <h2 style="position:absolute;top:35px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:58px;font-weight:500;line-height:68px;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
   <p style="position:absolute;top:110px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:1.7px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
   <div style="position:absolute;top:137px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
-    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
+    <div style="height:88px;background:var(--ui-control);border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:var(--ui-ink);display:flex;flex-direction:column;align-items:stretch;min-width:0">
       <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4V6Z M12 6v3 M12 12v1 M12 16v2"/></svg><span>追星回憶</span></div>
       <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;line-height:29px;overflow:hidden;overflow-wrap:anywhere">{{ statsData.count }}</div>
       <div style="height:15px;min-height:15px;margin-top:2px;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">場回憶</div>
     </div>
-    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
+    <div style="height:88px;background:var(--ui-control);border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:var(--ui-ink);display:flex;flex-direction:column;align-items:stretch;min-width:0">
       <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg><span>最遠追星</span></div>
       <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-weight:900;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;padding:0 2px" :style="{fontSize:(String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 4 ? 23 : String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 8 ? 18 : String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 13 ? 14 : 11)+'px'}">{{ recapFarthestCity ? recapFarthestCity.city : '—' }}</div>
       <div style="height:15px;min-height:15px;margin-top:2px;font-size:9px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ recapFarthestCity ? recapFarthestCity.km.toLocaleString() + ' km' : (recapHomeCity ? '尚無城市資料' : '請先設定出發城市') }}</div>
     </div>
-    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
+    <div style="height:88px;background:var(--ui-control);border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:var(--ui-ink);display:flex;flex-direction:column;align-items:stretch;min-width:0">
       <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 21V8l9-5 9 5v13H3Z M3 10h18 M9 21v-7h6v7"/></svg><span>最常去</span></div>
       <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-weight:900;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;padding:0 2px" :style="{fontSize:(String(recapTopVenue ? recapTopVenue.name : '—').length <= 4 ? 23 : String(recapTopVenue ? recapTopVenue.name : '—').length <= 8 ? 15 : String(recapTopVenue ? recapTopVenue.name : '—').length <= 13 ? 11 : 9)+'px'}">{{ recapTopVenue ? recapTopVenue.name : '—' }}</div>
       <div style="height:15px;min-height:15px;margin-top:2px;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '尚無資料' }}</div>
     </div>
   </div>
-    <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
+    <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:var(--ui-control);border-radius:17px;padding:14px 17px;box-sizing:border-box;color:var(--ui-ink)">
     <h3 style="font-size:15px;font-weight:900;line-height:20px;margin:0 0 12px;letter-spacing:.5px">TOP 3 ARTISTS</h3>
     <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
     <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="height:43px;box-sizing:border-box">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;height:22px;line-height:20px">
         <span style="display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto;font-weight:800"><span :style="{background:i===0?'#d9bc79':i===1?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ i+1 }}</span><span style="display:block;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap;flex:0 0 auto">{{ a.count }} 次見面</span>
       </div>
-      <div style="height:6px;margin-top:3px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
+      <div style="height:6px;margin-top:3px;background:var(--ui-border);border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'var(--ui-strong)',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
     </div>
   </div>
   <div style="position:absolute;top:434px;left:22px;right:22px;height:77px">
