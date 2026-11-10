@@ -57,60 +57,56 @@
 
 <!-- Clean 444-inspired palette; all shades derive only from the user's theme color. -->
 <style id="scrapbook-theme-clean">
-#app {
- --paper: color-mix(in srgb,var(--primary-color) 30%,white);
- --surface: color-mix(in srgb,var(--primary-color) 12%,white);
- --soft: color-mix(in srgb,var(--primary-color) 21%,white);
- --outline: color-mix(in srgb,var(--primary-color) 43%,white);
- --lift: color-mix(in srgb,var(--primary-color) 34%,white);
- background:var(--paper);
+/* 444 palette: bright tinted paper, WHITE cards, softly colored edges. */
+#app{
+ --paper:color-mix(in srgb,var(--primary-color) 7%,white);
+ --surface:#fff;
+ --soft:color-mix(in srgb,var(--primary-color) 11%,white);
+ --outline:color-mix(in srgb,var(--primary-color) 22%,white);
+ --lift:color-mix(in srgb,var(--primary-color) 17%,white);
+ background:var(--paper)!important;
 }
-body {background:#fafafa}
-#app > main {background:var(--paper)!important}
-#app .concert-header {border-radius:0 0 22px 22px}
+body{background:#fafafa}
+#app>main{background:var(--paper)!important}
+#app .scrapbook-stats{background:transparent!important}
 #app .scrapbook-stats .bg-white,
 #app .scrapbook-stats .bg-gradient-to-br,
 #app .scrapbook-stats .bg-slate-50,
-#app .scrapbook-stats .bg-gray-50 {
- background:var(--surface)!important;
+#app .scrapbook-stats .bg-gray-50{
+ background:#fff!important;
  border-color:var(--outline)!important;
 }
 #app .scrapbook-stats .bg-slate-100,
 #app .scrapbook-stats .bg-gray-100,
 #app .scrapbook-stats .bg-slate-200,
-#app .scrapbook-stats .bg-gray-200 {
- background:var(--soft)!important;
-}
+#app .scrapbook-stats .bg-gray-200{background:var(--soft)!important}
 #app .scrapbook-stats .rounded-2xl.bg-white,
 #app .scrapbook-stats .rounded-xl.bg-white,
-#app .scrapbook-stats .bg-gradient-to-br {
+#app .scrapbook-stats .bg-gradient-to-br{
  box-shadow:4px 5px 0 var(--lift)!important;
  border:1px solid var(--outline)!important;
 }
 #app .scrapbook-stats .border-slate-100,
-#app .scrapbook-stats .border-slate-200 {
- border-color:var(--outline)!important;
-}
-/* Match 444 photo-card: zero inner padding, flush rectangular image. */
-#app > main .group.overflow-hidden:has(>div>img[src]) {
+#app .scrapbook-stats .border-slate-200{border-color:var(--outline)!important}
+#app>main .group.overflow-hidden:has(>div>img[src]){
  padding:0!important;
- background:var(--surface);
- border:1px solid var(--outline);
- box-shadow:4px 5px 0 var(--lift);
+ background:#fff!important;
+ border:1px solid var(--outline)!important;
+ box-shadow:4px 5px 0 var(--lift)!important;
 }
-#app > main .group.overflow-hidden:has(>div>img[src])>div:first-child {
+#app>main .group.overflow-hidden:has(>div>img[src])>div:first-child{
  height:clamp(155px,28vw,235px);
  border-radius:0!important;
  margin:0!important;
  width:100%;
 }
-#app > main .group.overflow-hidden:has(>div>img[src])>div:first-child img {
+#app>main .group.overflow-hidden:has(>div>img[src])>div:first-child img{
  border-radius:0!important;
  display:block;
 }
-#app .app-bottom-nav {border-color:var(--outline)}
-@media(min-width:760px) {
- #app {width:min(100%,490px);max-width:490px;margin-inline:auto;box-shadow:0 0 30px #00000012}
+#app .app-bottom-nav{border-color:var(--outline)}
+@media(min-width:760px){
+ #app{width:min(100%,490px);max-width:490px;margin-inline:auto;box-shadow:0 0 30px #00000012}
 }
 </style>
 </head>
