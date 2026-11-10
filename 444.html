@@ -105,61 +105,18 @@
 #app .rita-theme-stat-grid>.bg-gradient-to-br{background:linear-gradient(135deg,var(--rita-surface),var(--rita-surface-strong))!important;border-color:var(--rita-surface-line)!important}
 #app .rita-theme-map-info select{background-color:var(--rita-surface-strong)!important}
 #app .rita-theme-share-action{color:var(--rita-surface-ink)!important}
+
+/* Consolidated budget, series and import theme rules. */
+#app .rita-budget-reminder{color:inherit!important}
+#app .rita-series-row{border-bottom-color:color-mix(in srgb,var(--primary-color) 35%,transparent)!important}
+#app .rita-series-count{color:var(--rita-action-ink,#172033)!important}
+#app .rita-theme-import-surface{color:var(--rita-surface-ink)!important}
+#app .rita-theme-import-surface :is(.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700){color:var(--rita-surface-ink)!important}
+#app .rita-theme-import-surface button.bg-slate-100{color:var(--rita-surface-ink)!important;border:1px solid var(--rita-surface-line)!important}
+#app .rita-theme-import-surface .rita-import-submit{color:var(--rita-action-ink,#172033)!important}
 </style>
-<style id="rita-gray-test-444">
-/* Temporary, opt-in gray color test. Default appearance is unchanged. */
-#app.rita-gray-test .bg-white:not(#share-template):not(#share-template *):not(.leaflet-container){background-color:#ffe56d!important}
-#app.rita-gray-test :is(.bg-slate-50,.bg-gray-50,.bg-neutral-50,.bg-slate-100,.bg-gray-100,.bg-neutral-100):not(#share-template):not(#share-template *){background-color:#ffb3df!important}
-#app.rita-gray-test :is(.border-slate-100,.border-slate-200,.border-slate-300,.border-gray-100,.border-gray-200,.border-gray-300):not(#share-template):not(#share-template *){border-color:#006dff!important}
-#app.rita-gray-test :is(.text-slate-300,.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700,.text-slate-800,.text-gray-400,.text-gray-500,.text-gray-600,.text-gray-700):not(#share-template):not(#share-template *){color:#9b00dc!important}
-#app.rita-gray-test>.app-bottom-nav{background-color:#ffe56d!important;border-top-color:#006dff!important}
-#app.rita-gray-test .ticket-divider{background-color:#ffb3df!important}
-#app.rita-gray-test :is(input,textarea,select):not(#share-template *){border-color:#006dff!important}
 
-/* Explicit diagnostic targets for uncolored neutral controls. */
-#app.rita-gray-test .rita-gray-expense{background-color:#ffb3df!important;border-color:#006dff!important;border-style:solid!important;color:#9b00dc!important}
-#app.rita-gray-test .rita-gray-logout{background-color:#ffb3df!important;border-color:#006dff!important;border-style:solid!important;color:#9b00dc!important}
-#app.rita-gray-test .rita-gray-coordinate{background-color:#ffb3df!important;border-color:#006dff!important;border-style:solid!important;color:#9b00dc!important}
-
-/* Additional uncovered neutral surfaces; only when diagnostic is enabled. */
-#app.rita-gray-test :is(.bg-slate-200,.bg-slate-300,.bg-gray-200,.bg-gray-300,.bg-neutral-200,.bg-neutral-300):not(#share-template):not(#share-template *){background-color:#ffb3df!important}
-#app.rita-gray-test :is(.from-slate-50,.from-slate-100,.from-gray-50,.from-gray-100):not(#share-template):not(#share-template *){--tw-gradient-from:#ffe56d var(--tw-gradient-from-position)!important;--tw-gradient-to:rgb(255 229 109 / 0) var(--tw-gradient-to-position)!important;--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)!important}
-#app.rita-gray-test :is(.to-slate-100,.to-slate-200,.to-gray-100,.to-gray-200):not(#share-template):not(#share-template *){--tw-gradient-to:#ffb3df var(--tw-gradient-to-position)!important}
-#app.rita-gray-test :is(.bg-gradient-to-br,.bg-gradient-to-r):is(.from-slate-50,.from-slate-100,.from-gray-50,.from-gray-100):not(#share-template):not(#share-template *){background-image:linear-gradient(to bottom right,#ffe56d,#ffb3df)!important}
-#app.rita-gray-test .map-replay-controls>div,#app.rita-gray-test .map-tab-panel>.bg-white{background-color:#ffe56d!important}
-#app.rita-gray-test .map-replay-controls .border-slate-100{border-color:#006dff!important}
-
-/* Preserve loading spinner contrast and selected-tab slider. */
-#app.rita-gray-test .rita-gray-loading-spinner{border-color:#ffb3df!important;border-top-color:#006dff!important}
-#app.rita-gray-test .rita-gray-view-toggle{background-color:#ffb3df!important}
-#app.rita-gray-test .rita-gray-view-toggle>div:first-child{background-color:#ffe56d!important;box-shadow:0 1px 5px #0002!important}
-/* Test placeholder text separately from entered text, including dynamic form inputs. */
-#app.rita-gray-test :is(input,textarea)::placeholder{color:#9b00dc!important;opacity:1!important}
-#app.rita-gray-test :is(input,textarea)::-webkit-input-placeholder{color:#9b00dc!important;opacity:1!important}
-/* Share dialog controls only: do not change the yearly share artwork. */
-#app.rita-gray-test .rita-gray-share-dialog button.bg-white{background-color:#ffb3df!important;color:#9b00dc!important}
-#app.rita-gray-test [data-import-dialog] .bg-white{background-color:#ffe56d!important}
-#app.rita-gray-test [data-import-dialog] :is(textarea,input){background-color:#ffb3df!important}
-#app.rita-gray-test [data-import-dialog] :is(.bg-slate-50,.bg-slate-100){background-color:#ffb3df!important}
-#app.rita-gray-test [data-import-dialog] button.bg-white{background-color:#ffb3df!important}
-</style>
-<script id="rita-gray-test-control">
-(function(){
- function ready(){
-  const app=document.getElementById('app');if(!app)return;
-  const b=document.createElement('button');
-  b.type='button';b.id='rita-gray-test-toggle';b.textContent='灰色測試：關';
-  b.setAttribute('aria-pressed','false');
-  b.style.cssText='position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:2147483646;background:#111;color:#fff;border:2px solid #fff;border-radius:999px;padding:8px 12px;font:700 12px/1.3 system-ui;box-shadow:0 2px 10px #0005;cursor:pointer';
-  b.addEventListener('click',function(){
-   const on=app.classList.toggle('rita-gray-test');
-   b.textContent=on?'灰色測試：開':'灰色測試：關';b.setAttribute('aria-pressed',String(on));
-  });
-  document.body.appendChild(b);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
-})();
-</script><style id="rita-consistency-fixes">#app .rita-budget-reminder{color:inherit!important}#app .rita-series-row{border-bottom-color:color-mix(in srgb,var(--primary-color) 35%,transparent)!important}#app .rita-series-count{color:var(--rita-action-ink,#172033)!important}#app .rita-theme-import-surface{color:var(--rita-surface-ink)!important}#app .rita-theme-import-surface :is(.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700){color:var(--rita-surface-ink)!important}#app .rita-theme-import-surface button.bg-slate-100{color:var(--rita-surface-ink)!important;border:1px solid var(--rita-surface-line)!important}#app .rita-theme-import-surface .rita-import-submit{color:var(--rita-action-ink,#172033)!important}</style></head>
+</head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
