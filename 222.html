@@ -55,6 +55,44 @@
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
+<!-- 444-inspired dynamic scrapbook trial: presentation only -->
+<style id="scrapbook-theme-v3">
+#app{
+ --book-bg:color-mix(in srgb,var(--primary-color) 9%,white);
+ --book-border:color-mix(in srgb,var(--primary-color) 25%,white);
+ --book-shadow:color-mix(in srgb,var(--primary-color) 19%,#e7e7ec);
+ --book-ink:color-mix(in srgb,var(--primary-color) 55%,#242a38);
+ background:var(--book-bg);
+}
+body{background:color-mix(in srgb,var(--primary-color) 17%,white)}
+#app > main{background:var(--book-bg)}
+#app .concert-header{border-radius:0 0 22px 22px}
+#app > main .bg-white.rounded-2xl,#app > main .rounded-2xl.bg-white,
+#app > main .bg-white.rounded-xl,#app > main .rounded-xl.bg-white{
+ background:white;border:1px solid var(--book-border);
+ box-shadow:4px 5px 0 var(--book-shadow);
+}
+#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
+ background:linear-gradient(140deg,white,var(--book-bg))!important;
+ border:1px solid var(--book-border)!important;
+ box-shadow:4px 5px 0 var(--book-shadow);
+}
+#app > main .bg-slate-50:not([role=status]){background-color:var(--book-bg)}
+#app > main .border-slate-100,#app > main .border-slate-200{border-color:var(--book-border)}
+#app .app-bottom-nav{border-color:var(--book-border);box-shadow:0 -2px 12px var(--book-shadow)}
+/* Framed photo cards, preserving the real cover and all existing controls. */
+#app > main .group.overflow-hidden:has(>div>img[src]){
+ padding:8px;background:white;
+ border:1px solid var(--book-border);
+ box-shadow:4px 5px 0 var(--book-shadow);
+}
+#app > main .group.overflow-hidden:has(>div>img[src])>div:first-child{
+ height:clamp(155px,28vw,235px);
+ border-radius:11px 11px 0 0;
+}
+#app > main .group.overflow-hidden:has(>div>img[src])>div.p-5{padding:18px 12px 12px}
+@media(min-width:760px){#app{width:min(100%,680px);max-width:680px}}
+</style>
 <!-- Desktop width only; original 222 styling and event cards restored -->
 <style id="desktop-width-only">
 @media(min-width:760px){#app{width:min(100%,760px);max-width:760px;margin:0 auto;box-shadow:0 0 36px #22222218}}
