@@ -57,69 +57,58 @@
 
 <!-- Clean 444-inspired palette; all shades derive only from the user's theme color. -->
 <style id="scrapbook-theme-clean">
-/* Directly matched to 444: 490px shell, light paper, white cards, 170px flush cover. */
+/* Unified dynamic palette. Only the user's --primary-color controls decorative hues. */
 #app{
- --book-paper:color-mix(in srgb,var(--primary-color) 9%,white);
- --book-outer:color-mix(in srgb,var(--primary-color) 16%,white);
- --book-edge:color-mix(in srgb,var(--primary-color) 22%,white);
- --book-shadow:color-mix(in srgb,var(--primary-color) 20%,white);
- --book-tint:color-mix(in srgb,var(--primary-color) 18%,white);
- --book-secondary:color-mix(in srgb,var(--primary-color) 75%,white);
- --book-ink:color-mix(in srgb,var(--primary-color) 60%,#101018);
+ --book-paper:color-mix(in srgb,var(--primary-color) 6%,white);
+ --book-outer:color-mix(in srgb,var(--primary-color) 13%,white);
+ --book-edge:color-mix(in srgb,var(--primary-color) 25%,white);
+ --book-shadow:color-mix(in srgb,var(--primary-color) 28%,white);
+ --book-tint:color-mix(in srgb,var(--primary-color) 16%,white);
+ --book-muted:color-mix(in srgb,var(--primary-color) 38%,#253047);
  background:var(--book-paper)!important;
 }
 body{background:var(--book-outer)!important}
-#app>main .scrapbook-event-card:not(:has(.scrapbook-event-cover)){
- border-color:var(--book-edge)!important;
-}
-#app>main .scrapbook-event-card .p-5{
- background:#fff;
-}
-#app>main .scrapbook-event-card .bg-slate-100:not(.scrapbook-event-cover){
- background:var(--book-tint)!important;
-}
-
 #app>main{background:var(--book-paper)!important}
-#app .scrapbook-stats{background:transparent!important}
 #app .concert-header{box-shadow:none!important}
-#app .scrapbook-stats .bg-gradient-to-br{
+/* Keep every regular panel white, never slate/gray gradient. */
+#app>main .bg-gradient-to-br:not(.from-black\/70){
  background-image:none!important;
  background-color:#fff!important;
 }
-#app .scrapbook-stats>div .bg-white{
- background-color:#fff!important;
+#app>main .bg-slate-50,#app>main .bg-gray-50{
+ background-color:var(--book-paper)!important;
 }
-#app .scrapbook-stats select{
- background-color:#fff!important;
+#app>main .bg-slate-100,#app>main .bg-gray-100,
+#app>main .bg-slate-200,#app>main .bg-gray-200{
+ background-color:var(--book-tint)!important;
+}
+#app>main .border-slate-100,#app>main .border-slate-200,
+#app>main .border-gray-100,#app>main .border-gray-200{
  border-color:var(--book-edge)!important;
- box-shadow:3px 4px 0 var(--book-shadow)!important;
 }
-#app .scrapbook-stats .bg-white.border-l-4{
- border-left-color:var(--primary-color)!important;
-}
-#app .scrapbook-stats .bg-slate-200,
-#app .scrapbook-stats .bg-gray-200{background-color:var(--book-edge)!important}
-
-#app .scrapbook-stats .bg-white,
-#app .scrapbook-stats .bg-gradient-to-br,
-#app .scrapbook-stats .bg-slate-50,
-#app .scrapbook-stats .bg-gray-50{
+#app>main .bg-white.rounded-2xl,
+#app>main .bg-white.rounded-xl,
+#app>main .scrapbook-stats .bg-gradient-to-br{
  background:#fff!important;
- border-color:var(--book-edge)!important;
-}
-#app .scrapbook-stats .bg-slate-100,
-#app .scrapbook-stats .bg-gray-100,
-#app .scrapbook-stats .bg-slate-200,
-#app .scrapbook-stats .bg-gray-200{background:var(--book-tint)!important}
-#app .scrapbook-stats .rounded-2xl.bg-white,
-#app .scrapbook-stats .rounded-xl.bg-white,
-#app .scrapbook-stats .bg-gradient-to-br{
- box-shadow:3px 4px 0 var(--book-shadow)!important;
  border:1px solid var(--book-edge)!important;
+ box-shadow:3px 4px 0 var(--book-shadow)!important;
  border-radius:12px!important;
 }
-#app .scrapbook-stats .border-slate-100,
-#app .scrapbook-stats .border-slate-200{border-color:var(--book-edge)!important}
+#app>main .scrapbook-stats{background:transparent!important}
+#app>main .scrapbook-stats select{
+ background:#fff!important;
+ border-color:var(--book-edge)!important;
+ box-shadow:3px 4px 0 var(--book-shadow)!important;
+}
+#app>main .scrapbook-stats .bg-white.border-l-4{
+ border-left:4px solid var(--primary-color)!important;
+}
+#app>main .scrapbook-stats .text-slate-400,
+#app>main .scrapbook-stats .text-slate-500,
+#app>main .scrapbook-stats .text-gray-500{
+ color:var(--book-muted)!important;
+}
+/* Photo card: 444's square, edge-to-edge cover within rounded outer card. */
 #app>main .scrapbook-event-card{
  padding:0!important;
  background:#fff!important;
@@ -130,32 +119,20 @@ body{background:var(--book-outer)!important}
 }
 #app>main .scrapbook-event-cover{
  height:170px!important;
- padding:0!important;
- margin:0!important;
  width:100%!important;
+ margin:0!important;
+ padding:0!important;
  border-radius:0!important;
  overflow:hidden;
 }
 #app>main .scrapbook-event-cover img{
- display:block;
- width:100%;
- height:100%;
- border-radius:0!important;
+ display:block;width:100%;height:100%;border-radius:0!important;
 }
-/* Unify ordinary cards and navigation without overriding event-specific colors. */
-#app>main .bg-white.rounded-2xl,
-#app>main .bg-white.rounded-xl{
- background-color:#fff;
- border-color:var(--book-edge);
- box-shadow:3px 4px 0 var(--book-shadow);
+#app .app-bottom-nav{
+ background:#fff!important;
+ border-color:var(--book-edge)!important;
+ box-shadow:0 -4px 16px var(--book-shadow);
 }
-#app>main .border-slate-100,#app>main .border-slate-200,
-#app>main .border-gray-200{border-color:var(--book-edge)}
-#app>main .bg-slate-50:not([role="status"]),
-#app>main .bg-gray-50{background-color:var(--book-paper)}
-#app>main .bg-slate-100,#app>main .bg-gray-100{background-color:var(--book-tint)}
-#app .app-bottom-nav{background:#fff;border-color:var(--book-edge);box-shadow:0 -4px 16px var(--book-shadow)}
-
 @media(min-width:600px){
  /* Desktop follows 444: the browser scrolls, not a narrow inner panel. */
  html{height:auto;overflow-y:auto}
