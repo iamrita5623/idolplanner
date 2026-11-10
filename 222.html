@@ -83,6 +83,9 @@
  #app:has(>main>.map-tab-panel:not([style*="display: none"]))>.concert-header{border-radius:0!important}
  #app>main>.map-tab-panel{height:max(500px,calc(100dvh - 150px))!important;min-height:500px;overflow:hidden}
  #app>main>.map-tab-panel .leaflet-container{width:100%!important}
+ /* Keep replay controls above the fixed navigation during desktop page scrolling. */
+ #app>main>.map-tab-panel .map-replay-controls{position:fixed!important;left:50%!important;right:auto!important;bottom:calc(80px + env(safe-area-inset-bottom))!important;width:calc(min(100vw,490px) - 24px)!important;transform:translateX(-50%)!important;z-index:39!important}
+ #app>main>.map-tab-panel .map-replay-controls>div{box-sizing:border-box;max-width:100%}
  #app>.app-bottom-nav{box-sizing:border-box;min-height:72px;padding-bottom:max(12px,env(safe-area-inset-bottom));box-shadow:0 -5px 18px #00000010}
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
@@ -579,7 +582,7 @@
 
 
 <!-- 年度足跡：極簡播放列，不遮住地圖 -->
-<div v-show="!showSettingsModal" class="absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
+<div v-show="!showSettingsModal" class="map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
   <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
     <div class="flex items-center gap-1 shrink-0" :style="{ color: themeColor }">
       <button type="button" @click="previousReplayStop" :disabled="!replayStops.length || replayIndex <= 0"
