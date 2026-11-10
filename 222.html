@@ -95,6 +95,28 @@ body{background:color-mix(in srgb,var(--primary-color) 12%,#e9e4db)}
 @supports not (color:color-mix(in srgb,red,white)){
   #app{--scrap-paper:#fbf6f0;--scrap-edge:#ede3dd;--scrap-shadow:#eaddd5;--scrap-ink:#654c57}
 }
+
+/* Scrapbook statistics: replace the original cold gray-blue gradient. */
+#app > main .bg-gradient-to-br.from-slate-50.to-slate-100{
+ background:linear-gradient(145deg,#fffefa,var(--scrap-paper))!important;
+ border:1px solid var(--scrap-edge)!important;
+ box-shadow:3px 4px 0 var(--scrap-shadow);
+}
+#app > main .bg-white.rounded-2xl,
+#app > main .bg-white.rounded-xl{
+ background-color:#fffefa;
+}
+#app > main .bg-slate-50:not([role="status"]){
+ background-color:var(--scrap-paper);
+}
+#app > main .bg-slate-100{
+ background-color:var(--scrap-edge);
+}
+#app > main select.bg-white{
+ background-color:#fffefa;
+ border-color:var(--scrap-edge);
+ box-shadow:3px 4px 0 var(--scrap-shadow);
+}
 </style>
 </head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
