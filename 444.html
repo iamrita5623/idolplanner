@@ -615,10 +615,10 @@
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
 <div class="flex gap-2">
-    <button @click="openSharePreview" :style="{ backgroundColor: themeColor }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button @click="openSharePreview" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
     </button>
-    <button type="button" @click="showImportModal = true" :style="{ backgroundColor: themeColor }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
+    <button type="button" @click="showImportModal = true" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-download-simple text-lg"></i> 匯入
     </button>
 </div>
@@ -916,7 +916,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </div>
                     <div class="shrink-0 pt-4">
             
-                        <button @click="showChangelogModal = false" :style="{ backgroundColor: themeColor }" class="w-full rita-primary-button font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-transform">返回</button>
+                        <button @click="showChangelogModal = false" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="w-full rita-primary-button font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-transform">返回</button>
                     </div>
                 </div>
             </div>
@@ -1125,7 +1125,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
           
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
-                        <button @click="addFandom" :style="{ backgroundColor: themeColor }" class="w-full rita-primary-button font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
+                        <button @click="addFandom" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="w-full rita-primary-button font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
                     </div>
                 </div>
             </div>
@@ -1240,7 +1240,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <div><label class="block text-sm font-medium text-slate-700 mb-1">心得筆記 📝</label><textarea v-model="form.memo" placeholder="寫下你的應援心情、觀後感..." class="w-full h-24 bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/50 text-slate-800 resize-none"></textarea></div>
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
-                        <button @click="saveEvent" :style="{ backgroundColor: themeColor }" class="w-full rita-primary-button font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
+                        <button @click="saveEvent" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="w-full rita-primary-button font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
                     </div>
                 </div>
             </div>
@@ -1341,7 +1341,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
 
                 <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期,歌手,活動名稱,地點,金額），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期,歌手,活動名稱,地點,金額\n2026-11-22,BTS, BTS WORLD TOUR ’ARIRANG’,高雄國家體育場,5000' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : 'JSON 範例：\n[\n  { &quot;日期&quot;: &quot;2026-11-22&quot;, &quot;歌手&quot;: &quot;BTS&quot;, &quot;活動名稱&quot;: &quot;BTS WORLD TOUR ’ARIRANG’&quot;, &quot;地點&quot;: &quot;高雄國家體育場&quot;, &quot;expenses&quot;: [{&quot;項目&quot;: &quot;門票&quot;, &quot;金額&quot;: 5000}] }\n]'"></textarea>
-                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="rita-primary-button flex-1 py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
+                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="rita-primary-button flex-1 py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
 
@@ -1352,7 +1352,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
 <script src="./js/app-444.js?v=1"></script>
-<script src="./js/theme-444.js?v=2"></script>
+<script src="./js/theme-444.js?v=3"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
