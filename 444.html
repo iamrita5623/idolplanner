@@ -159,7 +159,7 @@
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
-</script></head>
+</script><style id="rita-consistency-fixes">#app .rita-budget-reminder{color:inherit!important}#app .rita-series-row{border-bottom-color:color-mix(in srgb,var(--primary-color) 35%,transparent)!important}#app .rita-series-count{color:var(--rita-action-ink,#172033)!important}#app .rita-theme-import-surface{color:var(--rita-surface-ink)!important}#app .rita-theme-import-surface :is(.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700){color:var(--rita-surface-ink)!important}#app .rita-theme-import-surface button.bg-slate-100{color:var(--rita-surface-ink)!important;border:1px solid var(--rita-surface-line)!important}#app .rita-theme-import-surface .rita-import-submit{color:var(--rita-action-ink,#172033)!important}</style></head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
@@ -219,7 +219,7 @@
                 <div class="h-full bg-white transition-all duration-500" 
                      :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></div>
             </div>
-            <div class="text-[8px] font-medium leading-none truncate" :style="{ color: isThemeColorLight ? 'color-mix(in srgb, var(--primary-color) 28%, #172033)' : 'color-mix(in srgb, var(--primary-color) 12%, white)' }">
+            <div class="rita-budget-reminder text-[8px] font-medium leading-none truncate">
                 {{ budgetNagging }}
             </div>
         </div>
@@ -830,7 +830,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                   
                     <p class="text-xs text-slate-400 mb-3 bg-slate-50 p-2 rounded-lg"><i class="ph ph-info"></i> 僅計入：演唱會、音樂節、見面會、生日會（拼盤依活動名稱合併，不限偶像）</p>
                     <div v-if="statsData.series.length > 0" class="space-y-3">
-                        <div v-for="item in statsData.series" :key="item.title" class="flex items-center justify-between border-b border-slate-50 pb-2 last:border-0"><span class="text-sm text-slate-600 truncate flex-1 pr-2 font-medium">{{ item.title }}</span><span class="text-white text-xs font-bold px-2 py-1 rounded-full" :style="{ backgroundColor: themeColor }">{{ item.count }} 場</span></div>
+                        <div v-for="item in statsData.series" :key="item.title" class="rita-series-row flex items-center justify-between border-b border-slate-50 pb-2 last:border-0"><span class="text-sm text-slate-600 truncate flex-1 pr-2 font-medium">{{ item.title }}</span><span class="rita-series-count text-xs font-bold px-2 py-1 rounded-full" :style="{ backgroundColor: themeColor }">{{ item.count }} 場</span></div>
                     </div>
                     <div v-else class="text-center text-slate-400 text-sm py-4">區間內無資料</div>
                 </div>
@@ -1403,7 +1403,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
 
                 <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期,歌手,活動名稱,地點,金額），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期,歌手,活動名稱,地點,金額\n2026-11-22,BTS, BTS WORLD TOUR ’ARIRANG’,高雄國家體育場,5000' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : 'JSON 範例：\n[\n  { &quot;日期&quot;: &quot;2026-11-22&quot;, &quot;歌手&quot;: &quot;BTS&quot;, &quot;活動名稱&quot;: &quot;BTS WORLD TOUR ’ARIRANG’&quot;, &quot;地點&quot;: &quot;高雄國家體育場&quot;, &quot;expenses&quot;: [{&quot;項目&quot;: &quot;門票&quot;, &quot;金額&quot;: 5000}] }\n]'"></textarea>
-                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
+                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="rita-import-submit flex-1 py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
             </div>
         </div>
 
