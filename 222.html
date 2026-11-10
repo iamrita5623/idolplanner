@@ -91,15 +91,22 @@ body {background:#fafafa}
 #app .scrapbook-stats .border-slate-200 {
  border-color:var(--outline)!important;
 }
+/* Match 444 photo-card: zero inner padding, flush rectangular image. */
 #app > main .group.overflow-hidden:has(>div>img[src]) {
- padding:7px;
+ padding:0!important;
  background:var(--surface);
  border:1px solid var(--outline);
  box-shadow:4px 5px 0 var(--lift);
 }
 #app > main .group.overflow-hidden:has(>div>img[src])>div:first-child {
  height:clamp(155px,28vw,235px);
- border-radius:11px 11px 0 0;
+ border-radius:0!important;
+ margin:0!important;
+ width:100%;
+}
+#app > main .group.overflow-hidden:has(>div>img[src])>div:first-child img {
+ border-radius:0!important;
+ display:block;
 }
 #app .app-bottom-nav {border-color:var(--outline)}
 @media(min-width:760px) {
