@@ -761,10 +761,27 @@ onMounted(async () => {
     loadError.value = result.status === 'error';
     if (result.status === 'signed_out') {
         try {
-            const saved = JSON.parse(localStorage.getItem('idolGuestEvents') || '[]');
+            const saved = JSON.parse(localStorage.getItem('idolGuestEvents') || localStorage.getItem('idolEvents') || '[]');
             if (Array.isArray(saved)) events.value = saved;
         } catch (error) {
             console.error('訪客暫存資料無法解析:', error);
+        }
+        // The active startup path must restore the guest's full local settings,
+        // not just their events. Do not overwrite these keys with empty defaults.
+        for (const [key, target] of [
+            ['idolActivityCategories', activityCategoryMap],
+            ['idolConfirmedSeries', confirmedSeries],
+            ['idolRejectedSeries', rejectedSeries]
+        ]) {
+            try {
+                const stored = localStorage.getItem(key);
+                if (stored !== null) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) target.value = parsed;
+                }
+            } catch (error) {
+                console.warn('訪客設定讀取失敗：' + key, error);
+            }
         }
     }
     await nextTick();
@@ -1840,7 +1857,7 @@ watch(events, stopReplay, { deep: true });
                             }
                             // Persist restored guest data synchronously before reporting success.
                             // Vue watchers may not flush before the user refreshes the page.
-                            localStorage.setItem('idolEvents', JSON.stringify(events.value));
+                            localStorage.setItem(currentUser.value ? 'idolEvents' : 'idolGuestEvents', JSON.stringify(events.value));
                             if (isFull) {
                                 localStorage.setItem('fandomFandoms', JSON.stringify(fandoms.value));
                                 localStorage.setItem('idolActivityCategories', JSON.stringify(activityCategoryMap.value));
