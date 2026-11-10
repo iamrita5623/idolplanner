@@ -59,14 +59,14 @@
 <style id="scrapbook-theme-clean">
 /* Directly matched to 444: 490px shell, light paper, white cards, 170px flush cover. */
 #app{
- --book-paper:color-mix(in srgb,var(--primary-color) 9%,#fff8ee);
- --book-outer:color-mix(in srgb,var(--primary-color) 16%,#eee7dd);
+ --book-paper:color-mix(in srgb,var(--primary-color) 9%,white);
+ --book-outer:color-mix(in srgb,var(--primary-color) 16%,white);
  --book-edge:color-mix(in srgb,var(--primary-color) 22%,white);
- --book-shadow:color-mix(in srgb,var(--primary-color) 20%,#e5ddd4);
+ --book-shadow:color-mix(in srgb,var(--primary-color) 20%,white);
  --book-tint:color-mix(in srgb,var(--primary-color) 18%,white);
  background:var(--book-paper)!important;
 }
-body{background:#fafafa}
+body{background:var(--book-outer)}
 #app>main{background:var(--book-paper)!important}
 #app .scrapbook-stats{background:transparent!important}
 #app .scrapbook-stats .bg-white,
@@ -111,9 +111,22 @@ body{background:#fafafa}
  height:100%;
  border-radius:0!important;
 }
-#app .app-bottom-nav{border-color:var(--book-edge)}
+/* Unify ordinary cards and navigation without overriding event-specific colors. */
+#app>main .bg-white.rounded-2xl,
+#app>main .bg-white.rounded-xl{
+ background-color:#fff;
+ border-color:var(--book-edge);
+ box-shadow:3px 4px 0 var(--book-shadow);
+}
+#app>main .border-slate-100,#app>main .border-slate-200,
+#app>main .border-gray-200{border-color:var(--book-edge)}
+#app>main .bg-slate-50:not([role="status"]),
+#app>main .bg-gray-50{background-color:var(--book-paper)}
+#app>main .bg-slate-100,#app>main .bg-gray-100{background-color:var(--book-tint)}
+#app .app-bottom-nav{background:#fff;border-color:var(--book-edge);box-shadow:0 -4px 16px var(--book-shadow)}
+
 @media(min-width:600px){
- #app{width:min(100%,490px);max-width:490px;margin:20px auto 0;box-shadow:0 0 55px #241a3420}
+ #app{width:min(100%,490px);max-width:490px;margin:20px auto 0;box-shadow:0 0 55px color-mix(in srgb,var(--primary-color) 16%,transparent)}
 }
 </style>
 </head>
