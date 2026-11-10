@@ -4,7 +4,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Rita · Memory Scrapbook｜我的追星日記</title>
+    <title>我的追星日記 🌟 |
+追星行程管理、費用紀錄與地圖足跡</title>
     
     <link rel="manifest" href="./manifest.webmanifest?v=4">
     <meta name="theme-color" content="#27243B">
@@ -93,67 +94,6 @@
  #app>main>.map-tab-panel .map-replay-controls>div{box-sizing:border-box;max-width:100%}
  #app>.app-bottom-nav{box-sizing:border-box;min-height:72px;padding-bottom:max(12px,env(safe-area-inset-bottom));box-shadow:0 -5px 18px #00000010;border-radius:0!important}
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
-}
-</style>
-
-<style id="rita-444-visual-only">
-/* Theme-driven scrapbook paper: neutral white base, no cream or fixed decorative hues. */
-#app{
- --rita-paper:color-mix(in srgb,var(--primary-color) 6%,#ffffff);
- --rita-surface:color-mix(in srgb,var(--primary-color) 2%,#ffffff);
- --rita-tint:color-mix(in srgb,var(--primary-color) 13%,#ffffff);
- --rita-border:color-mix(in srgb,var(--primary-color) 18%,#ffffff);
- --rita-shadow:color-mix(in srgb,var(--primary-color) 10%,#ffffff);
- --rita-ink:color-mix(in srgb,var(--primary-color) 30%,#171717);
- background:var(--rita-paper)!important;
-}
-body{background:color-mix(in srgb,var(--primary-color,#27243B) 11%,#ffffff)}
-#app>.concert-header{
- background:linear-gradient(140deg,var(--primary-color),color-mix(in srgb,var(--primary-color) 88%,white))!important;
- border-radius:0 0 22px 22px!important;
- box-shadow:0 5px 17px color-mix(in srgb,var(--primary-color) 16%,transparent)!important;
-}
-#app>.concert-header h1{font-family:"Noto Serif TC","Noto Sans TC",serif;letter-spacing:.03em}
-#app>main{background:var(--rita-paper)!important}
-#app>main .bg-white{background-color:var(--rita-surface)!important}
-#app>main .bg-slate-50,#app>main .bg-gray-50{background-color:var(--rita-paper)!important}
-#app>main .bg-slate-100,#app>main .bg-gray-100{background-color:var(--rita-tint)!important}
-#app>main .border-slate-100,#app>main .border-slate-200{border-color:var(--rita-border)!important}
-#app>main .rounded-2xl.shadow-sm.border,
-#app>main .rounded-2xl.shadow-md.border,
-#app>main .rounded-xl.shadow-sm.border{
- border:1px solid var(--rita-border)!important;
- box-shadow:3px 4px 0 var(--rita-shadow)!important;
- border-radius:14px!important;
-}
-#app>main input:not([type="checkbox"]):not([type="radio"]),#app>main select,#app>main textarea{
- border-color:var(--rita-border);accent-color:var(--primary-color);
-}
-#app>main .bg-primary{background-color:var(--primary-color)!important}
-#app>main .text-primary{color:var(--primary-color)!important}
-#app>.app-bottom-nav{
- background:var(--rita-surface)!important;
- border-top:1px solid var(--rita-border)!important;
- box-shadow:0 -5px 18px color-mix(in srgb,var(--primary-color) 8%,transparent)!important;
-}
-#app>.app-bottom-nav button[aria-current="page"]{
- background:var(--rita-tint);border-radius:12px;
-}
-#app .settings-modal-panel,#app .changelog-modal-panel{
- background:var(--rita-surface)!important;
-}
-#app .settings-modal-panel .bg-slate-50,#app .changelog-modal-panel .bg-slate-50{
- background:var(--rita-paper)!important;
-}
-#app .map-tab-panel,#app .map-tab-panel #map-container{background:var(--rita-paper)}
-/* Desktop: one centered shell; reserve equal scrollbar gutters so data-heavy tabs and map don't jump. */
-@media(min-width:600px){
- html{overflow-y:scroll!important;scrollbar-gutter:stable both-edges!important}
- body{width:100%!important}
- #app{width:490px!important;max-width:calc(100vw - 24px)!important;min-width:0!important;box-sizing:border-box!important;margin-inline:auto!important;align-self:center!important}
- #app>.concert-header,#app>main{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
- #app>.app-bottom-nav{width:490px!important;max-width:calc(100vw - 24px)!important;box-sizing:border-box!important;left:50%!important;transform:translateX(-50%)!important}
- #app>main>div{max-width:100%;min-width:0;box-sizing:border-box}
 }
 </style>
 </head>
