@@ -52,7 +52,7 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
-<link rel="stylesheet" href="./css/theme-444.css?v=4">
+<link rel="stylesheet" href="./css/theme-444.css?v=5">
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
@@ -122,7 +122,7 @@
         </div>
 
         <header :class="headerTextColor" class="concert-header pt-4 pb-4 px-5 shadow-lg rounded-b-[1.5rem] z-20 shrink-0 transition-colors duration-200"
-            :style="{ backgroundColor: 'var(--rita-action-bg)' }">
+            :style="{ backgroundColor: 'var(--rita-header-bg)' }">
             <div class="flex justify-between items-center mb-3">
                 <div>
                     <h1 class="text-xl font-bold tracking-wide">{{ customTitle }}</h1>
@@ -207,7 +207,7 @@
                     </p>
 
                     <button v-if="!searchQuery" @click="openModal()" 
-                            :style="{ color: themeColor, borderColor: themeColor }"
+                            :style="{ color: 'var(--rita-accent)', borderColor: 'var(--rita-accent)' }"
                             class="bg-white border-2 px-6 py-2 rounded-full font-bold shadow-sm active:scale-95 transition-transform text-sm flex items-center gap-2">
                         <i class="ph ph-plus-circle text-lg"></i>
                         <span>新增行程</span>
@@ -494,7 +494,7 @@
                                         <template v-for="(part, i) in fandomMessageStatic(fan).message.split(calculateFandomDays(fan.date))" :key="i">
                                
                                             {{ part }}
-                                            <span v-if="i < fandomMessageStatic(fan).message.split(calculateFandomDays(fan.date)).length - 1" class="text-3xl font-extrabold" :style="{ color: themeColor }">{{ calculateFandomDays(fan.date) }}</span>
+                                            <span v-if="i < fandomMessageStatic(fan).message.split(calculateFandomDays(fan.date)).length - 1" class="text-3xl font-extrabold" :style="{ color: 'var(--rita-accent)' }">{{ calculateFandomDays(fan.date) }}</span>
                             
                                         </template>
                                     </div>
@@ -577,7 +577,7 @@
         </div>
 
         <div class="text-right shrink-0 border-l border-slate-100 pl-3 ml-1">
-            <div class="text-lg font-bold leading-none" :style="{ color: themeColor }">
+            <div class="text-lg font-bold leading-none" :style="{ color: 'var(--rita-accent)' }">
                 {{ totalDistance === null ? "—" : totalDistance }} <span v-if="totalDistance !== null" class="text-[10px] font-normal text-slate-400">km</span>
             </div>
             <div class="text-[9px] text-slate-400 font-medium mt-1">年度來回直線里程</div>
@@ -591,11 +591,11 @@
 <!-- 年度足跡：極簡播放列，不遮住地圖 -->
 <div v-show="!showSettingsModal" class="rita-theme-map-replay map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
   <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
-    <div class="flex items-center gap-1 shrink-0" :style="{ color: themeColor }">
+    <div class="flex items-center gap-1 shrink-0" :style="{ color: 'var(--rita-accent)' }">
       <button type="button" @click="previousReplayStop" :disabled="!replayStops.length || replayIndex <= 0"
         class="w-9 h-9 flex items-center justify-center rounded-full disabled:opacity-30" aria-label="上一站" title="上一站"><i class="ph ph-skip-back text-lg"></i></button>
       <button type="button" @click="replayPlaying ? pauseReplay() : startReplay()" :disabled="!replayStops.length"
-        :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#263238' : '#fff' }"
+        :style="{ backgroundColor: 'var(--rita-action-bg)', color: 'var(--rita-on-primary)' }"
         class="w-10 h-10 flex items-center justify-center rounded-full disabled:opacity-30" :aria-label="replayPlaying ? '暫停' : '播放或繼續'" :title="replayPlaying ? '暫停' : '播放或繼續'">
         <i :class="replayPlaying ? 'ph ph-pause text-lg' : 'ph ph-play text-lg'"></i>
       </button>
@@ -633,7 +633,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <p class="text-[9px] text-slate-500 tracking-widest uppercase">珍藏追星足跡 ✨</p>
     </div>
 
-<div class="px-3 py-1 rounded-2xl shadow-md mb-1 text-center flex items-center justify-center h-auto pt-2" :style="{ backgroundColor: themeColor }">
+<div class="px-3 py-1 rounded-2xl shadow-md mb-1 text-center flex items-center justify-center h-auto pt-2" :style="{ backgroundColor: 'var(--rita-action-bg)' }">
     <div class="text-white font-bold italic text-xs leading-relaxed whitespace-pre-line" style="margin: 0 auto; max-width: 90%;">
         "{{ emotionalSummary }}"
     </div>
@@ -647,33 +647,33 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         
         <div class="flex-1 min-w-[45%] mb-2 pt-1 leading-tight text-[12px]">
             今年參加了
-            <div class="text-xl font-black my-0" :style="{ color: themeColor }">{{ statsData.count }}</div>
+            <div class="text-xl font-black my-0" :style="{ color: 'var(--rita-accent)' }">{{ statsData.count }}</div>
             場追星活動
         </div>
 
         <div class="flex-1 min-w-[45%] mb-2 pt-1 leading-tight text-[12px]">
             跨越
-            <div class="text-xl font-black my-0" :style="{ color: themeColor }">{{ totalDistance }}</div>
+            <div class="text-xl font-black my-0" :style="{ color: 'var(--rita-accent)' }">{{ totalDistance }}</div>
             公里的距離
         </div>
 
         <div v-if="statsData.topArtists.length > 0" class="flex-1 min-w-[45%] pt-2 border-t border-dashed border-slate-100 leading-tight text-[12px]">
             與
-<span class="text-xl font-black" :style="{ color: themeColor }">{{ statsData.topArtists[0].name }}</span> <br>
-            共創 <span class="text-xl font-black" :style="{ color: themeColor }">{{ statsData.topArtists[0].count }}</span> 
+<span class="text-xl font-black" :style="{ color: 'var(--rita-accent)' }">{{ statsData.topArtists[0].name }}</span> <br>
+            共創 <span class="text-xl font-black" :style="{ color: 'var(--rita-accent)' }">{{ statsData.topArtists[0].count }}</span> 
             場回憶
         </div>
 
         <div v-if="statsData.topLocations.length > 0" class="flex-1 min-w-[45%] pt-4 border-t border-dashed border-slate-100 leading-tight text-[10px]">
-            你最常跑去 <br><span class="text-xl font-black" :style="{ color: themeColor }">{{ statsData.topLocations[0].name }}</span>
+            你最常跑去 <br><span class="text-xl font-black" :style="{ color: 'var(--rita-accent)' }">{{ statsData.topLocations[0].name }}</span>
         </div>
         
     </div>
 </div>
 
-<div class="w-full px-3 py-1 rounded-xl text-center" :style="{ backgroundColor: themeColor + '15' }">
+<div class="w-full px-3 py-1 rounded-xl text-center" :style="{ backgroundColor: 'var(--rita-action-bg)' + '15' }">
     <div class="font-bold text-xs w-full whitespace-pre-line" 
-         :style="{ color: adjustColor ? adjustColor(themeColor, -40) : themeColor }" 
+         :style="{ color: 'var(--rita-accent)' }" 
          style="line-height: 1.6; padding: 0 5px;">
         💡 {{ idolNagging }}
     </div>
@@ -694,7 +694,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <div class="font-bold text-slate-700 text-[8px] break-words leading-[1.1] mb-1">
             {{ item.title }}
         </div>
-        <div class="font-black text-[10px]" :style="{ color: themeColor }">
+        <div class="font-black text-[10px]" :style="{ color: 'var(--rita-accent)' }">
             {{ item.count }}場
         </div>
     </div>
@@ -723,7 +723,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         </div>
     </div>
          
-                    <div v-if="emotionalSummary" class="bg-white p-4 rounded-xl shadow-sm border-l-4" :style="{ borderColor: themeColor }">
+                    <div v-if="emotionalSummary" class="bg-white p-4 rounded-xl shadow-sm border-l-4" :style="{ borderColor: 'var(--rita-accent)' }">
                         <p class="text-sm font-bold text-slate-700 italic">"{{ emotionalSummary }}"</p>
                     </div>
                 </div>
@@ -756,7 +756,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <div v-if="statsData.topArtists.length > 0" class="space-y-4">
                  
  
-                        <div v-for="(artist, index) in statsData.topArtists" :key="artist.name" class="relative"><div class="flex justify-between text-sm mb-1 z-10 relative"><span class="font-bold text-slate-700"><span class="inline-block w-5 text-center mr-1" :class="{'text-yellow-500': index===0, 'text-gray-500': index===1, 'text-amber-700': index===2, 'text-slate-400': index > 2}">#{{index+1}}</span>{{ artist.name }}</span><span class="text-slate-500">{{ artist.count }} 次見面</span></div><div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full transition-all duration-1000 ease-out" :style="{ width: (artist.count / statsData.maxArtistCount * 100) + '%', backgroundColor: themeColor }"></div></div></div>
+                        <div v-for="(artist, index) in statsData.topArtists" :key="artist.name" class="relative"><div class="flex justify-between text-sm mb-1 z-10 relative"><span class="font-bold text-slate-700"><span class="inline-block w-5 text-center mr-1" :class="{'text-yellow-500': index===0, 'text-gray-500': index===1, 'text-amber-700': index===2, 'text-slate-400': index > 2}">#{{index+1}}</span>{{ artist.name }}</span><span class="text-slate-500">{{ artist.count }} 次見面</span></div><div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full transition-all duration-1000 ease-out" :style="{ width: (artist.count / statsData.maxArtistCount * 100) + '%', backgroundColor: 'var(--rita-action-bg)' }"></div></div></div>
                     </div>
           
          
@@ -768,7 +768,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                   
                     <p class="text-xs text-slate-400 mb-3 bg-slate-50 p-2 rounded-lg"><i class="ph ph-info"></i> 僅計入：演唱會、音樂節、見面會、生日會（拼盤依活動名稱合併，不限偶像）</p>
                     <div v-if="statsData.series.length > 0" class="space-y-3">
-                        <div v-for="item in statsData.series" :key="item.title" class="rita-series-row flex items-center justify-between border-b border-slate-50 pb-2 last:border-0"><span class="text-sm text-slate-600 truncate flex-1 pr-2 font-medium">{{ item.title }}</span><span class="rita-series-count text-xs font-bold px-2 py-1 rounded-full" :style="{ backgroundColor: themeColor }">{{ item.count }} 場</span></div>
+                        <div v-for="item in statsData.series" :key="item.title" class="rita-series-row flex items-center justify-between border-b border-slate-50 pb-2 last:border-0"><span class="text-sm text-slate-600 truncate flex-1 pr-2 font-medium">{{ item.title }}</span><span class="rita-series-count text-xs font-bold px-2 py-1 rounded-full" :style="{ backgroundColor: 'var(--rita-action-bg)' }">{{ item.count }} 場</span></div>
                     </div>
                     <div v-else class="text-center text-slate-400 text-sm py-4">區間內無資料</div>
                 </div>
@@ -776,7 +776,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   
        </main>
 
-        <button @click="openModal()" :style="{ backgroundColor: themeColor }"
+        <button @click="openModal()" :style="{ backgroundColor: 'var(--rita-action-bg)' }"
             class="absolute bottom-24 right-6 w-14 h-14 rita-primary-button rounded-full shadow-lg shadow-primary/40 flex items-center justify-center transform transition-transform hover:scale-110 active:scale-95 z-30 mb-safe"
             v-if="activeTab === 'home'">
             <i class="ph ph-plus text-2xl font-bold"></i>
@@ -958,7 +958,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <template v-else>
             <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
                 <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
-                <button @click="loginWithEmail" :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#1f2937' : '#ffffff' }" class="text-xs px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                <button @click="loginWithEmail" :style="{ backgroundColor: 'var(--rita-action-bg)', color: 'var(--rita-on-primary)' }" class="text-xs px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
                     <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
                 </button>
             </div>
@@ -1058,7 +1058,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
                 <div class="pt-2 text-[10px] text-slate-400">
                     <p class="mb-2">當前版本: {{ appVersion }}</p>
-                    <button @click="showChangelog" class="font-medium underline" :style="{ color: themeColor }">📄 查看更新日誌</button>
+                    <button @click="showChangelog" class="font-medium underline" :style="{ color: 'var(--rita-accent)' }">📄 查看更新日誌</button>
                 </div>
 
             </div>
@@ -1177,7 +1177,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                                 <p class="text-xs text-slate-400 mt-1">上傳圖片檔案，將其轉換為 Base64 儲存，豐富你的行程卡片！</p>
                             </div>
                             <div class="grid grid-cols-[minmax(0,1fr)_96px] gap-3 items-end">
-                                <div><label class="block text-sm font-medium text-slate-500 mb-1">歌手/團體</label><div class="w-full bg-slate-50 rounded-xl p-2 flex flex-wrap items-center gap-1 min-h-[46px]"><span v-for="a in (form.artists||[])" :key="a" class="text-xs bg-white border rounded-lg px-2 py-1 inline-flex gap-1 items-center">{{a}}<button type="button" @click="removeFormArtist(a)" aria-label="移除藝人"><i class="ph ph-x"></i></button></span><input v-model="artistDraft" @keydown.enter.prevent="addFormArtist" placeholder="輸入藝人按 Enter" class="min-w-[90px] flex-1 bg-transparent border-none p-1 text-sm focus:ring-0"><button type="button" @click="addFormArtist" :style="{color:themeColor}" aria-label="加入藝人"><i class="ph ph-plus-circle"></i></button></div></div>
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">歌手/團體</label><div class="w-full bg-slate-50 rounded-xl p-2 flex flex-wrap items-center gap-1 min-h-[46px]"><span v-for="a in (form.artists||[])" :key="a" class="text-xs bg-white border rounded-lg px-2 py-1 inline-flex gap-1 items-center">{{a}}<button type="button" @click="removeFormArtist(a)" aria-label="移除藝人"><i class="ph ph-x"></i></button></span><input v-model="artistDraft" @keydown.enter.prevent="addFormArtist" placeholder="輸入藝人按 Enter" class="min-w-[90px] flex-1 bg-transparent border-none p-1 text-sm focus:ring-0"><button type="button" @click="addFormArtist" :style="{color:'var(--rita-accent)'}" aria-label="加入藝人"><i class="ph ph-plus-circle"></i></button></div></div>
     
        
                                 <div><label class="block text-sm font-medium text-slate-500 mb-1">應援色</label><div class="h-[46px] w-[46px] mx-auto relative overflow-hidden rounded-full border border-slate-200 bg-slate-50"><input v-model="form.color" type="color" aria-label="選擇應援色" class="absolute inset-0 w-full h-full cursor-pointer p-0 border-0 rounded-full"></div></div>
@@ -1217,7 +1217,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
  
                 
                         <div>
-                            <div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">必帶清單 ✅</label><button @click="addDefaultChecklist" class="text-xs text-primary hover:underline" :style="{color: themeColor}">加入常用項目</button></div>
+                            <div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">必帶清單 ✅</label><button @click="addDefaultChecklist" class="text-xs text-primary hover:underline" :style="{color: 'var(--rita-accent)'}">加入常用項目</button></div>
                  
    
                             <div class="space-y-2 mb-2"><div v-for="(item, index) in form.checklist" :key="index" class="flex gap-2 items-center"><input v-model="item.text" type="text" placeholder="項目" class="flex-1 bg-slate-50 border-none rounded-lg p-2 text-sm"><button @click="removeChecklistItem(index)" class="text-slate-400 hover:text-red-500 p-1"><i class="ph ph-x"></i></button></div></div>
@@ -1228,7 +1228,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   
                         <hr class="border-slate-100 my-2">
                         
-                        <div><div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">詳細支出記帳 💰</label><span class="text-xs font-bold" :style="{ color: themeColor }">總計: ${{ formatMoney(calculateTotal(form.expenses)) }}</span></div><div class="space-y-2 mb-2"><div v-for="(exp, index) in form.expenses" :key="index" class="grid grid-cols-[1fr,1fr,auto] gap-2 items-center"><input v-model="exp.item" type="text" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm"><input v-model.number="exp.amount" type="number" placeholder="金額" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm text-right"><button @click="removeExpenseItem(index)" class="text-slate-400 hover:text-red-500"><i class="ph ph-minus-circle text-lg"></i></button></div><div class="flex gap-2 overflow-x-auto items-center">
+                        <div><div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">詳細支出記帳 💰</label><span class="text-xs font-bold" :style="{ color: 'var(--rita-accent)' }">總計: ${{ formatMoney(calculateTotal(form.expenses)) }}</span></div><div class="space-y-2 mb-2"><div v-for="(exp, index) in form.expenses" :key="index" class="grid grid-cols-[1fr,1fr,auto] gap-2 items-center"><input v-model="exp.item" type="text" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm"><input v-model.number="exp.amount" type="number" placeholder="金額" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm text-right"><button @click="removeExpenseItem(index)" class="text-slate-400 hover:text-red-500"><i class="ph ph-minus-circle text-lg"></i></button></div><div class="flex gap-2 overflow-x-auto items-center">
     <button @click="addExpenseItem('門票')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
     <button @click="addExpenseItem('交通')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
     <button @click="addExpenseItem('住宿')" class="rita-ui-control px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
@@ -1352,7 +1352,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/events.js?v=1.1.5"></script>
     <script src="./js/venues.js?v=1.0.0"></script>
 <script src="./js/app-444.js?v=1"></script>
-<script src="./js/theme-444.js?v=4"></script>
+<script src="./js/theme-444.js?v=5"></script>
     <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(err => console.warn("PWA registration unavailable", err)));</script>
 </body>
 </html>
