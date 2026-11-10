@@ -142,7 +142,7 @@ body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,whi
 #app>.app-bottom-nav button:focus-visible{outline-color:var(--ui-accent)}
 #app>.concert-header :is(.text-slate-600,.text-slate-700){color:inherit!important}
 #app .event-editor-sheet,#app .fandom-editor-sheet,#app .settings-modal-panel,#app .changelog-modal-panel,#app .ticket-stub{background-color:var(--ui-card)!important}
-#app .ticket-divider,#app .ticket-stub .bg-\\[\\#f8fafc\\]{background-color:var(--ui-control)!important;border-color:var(--ui-border)}
+#app .ticket-divider,#app .ticket-stub .rita-ticket-paper{background-color:var(--ui-control)!important;border-color:var(--ui-border)}
 #app .ticket-divider::before,#app .ticket-divider::after{background-color:var(--ui-page)!important}
 #app .ticket-barcode-graphic{background:repeating-linear-gradient(90deg,var(--ui-strong) 0 2px,transparent 2px 4px,var(--ui-strong) 4px 5px,transparent 5px 8px,var(--ui-strong) 8px 12px,transparent 12px 15px)!important}
 #app .ticket-barcode-number{color:var(--ui-ink)}
@@ -156,7 +156,7 @@ body:has(#app){background:color-mix(in srgb,var(--primary-color,#27243B) 13%,whi
 #app .bg-primary,#app .bg-primary-dark{color:var(--ui-on-accent)!important}
 #app .text-white:not(.concert-header .text-white):not(.bg-red-500 .text-white){color:inherit}
 /* Danger, success, D-DAY, event colors, photographs and map tile/route colors remain semantic. */
-</style><script id="rita-444-theme-bridge">(function(){function luminance(h){if(!/^#[0-9a-f]{6}$/i.test(h))return null;let c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]}function apply(){let a=document.getElementById("app");if(!a)return;let c=getComputedStyle(a).getPropertyValue("--primary-color").trim(),l=luminance(c);if(l===null)return;a.style.setProperty("--ui-on-accent",l>.179?"#171717":"#ffffff");document.querySelector('meta[name="theme-color"]')?.setAttribute("content",c)}function start(){let a=document.getElementById("app");if(!a)return;new MutationObserver(apply).observe(a,{attributes:true,attributeFilter:["style"]});apply()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",start,{once:true}):start()})();</script></head>
+</style><script id="rita-444-theme-bridge">(function(){function luminance(h){if(!/^#[0-9a-f]{6}$/i.test(h))return null;let c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]}function apply(){let a=document.getElementById("app");if(!a)return;let c=getComputedStyle(a).getPropertyValue("--primary-color").trim(),l=luminance(c);if(l===null)return;let ink=l>.179?"#171717":"#ffffff";if(a.style.getPropertyValue("--ui-on-accent")!==ink)a.style.setProperty("--ui-on-accent",ink);document.querySelector('meta[name="theme-color"]')?.setAttribute("content",c)}function start(){let a=document.getElementById("app");if(!a)return;new MutationObserver(apply).observe(a,{attributes:true,attributeFilter:["style"]});apply()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",start,{once:true}):start()})();</script></head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
