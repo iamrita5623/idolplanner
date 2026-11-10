@@ -105,6 +105,11 @@
 #app.rita-gray-test>.app-bottom-nav{background-color:#ffe56d!important;border-top-color:#006dff!important}
 #app.rita-gray-test .ticket-divider{background-color:#ffb3df!important}
 #app.rita-gray-test :is(input,textarea,select):not(#share-template *){border-color:#006dff!important}
+
+/* Explicit diagnostic targets for uncolored neutral controls. */
+#app.rita-gray-test .rita-gray-expense{background-color:#ffb3df!important;border:2px solid #006dff!important;color:#9b00dc!important}
+#app.rita-gray-test .rita-gray-logout{background-color:#ffb3df!important;border:2px solid #006dff!important;color:#9b00dc!important}
+#app.rita-gray-test .rita-gray-coordinate{background-color:#ffb3df!important;border:2px solid #006dff!important;color:#9b00dc!important}
 </style>
 <script id="rita-gray-test-control">
 (function(){
@@ -972,7 +977,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <div class="flex flex-col items-center gap-1 w-full">
                 <div class="flex items-center justify-center gap-2">
                     <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
-                    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+                    <button @click="logout" class="rita-gray-logout text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
                 </div>
                 <!-- 📍 新增：顯示最後備份時間 -->
                 <p v-if="lastSyncTime" class="text-[10px] text-slate-400 mt-1">
@@ -1222,7 +1227,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                        
                             </div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
-                            <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="rita-gray-coordinate bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
                             <div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
                                 <p class="text-xs text-slate-500 px-2 pb-1">常見場館搜尋建議 · 最多 5 筆</p>
                                 <button v-for="venue in windowVenueMatches(form.location)" :key="venue.country + venue.label" type="button"
@@ -1254,12 +1259,12 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                         <hr class="border-slate-100 my-2">
                         
                         <div><div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">詳細支出記帳 💰</label><span class="text-xs font-bold" :style="{ color: themeColor }">總計: ${{ formatMoney(calculateTotal(form.expenses)) }}</span></div><div class="space-y-2 mb-2"><div v-for="(exp, index) in form.expenses" :key="index" class="grid grid-cols-[1fr,1fr,auto] gap-2 items-center"><input v-model="exp.item" type="text" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm"><input v-model.number="exp.amount" type="number" placeholder="金額" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm text-right"><button @click="removeExpenseItem(index)" class="text-slate-400 hover:text-red-500"><i class="ph ph-minus-circle text-lg"></i></button></div><div class="flex gap-2 overflow-x-auto items-center">
-    <button @click="addExpenseItem('門票')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
-    <button @click="addExpenseItem('交通')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
-    <button @click="addExpenseItem('住宿')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
-    <button @click="addExpenseItem('周邊')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
+    <button @click="addExpenseItem('門票')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
+    <button @click="addExpenseItem('交通')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
+    <button @click="addExpenseItem('住宿')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
+    <button @click="addExpenseItem('周邊')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
     <!-- 🌟 樣式跟旁邊完全一樣的自訂按鈕 -->
-    <button @click="addExpenseItem('')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border shrink-0">+ 自訂</button>
+    <button @click="addExpenseItem('')" class="rita-gray-expense px-3 py-1 bg-slate-100 text-xs rounded-full border shrink-0">+ 自訂</button>
 </div>
 </div>
                         <div><label class="block text-sm font-medium text-slate-700 mb-1">心得筆記 📝</label><textarea v-model="form.memo" placeholder="寫下你的應援心情、觀後感..." class="w-full h-24 bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/50 text-slate-800 resize-none"></textarea></div>
