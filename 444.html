@@ -1,5 +1,8 @@
-<!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#856F78"><title>Rita · Memory Scrapbook 奶油手帳 設計預覽</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#856F78"><title>Rita · Memory Scrapbook</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/vue@3/dist/vue.global.js"></script><script src="https://cdn.tailwindcss.com"></script><script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script><script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"><link rel="stylesheet" href="./css/main.css?v=1.1.24">
+<script>tailwind.config={theme:{extend:{colors:{primary:'var(--brand)','primary-dark':'var(--brand-secondary)','primary-light':'var(--tint)'}}}};</script>
 <style>
 :root{--brand:#856F78;--on:#fff;--soft:#FBF6F0;--tint:#F0E1DD;--ink:#654C57;--line:#EDE3DD;--paper:#FBF6F0;--outer:#EDE6E0;--brand-secondary:#A78D91}*{box-sizing:border-box}body{margin:0;background:var(--outer);color:#302C36;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #e8a9dc;outline-offset:2px}.shell{max-width:490px;min-height:100vh;margin:auto;background:var(--soft);padding-bottom:95px;box-shadow:0 0 55px #241a3420}.hero{background:var(--brand);color:var(--on);padding:25px 23px 32px;border-radius:0 0 30px 30px}.eyebrow{font-size:11px;letter-spacing:2.5px;opacity:.82;font-weight:700}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.hero h1{font-size:25px;margin:8px 0 6px;letter-spacing:.5px}.sub{opacity:.85;font-size:12px}.round{border:1px solid currentColor;color:inherit;background:transparent;border-radius:50%;width:38px;height:38px}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:23px}.metric{padding:16px;border:1px solid color-mix(in srgb,var(--on) 26%,transparent);border-radius:17px;background:color-mix(in srgb,var(--on) 13%,transparent)}.metric small{font-size:12px;opacity:.86}.metric strong{display:block;font-size:23px;margin-top:7px}.content{padding:24px 19px}.section{display:flex;align-items:center;justify-content:space-between;margin:0 0 13px}.section h2{font-size:17px;margin:0}.section span{font-size:12px;color:var(--ink);opacity:.7}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 7px 24px #29203309}.event{display:flex;align-items:center;gap:14px}.date{flex:0 0 64px;text-align:center;background:var(--tint);color:var(--ink);padding:12px 6px;border-radius:14px}.date small{font-size:11px;letter-spacing:1px}.date b{display:block;font-size:25px;margin-top:2px}.event h3{font-size:15px;margin:0 0 7px}.event p{font-size:12px;color:#77717e;margin:0;line-height:1.6}.tag{display:inline-block;background:var(--soft);color:var(--ink);font-size:11px;padding:6px 9px;border-radius:8px;margin-top:11px}.dash{border-top:1px dashed #e5dfe8;margin-top:14px;padding-top:12px;color:var(--ink);font-size:12px}.controls{padding:17px;background:white;border:1px solid var(--line);border-radius:20px;margin:23px 0}.controls h2{font-size:15px;margin:0 0 5px}.controls p{font-size:12px;color:#77717e;margin:0 0 13px}.swatches{display:flex;flex-wrap:wrap;gap:9px}.swatch{height:34px;width:34px;border:3px solid white;border-radius:50%;box-shadow:0 0 0 1px #d6cfd9}.swatch.active{box-shadow:0 0 0 2px #333}.custom{display:flex;align-items:center;gap:9px;margin-top:15px;font-size:12px}.custom input{width:38px;height:32px;border:0;background:none}.custom code{color:#777}.action{width:100%;border:0;border-radius:14px;padding:15px;background:var(--brand);color:var(--on);font-weight:700;margin:6px 0 15px}.note{font-size:11px;color:#7d7483;line-height:1.8}.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:490px;width:100%;display:flex;justify-content:space-around;padding:12px 8px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 22px #00000008}.nav{border:0;background:transparent;color:#8b8490;font-size:11px;display:grid;gap:4px;place-items:center}.nav .symbol{font-size:20px}.nav.active{color:var(--ink);font-weight:700}.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#292333;color:white;border-radius:12px;padding:12px 16px;font-size:12px;max-width:90%;display:none;z-index:3}body.showtoast .toast{display:block}@media(min-width:600px){.shell{margin-top:20px;border-radius:25px 25px 0 0;overflow:hidden;min-height:calc(100vh - 20px)}.hero{border-radius:0 0 30px 30px}}
 .shell{background:var(--paper)}.hero{background:linear-gradient(135deg,var(--brand),var(--brand-secondary));border-radius:0 0 18px 18px}.card{border:1px solid #EDE3DD;box-shadow:3px 4px 0 #EADDD5;border-radius:12px}.date{border:1px dashed #C8A9A5;border-radius:8px}.metric{border-radius:9px}.tag{border-radius:5px}.controls{border-radius:12px}.action{border-radius:9px}.eyebrow{letter-spacing:1px}.dash{border-top-style:dashed}
@@ -9,7 +12,582 @@
 /* Dynamic scrapbook palette: all decorative paper, borders and shadows follow theme. */
 :root{--edge:#EDE3DD;--shadow:#EADDD5;--date-edge:#C8A9A5;--muted:#77717e;--cover-a:#30284e;--cover-b:#a88eaf;--cover-c:#f4d4da}
 .card,.fan-card,.photo-card{border-color:var(--edge)!important;box-shadow:4px 5px 0 var(--shadow)!important}.date{border-color:var(--date-edge)!important}.fan-card,.controls{border-color:var(--edge)!important}.photo-meta,.dash{border-color:var(--edge)!important}.fan-noimage{background:var(--tint)!important}.cover-art{background:linear-gradient(135deg,var(--cover-a),var(--cover-b),var(--cover-c))}.fan-cover{background:linear-gradient(135deg,var(--cover-a),var(--cover-b))}.event p,.photo-body p,.fan-content p,.preview-flag,.note,.controls p{color:var(--muted)}
-</style></head><body><div class="toast" id="toast" role="status">這是純設計預覽，不會更動任何行程或雲端資料。</div><div class="shell"><header class="hero"><div class="top"><div><div class="eyebrow">RITA'S MEMORY SCRAPBOOK ♡</div><h1>我的追星日記</h1><div class="sub">把每張票根，貼進喜歡的日子 ♡</div></div><button class="round" type="button" data-demo aria-label="設定">⚙</button></div><div class="metrics"><div class="metric"><small>✦ 即將到來</small><strong>3 場</strong></div><div class="metric"><small>♡ 今年收藏</small><strong>12 場</strong></div></div></header><main class="content"><div class="section"><h2>即將到來的行程</h2><span>November 2026</span></div><article class="card"><div class="event"><div class="date"><small>NOV</small><b>21</b></div><div><h3>演唱會 · 行程示意</h3><p>19:00 · 台北<br>CONCERT / LIVE</p><span class="tag">✧ 距離演出還有 12 天</span></div></div><div class="dash">♡ 每一場演出，都是專屬的紀念</div></article><article class="card"><div class="event"><div class="date"><small>DEC</small><b>06</b></div><div><h3>應援咖啡廳 · 行程示意</h3><p>14:00 · 台北<br>FAN EVENT / CAFE</p><span class="tag">✧ 即將到來</span></div></div></article><section aria-label="圖片行程與紀念日預覽"><div class="section"><h2>有封面圖片的行程</h2><span>PHOTO EVENT</span></div><p class="preview-flag">依照 222 的封面圖片與展開卡片概念示意</p><article class="card photo-card"><div class="cover-art"><svg viewBox="0 0 420 190" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意演唱會海報插畫"><defs><linearGradient id="night-scrapbook" x2="1" y2="1"><stop stop-color="#14182d"/><stop offset=".58" stop-color="#604a86"/><stop offset="1" stop-color="#e7a5c8"/></linearGradient><radialGradient id="glow-scrapbook"><stop stop-color="#fff6db" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="420" height="190" fill="url(#night-scrapbook)"/><circle cx="110" cy="35" r="90" fill="url(#glow-scrapbook)"/><circle cx="325" cy="24" r="105" fill="url(#glow-scrapbook)"/><path d="M30 0 L170 190 M390 0 L240 190" stroke="#f8e6fb" stroke-width="28" opacity=".12"/><path d="M0 165 Q60 145 120 166 T240 164 T420 166 V190 H0" fill="#17162c"/><g fill="#0d1024"><circle cx="48" cy="161" r="19"/><circle cx="103" cy="166" r="22"/><circle cx="162" cy="161" r="20"/><circle cx="225" cy="166" r="23"/><circle cx="289" cy="160" r="20"/><circle cx="351" cy="165" r="24"/><circle cx="408" cy="164" r="18"/></g><g fill="#fff" opacity=".9"><circle cx="56" cy="28" r="2"/><circle cx="213" cy="19" r="1.8"/><circle cx="360" cy="55" r="2"/></g><text x="210" y="73" text-anchor="middle" fill="#fff" font-size="14" letter-spacing="6" font-weight="600">CONCERT NIGHT</text><text x="210" y="112" text-anchor="middle" fill="#fff" font-size="31" font-weight="700" letter-spacing="3">LIVE MEMORY</text><text x="210" y="133" text-anchor="middle" fill="#ffe9f4" font-size="10" letter-spacing="3">TOGETHER UNDER THE LIGHTS</text></svg><span class="cover-label">✦ 行程封面圖片示意</span></div><div class="photo-body"><div class="photo-top"><span class="photo-date">NOV 21 · SAT</span><span class="tag" style="margin:0">演唱會</span></div><h3>演唱會 · 行程示意</h3><p>19:00 · 台北｜場館資訊<br>我的第一場演唱會，期待見面 ♡</p><div class="photo-meta"><span>✧ 倒數 12 天</span><span>⌄ 點開查看詳情（示意）</span></div></div></article><div class="section" style="margin-top:20px"><h2>沒有封面的行程</h2><span>TEXT EVENT</span></div><article class="card photo-noimage"><div class="event"><div class="date"><small>DEC</small><b>06</b></div><div><h3>應援咖啡廳 · 行程示意</h3><p>14:00 · 台北<br>不放圖片也保持清楚易讀</p><span class="tag">✧ 即將到來</span></div></div></article><div class="section" style="margin-top:25px"><h2>入坑紀念日 💖</h2><span>ANNIVERSARY</span></div><p class="preview-flag">示意 222 的封面、入坑日期、累計天數與紀念日資訊</p><div class="fan-grid"><article class="fan-card"><div class="fan-cover"><svg viewBox="0 0 220 125" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意偶像收藏封面插畫"><defs><linearGradient id="fan-scrapbook" x2="1" y2="1"><stop stop-color="#30284e"/><stop offset=".55" stop-color="#a88eaf"/><stop offset="1" stop-color="#f4d4da"/></linearGradient></defs><rect width="220" height="125" fill="url(#fan-scrapbook)"/><circle cx="171" cy="31" r="30" fill="#f6e4f2" opacity=".8"/><path d="M0 118 Q44 58 85 120 T220 107 V125 H0" fill="#473957" opacity=".7"/><g fill="#fff9f2"><path d="M54 28 l4 10 11 2 -9 7 2 11 -8 -6 -9 6 3 -11 -9 -7 11 -2z" opacity=".85"/><circle cx="115" cy="27" r="2"/><circle cx="187" cy="79" r="2"/></g><text x="110" y="81" fill="white" font-size="19" font-weight="700" text-anchor="middle" letter-spacing="3">MY FIRST DAY</text><text x="110" y="98" fill="white" font-size="9" text-anchor="middle" letter-spacing="2">OUR STORY BEGINS</text></svg></div><div class="fan-content"><h3>我的本命 · 示意</h3><p>入坑日：2023/05/20</p><div class="fan-count">1,269 <small>天的喜歡 ♡</small></div><p style="margin-top:6px">下一個週年紀念日：倒數 192 天</p></div></article><article class="fan-card"><div class="fan-noimage">♡ ✧</div><div class="fan-content"><h3>另一段心動 · 示意</h3><p>入坑日：2025/02/14</p><div class="fan-count">633 <small>天的陪伴 ♡</small></div><p style="margin-top:6px">沒有封面也能顯示紀念日</p></div></article></div></section><section class="controls"><h2>試試不同主題色</h2><p>卡片、背景、文字和按鈕會一起協調變色。</p><div class="swatches" id="swatches"><button class="swatch active" type="button" data-color="#856F78" aria-label="薰衣草紫" title="薰衣草紫" style="background:#856F78"></button><button class="swatch" type="button" data-color="#63B3B0" aria-label="薄荷綠" title="薄荷綠" style="background:#63B3B0"></button><button class="swatch" type="button" data-color="#C5F442" aria-label="NCT 綠" title="NCT 綠" style="background:#C5F442"></button><button class="swatch" type="button" data-color="#C9A1FF" aria-label="aespa 紫" title="aespa 紫" style="background:#C9A1FF"></button><button class="swatch" type="button" data-color="#495A86" aria-label="月光藍" title="月光藍" style="background:#495A86"></button><button class="swatch" type="button" data-color="#A66D84" aria-label="玫瑰粉" title="玫瑰粉" style="background:#A66D84"></button></div><label class="custom">自訂顏色 <input id="custom" type="color" value="#856F78"><code id="hex">#856F78</code></label></section><button class="action" type="button" data-demo>＋ 新增行程（示意）</button><p class="note">333 是獨立的視覺設計預覽。圖片、日期與行程均為示意資料；不連線 Supabase、不讀取正式版資料、不進行備份或寫入。</p></main><nav class="bottom" aria-label="預覽導覽"><button class="nav active" data-demo><span class="symbol">⌂</span>首頁</button><button class="nav" data-demo><span class="symbol">▦</span>行事曆</button><button class="nav" data-demo><span class="symbol">♡</span>回憶</button><button class="nav" data-demo><span class="symbol">⚙</span>設定</button></nav></div>
-<script>
-(function(){const root=document.documentElement,custom=document.getElementById('custom'),hex=document.getElementById('hex');function rgb(c){return [1,3,5].map(i=>parseInt(c.slice(i,i+2),16))}function blend(a,b,f){return '#'+rgb(a).map((v,i)=>Math.round(v*(1-f)+rgb(b)[i]*f).toString(16).padStart(2,'0')).join('')}function lum(c){return rgb(c).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0)}function apply(c){if(!/^#[0-9a-fA-F]{6}$/.test(c))return;const dark=lum(c)>.38;root.style.setProperty('--brand',c);root.style.setProperty('--brand-secondary',blend(c,'#FFFFFF',.25));root.style.setProperty('--paper',blend(c,'#FFF8EE',.91));root.style.setProperty('--outer',blend(c,'#EEE7DD',.84));root.style.setProperty('--edge',blend(c,'#FFFFFF',.78));root.style.setProperty('--shadow',blend(c,'#E5DDD4',.80));root.style.setProperty('--date-edge',blend(c,'#FFFFFF',.54));root.style.setProperty('--muted',blend(c,'#45404A',.40));root.style.setProperty('--cover-a',blend(c,'#101020',.45));root.style.setProperty('--cover-b',blend(c,'#FFFFFF',.35));root.style.setProperty('--cover-c',blend(c,'#FFFFFF',.72));root.style.setProperty('--on',dark?'#25232B':'#FFFFFF');root.style.setProperty('--soft',blend(c,'#FFFFFF',.95));root.style.setProperty('--tint',blend(c,'#FFFFFF',.82));root.style.setProperty('--ink',dark?blend(c,'#101018',.72):blend(c,'#101018',.46));custom.value=c;hex.textContent=c.toUpperCase();document.querySelector('meta[name="theme-color"]').content=c;document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('active',b.dataset.color.toLowerCase()===c.toLowerCase()))}document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>apply(b.dataset.color)));custom.addEventListener('input',()=>apply(custom.value));let timeout;document.querySelectorAll('[data-demo]').forEach(b=>b.addEventListener('click',()=>{document.body.classList.add('showtoast');clearTimeout(timeout);timeout=setTimeout(()=>document.body.classList.remove('showtoast'),2800)}));apply('#856F78')})();
-</script></body></html>
+
+[v-cloak]{display:none!important}
+body{height:auto!important;min-height:100vh;overflow-x:hidden!important;overflow-y:auto!important}
+.shell{position:relative;min-height:100vh}
+.shell .content{padding-bottom:120px}
+.shell .bottom{z-index:45}
+.shell .hero{color:var(--on)}
+.shell .hero h1,.shell .hero .sub,.shell .hero .eyebrow{color:var(--on)}
+.shell .photo-card{cursor:pointer}
+.scrap-detail{padding:12px 15px;border-top:1px dashed var(--edge);font-size:12px;line-height:1.8}
+.scrap-detail button{padding:8px 12px;border-radius:8px;border:1px solid var(--edge);margin-right:6px}
+.scrap-empty{text-align:center;padding:30px 14px;color:var(--muted)}
+.scrap-map{height:max(500px,calc(100dvh - 210px));position:relative;min-height:500px}
+#map-container{height:100%;width:100%}
+.scrap-map .map-overlay{position:absolute;top:12px;left:12px;right:12px;z-index:500}
+.scrap-map .replay-overlay{position:absolute;bottom:12px;left:12px;right:12px;z-index:500}
+.scrap-map .replay-overlay button{padding:8px;border-radius:50%;background:var(--brand);color:var(--on)}
+.scrap-stat{font-size:26px;font-weight:800;color:var(--ink)}
+.scrap-nav-active{color:var(--ink)!important;font-weight:700}
+.scrap-modal-layer{position:relative;z-index:100}
+@media(min-width:600px){.shell{overflow:visible!important}}
+</style></head><body><div id="app" v-cloak :style="cssVars" class="shell">
+<header class="hero" :style="{background:'linear-gradient(135deg,'+themeColor+','+themeColor+')'}"><div class="top"><div><div class="eyebrow">RITA'S MEMORY SCRAPBOOK ♡</div><h1>{{customTitle}}</h1><div class="sub">{{greetingMessage}}</div></div><button class="round" type="button" @click="toggleSettingsModal" aria-label="設定">⚙</button></div>
+<div class="metrics"><div class="metric"><small>✦ 即將到來</small><strong>{{upcomingCount}} 場</strong></div><div class="metric"><small>♡ 今年收藏</small><strong>{{events.filter(e=>String(e.date||'').startsWith(String(new Date().getFullYear()))).length}} 場</strong></div></div></header>
+<main class="content" v-show="activeTab==='home'"><div class="section"><h2>即將到來的行程</h2><span>MY EVENTS</span></div>
+<div class="controls" style="margin:0 0 16px"><div style="display:flex;gap:8px"><button class="tag" @click="viewMode='upcoming'" :style="{background:viewMode==='upcoming'?'var(--tint)':'var(--soft)'}">即將到來</button><button class="tag" @click="viewMode='past'" :style="{background:viewMode==='past'?'var(--tint)':'var(--soft)'}">過去回憶</button><input v-model="searchQuery" placeholder="搜尋行程" style="width:42%;min-width:0;padding:8px;border:1px solid var(--edge);border-radius:8px"></div></div>
+<div v-if="!filteredEvents.length" class="card scrap-empty">目前沒有符合的行程 ♡</div>
+<article v-for="event in filteredEvents" :key="event.id" class="card photo-card" @click="toggleExpand(event.id)">
+<div v-if="event.coverUrl" class="cover-art"><img :src="event.coverUrl" :alt="event.title" style="width:100%;height:100%;object-fit:cover"><span class="cover-label">{{event.artist}}</span></div>
+<div class="photo-body"><div class="photo-top"><span class="photo-date">{{event.date}} · {{event.time}}</span><span class="tag" style="margin:0">{{event.artist}}</span></div><h3>{{event.title}}</h3><p>{{event.location || '尚未填寫地點'}}</p><div class="photo-meta"><span>{{getDaysDiff(event.date)>=0?'✧ D-'+getDaysDiff(event.date):'♡ 珍藏的回憶'}}</span><span>{{expandedEventId===event.id?'⌃ 收起':'⌄ 查看詳情'}}</span></div></div>
+<div v-if="expandedEventId===event.id" class="scrap-detail" @click.stop><p>{{event.memo}}</p><p v-if="event.seat">座位：{{event.seat}}</p><button @click="editEvent(event)">編輯</button><button @click="showTicket(event)">票根</button><button @click="deleteEvent(event.id)">刪除</button></div></article>
+<button class="action" type="button" @click="openModal()">＋ 新增行程</button></main>
+<main class="content" v-show="activeTab==='fandom'"><div class="section"><h2>入坑紀念日 💖</h2><span>ANNIVERSARY</span></div><div class="fan-grid"><article class="fan-card" v-for="fan in fandoms" :key="fan.id" @click="editFandom(fan)"><div v-if="fan.coverUrl" class="fan-cover"><img :src="fan.coverUrl" style="width:100%;height:100%;object-fit:cover"></div><div v-else class="fan-noimage">♡ ✧</div><div class="fan-content"><h3>{{fan.name}}</h3><p>入坑日：{{fan.startDate||fan.date||'—'}}</p><div class="fan-count">{{calculateFandomDays(fan.startDate||fan.date)}} <small>天的喜歡 ♡</small></div></div></article></div><button class="action" @click="openFandomModal()">＋ 新增紀念日</button></main>
+<main v-show="activeTab==='map'" class="scrap-map"><div id="map-container"></div><div class="map-overlay card"><div class="section"><h2>追星足跡</h2><span>{{totalDistance}} km</span></div><select v-model="selectedMapYear"><option value="ALL">全部年度</option><option v-for="year in availableYears" :value="year">{{year}} 年</option></select><span style="font-size:12px;margin-left:10px">已踏足 {{filteredMapEventsCount}} 個活動地點</span></div><div class="replay-overlay" v-show="!showSettingsModal"><div class="card" style="display:flex;align-items:center;gap:10px;margin:0"><button @click="previousReplayStop">◀</button><button @click="replayPlaying?pauseReplay():startReplay()">{{replayPlaying?'Ⅱ':'▶'}}</button><button @click="nextReplayStop">▶|</button><span style="font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{replayEvent?replayEvent.title:'年度足跡 · '+replayStops.length+' 站'}}</span></div></div></main>
+<main class="content" v-show="activeTab==='stats'"><div class="section"><h2>追星儀表板 📊</h2><span>RECAP</span></div><div class="controls"><select v-model="selectedYear"><option value="ALL">全部年度</option><option v-for="year in availableYears" :value="year">{{year}} 年</option></select></div><div class="metrics" style="margin:0 0 18px"><div class="card"><small>累計場次</small><div class="scrap-stat">{{statsData.count}}</div></div><div class="card"><small>累計投資</small><div class="scrap-stat">{{isStatsPrivacy?'****':formatMoney(statsData.totalSpent)}}</div><button @click="isStatsPrivacy=!isStatsPrivacy">顯示／隱藏</button></div></div><div class="card"><div class="section"><h2>本命排行榜</h2></div><div v-for="(artist,i) in statsData.topArtists" :key="artist.name" style="margin:12px 0"><div style="display:flex;justify-content:space-between"><strong>#{{i+1}} {{artist.name}}</strong><span>{{artist.count}} 次見面</span></div><div style="height:7px;background:var(--tint);border-radius:8px"><div :style="{width:(artist.count/statsData.maxArtistCount*100)+'%',background:'var(--brand)',height:'100%',borderRadius:'8px'}"></div></div></div></div><div class="card"><h2>大型演出／全勤成就</h2><p v-for="item in statsData.series" :key="item.title">{{item.title}} · {{item.count}} 場</p></div><button class="action" @click="showImportModal=true">匯入資料</button></main>
+<nav class="bottom" aria-label="主要導覽"><button v-for="tab in [{id:'home',icon:'▦',label:'行程'},{id:'fandom',icon:'♡',label:'紀念日'},{id:'map',icon:'♧',label:'地圖'},{id:'stats',icon:'▥',label:'回顧'}]" :key="tab.id" class="nav" :class="{active:activeTab===tab.id}" @click="activeTab=tab.id"><span class="symbol">{{tab.icon}}</span>{{tab.label}}</button></nav>
+        <transition name="fade">
+            
+            <div v-if="showTicketModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" @click.self="showTicketModal = false">
+                <div class="ticket-preview-panel w-full max-w-xs transform transition-all relative" @click.stop>
+                    <div class="ticket-stub bg-white rounded-3xl overflow-hidden relative text-slate-800">
+                        <div class="h-20 relative flex items-center justify-center" :style="{ backgroundColor: getEventColor(ticketEvent) }">
+     
+                            <img v-if="ticketEvent.coverUrl" :src="ticketEvent.coverUrl" class="absolute inset-0 w-full h-full object-cover opacity-95" alt="Event Cover" onerror="this.style.display='none'">
+                            <h2 :class="isColorLight(getEventColor(ticketEvent)) ? 'text-slate-800' : 'text-white'" 
+                                class="font-bold text-xl relative z-10 drop-shadow-md">{{ ticketEvent.artist }}</h2>
+                        </div>
+       
+                        <div class="p-6 text-center space-y-4">
+         
+                            <div><div class="text-xs text-slate-400 uppercase tracking-widest mb-1">EVENT</div><h3 class="text-xl font-bold leading-tight">{{ ticketEvent.title }}</h3></div>
+                            <div class="flex justify-between items-stretch border-b border-slate-100 pb-4">
+        
+                                <div class="flex-1 text-left min-w-0 pr-2">
+                                    <div class="text-[10px] text-slate-400 uppercase">DATE / TIME</div>
+                                    <div class="font-bold text-sm">{{ ticketEvent.date }}</div>
+                                    <div class="font-bold text-sm">{{ ticketEvent.time }}</div>
+                                </div>
+                   
+                                <div class="flex-1 text-right min-w-0 pl-2">
+   
+                                    <div class="text-[10px] text-slate-400 uppercase">LOCATION</div>
+                                    <div class="font-bold text-sm">{{ ticketEvent.location }}</div>
+    
+                    
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                             
+  
+                                <div class="text-left">
+                                    <div class="text-[10px] text-slate-400 uppercase">SEAT</div>
+                                    <div class="font-bold text-primary" :style="{ color: getEventColor(ticketEvent) }">{{ ticketEvent.seat || '無座席資訊' }}</div>
+                                </div>
+                                <div class="text-right">
+                             
+  
+                                    <div class="text-[10px] text-slate-400 uppercase">TICKET PRICE</div>
+                                    <div class="font-bold">${{ formatMoney(getTicketPrice(ticketEvent.expenses)) }}</div>
+                                </div>
+                
+    
+                            </div>
+                            <div v-if="ticketEvent.sticker" class="text-4xl absolute top-16 right-4 rotate-12 drop-shadow-md">{{ ticketEvent.sticker }}</div>
+                        </div>
+                        <div class="ticket-divider bg-[#f8fafc] -mx-2"></div>
+   
+                        <div class="bg-[#f8fafc] p-6 pt-4 text-center"><div aria-label="紀念票券條碼" class="ticket-barcode-graphic" role="img"></div><div class="ticket-barcode-number">{{ ticketEvent.id ? ticketEvent.id.toString().slice(-8) : '12345678' }}</div><p class="text-[10px] text-slate-400 mt-2">IDOL TRACKER EXCLUSIVE TICKET</p></div>
+                    </div>
+                    <div class="flex justify-center pt-4 pb-2">
+                        <button @click="showTicketModal = false" aria-label="關閉票券" class="w-11 h-11 rounded-full bg-white/20 text-white flex items-center justify-center text-2xl shadow-lg border border-white/20"><i class="ph ph-x"></i></button>
+                    </div>
+                </div>
+            </div>
+      
+ 
+          </transition>
+
+        <transition name="slide-up">
+            <div v-if="calendarEvent && showCalendarModal" class="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" @click.self="showCalendarModal = false">
+                <div class="bg-white w-full max-w-sm rounded-t-3xl p-6 relative shadow-2xl safe-pb transform transition-transform duration-300 translate-y-0">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800">選擇日曆類型</h3>
+   
+                    <div class="space-y-3">
+                        <button @click="addToiCal()" class="w-full py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors">
+                            <i class="ph ph-apple-logo text-xl"></i> Apple/Outlook/其他日曆 (.ics)
+            
+                        </button>
+                        <button @click="addToGoogleCalendar()" class="w-full py-3 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors">
+                            <i class="ph ph-google-logo text-xl"></i> Google 日曆
+                  
+                        </button>
+                    </div>
+                    <button @click="showCalendarModal = false" class="mt-4 text-sm text-slate-400 hover:text-slate-600">取消</button>
+                </div>
+            </div>
+        </transition>
+
+        <transition name="slide-up">
+  
+            <div v-if="showChangelogModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="showChangelogModal = false"></div>
+                <div class="changelog-modal-panel bg-white w-full max-w-md max-h-[70vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+    
+                        <h2 class="text-xl font-bold text-slate-800">更新日誌 📄</h2>
+                        <button @click="showChangelogModal = false" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
+                    </div>
+                    <div class="overflow-y-auto flex-1 no-scrollbar space-y-6">
+
+                        <div v-for="log in changelogContent" :key="log.version" class="border-b pb-4 border-slate-100 last:border-0">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-bold text-lg text-slate-800">{{ log.version }}</span>
+                                <span class="text-xs text-slate-400">{{ log.date }}</span>
+                            </div>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1 pl-4">
+                                <li v-for="(item, index) in log.items" :key="index">{{ item }}</li>
+                            </ul>
+                        </div>
+        
+                 
+                        <p class="text-center text-sm text-slate-400 pt-2">— 這是所有歷史版本紀錄 —</p>
+
+                    </div>
+                    <div class="shrink-0 pt-4">
+            
+                        <button @click="showChangelogModal = false" :style="{ backgroundColor: themeColor }" class="w-full text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-transform">返回</button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
+<div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
+    <div class="settings-modal-panel bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
+        
+        <!-- 標題列 -->
+        <div class="flex justify-between items-center p-6 pb-4 shrink-0">
+            <h3 class="font-bold text-lg text-slate-700">系統與主題設定 ⚙️</h3>
+            <button @click="showSettingsModal = false" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200 transition-colors">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+
+        <!-- 內容捲動容器 -->
+        <div class="flex-1 overflow-y-auto px-6 pr-6 pb-6 custom-popup-scroll">
+            <div class="space-y-6 text-center">
+
+<!-- 👤 雲端同步帳號（單一乾淨登入區塊） -->
+<div class="border-b border-slate-100 pb-4">
+    <p class="text-xs font-medium text-slate-500 mb-2">雲端同步帳號</p>
+    <p class="text-[10px] text-slate-400 mb-2 italic">登入只是自動備份，資料隨時幫您安全存到雲端</p>
+    <div class="flex items-center justify-center gap-2">
+        <template v-if="currentUser">
+            <!-- 已登入區塊：改用 flex-col 讓結構垂直排列，包含備份時間 -->
+            <div class="flex flex-col items-center gap-1 w-full">
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-xs text-slate-700 font-bold">👤 已登入</span>
+                    <button @click="logout" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg transition-colors">登出</button>
+                </div>
+                <!-- 📍 新增：顯示最後備份時間 -->
+                <p v-if="lastSyncTime" class="text-[10px] text-slate-400 mt-1">
+                    ☁️ 最後備份：{{ lastSyncTime }}
+                </p>
+            </div>
+        </template>
+        <template v-else>
+            <div class="flex flex-col gap-2 w-full max-w-xs mx-auto">
+                <input v-model="loginEmail" type="email" placeholder="輸入 Email" class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 text-center focus:ring-2 focus:ring-primary/50">
+                <button @click="loginWithEmail" :style="{ backgroundColor: themeColor, color: isThemeColorLight ? '#1f2937' : '#ffffff' }" class="text-xs px-4 py-2 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                    <i class="ph ph-envelope-simple text-sm"></i> 發送 Email 登入連結
+                </button>
+            </div>
+        </template>
+    </div>
+</div>
+
+                <div class="border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-500 mb-2">App 標題</p>
+                    <input type="text" v-model="customTitle" @change="updateAppTitle" placeholder="追星日記 ✨"
+                         class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
+                </div>
+
+                <div class="border-b border-slate-100 pb-4">
+                    <label for="recap-home-city" class="block text-xs font-medium text-slate-500 mb-2">年度回顧出發城市</label>
+                    <input id="recap-home-city" v-model.trim="recapHomeCity" list="recap-home-cities" placeholder="例如：台北、首爾、東京"
+                           class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
+                    <datalist id="recap-home-cities"><option v-for="city in recapKnownCities" :key="city" :value="city"></option></datalist>
+                    <p class="text-[10px] text-slate-400 mt-2 italic">※ 出發城市只儲存在此裝置；優先依活動座標計算直線距離，無座標時才用已知城市中心估算。</p>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-500 mb-2">年度追星預算 (TWD)</p>
+                    <input type="number" v-model.number="yearlyBudget" placeholder="例如: 50000"
+                           class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
+                    <p class="text-[10px] text-slate-400 mt-2 italic">※ 設定後，首頁會提醒你是否花太多錢囉！</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-2">全域主題色</p>
+                    <div class="grid grid-cols-4 gap-3 mb-3">
+                        <button v-for="color in presetColors" :key="color" @click="setTheme(color)" :title="({ '#27243B': 'App 圖示色', '#63B3B0': '薄荷綠', '#C5F442': 'NCT Neo 綠', '#C9A1FF': 'aespa 紫' })[color]" :aria-label="({ '#27243B': 'App 圖示色', '#63B3B0': '薄荷綠', '#C5F442': 'NCT Neo 綠', '#C9A1FF': 'aespa 紫' })[color]" 
+                                class="w-full aspect-square rounded-full shadow-sm transition-transform hover:scale-110 border-2" 
+                                :class="themeColor === color ? 'border-slate-800' : 'border-transparent'" 
+                                :style="{ backgroundColor: color }"></button>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl">
+                        <p class="text-sm text-slate-500 shrink-0">自訂:</p>
+                        <input type="color" v-model="themeColor" @input="setTheme(themeColor)" class="w-full h-8 cursor-pointer rounded bg-transparent">
+                    </div>
+                </div>
+
+
+                <div class="border-t border-slate-100 pt-4 text-left">
+                    <button @click="showActivityCategories = !showActivityCategories" class="w-full flex justify-between items-center text-sm font-bold text-slate-700">
+                        <span>活動分類管理</span><span class="text-xs text-slate-400">{{ activityCategoryPending }} 筆待確認 {{ showActivityCategories ? '▲' : '▼' }}</span>
+                    </button>
+                    <div v-if="showActivityCategories" class="mt-3 space-y-3">
+                        <p class="text-xs text-slate-500">依「偶像＋活動名稱」批次分類；不會改動原始行程。系統建議可手動修正。</p>
+                        <input v-model="activityCategoryQuery" placeholder="搜尋偶像或活動名稱" class="w-full bg-slate-50 rounded-lg p-2 text-sm text-slate-700">
+                        <select v-model="activityCategoryFilter" class="w-full bg-slate-50 rounded-lg p-2 text-sm text-slate-700">
+                            <option value="all">全部</option><option value="unknown">待確認</option><option value="classified">已分類</option>
+                        </select>
+                        <div class="max-h-72 overflow-y-auto space-y-4 pr-1 pb-3">
+                            <div v-for="group in filteredActivityGroups" :key="group.key" class="border-b border-slate-100 pb-4 space-y-2">
+                                <p class="text-sm font-medium text-slate-700 break-words">{{ group.title }}</p>
+                                <p class="text-xs text-slate-400">{{ group.artist }} · {{ group.count }} 筆 <span v-if="activityCategoryMap[group.key] === undefined">· 系統建議（尚未確認）</span></p>
+                                <p v-if="group.customNames.length" class="text-xs text-slate-600">活動類型：{{ group.customNames.join("、") }}（自訂）</p>
+                                <select :value="activityCategoryMap[group.key] || group.suggested" @change="setActivityGroupCategory(group.key,$event.target.value)" class="w-full bg-slate-50 rounded-lg p-2 text-sm text-slate-700">
+                                    <option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option>
+                                </select>
+                                <button v-if="activityCategoryMap[group.key] === undefined" @click="confirmSuggestedCategory(group)" class="mt-2 text-xs bg-slate-700 text-white rounded-lg px-3 py-2">確認此分類</button>
+                            </div>
+                            <p v-if="!filteredActivityGroups.length" class="text-xs text-slate-400 text-center">沒有符合的活動</p>
+                        </div>
+                        <div class="border-t border-slate-100 pt-3 space-y-2">
+                            <button @click="showSeriesReview = !showSeriesReview" class="w-full flex justify-between items-center gap-3 text-sm font-bold text-slate-700 text-left"><span class="min-w-0">同系列活動建議（DAY 1／DAY 2）</span><span class="shrink-0 whitespace-nowrap text-xs text-slate-400">{{ seriesCandidateGroups.length }} 組待確認 {{ showSeriesReview ? '▲' : '▼' }}</span></button>
+                            <div v-if="showSeriesReview" class="space-y-3">
+                                <p class="text-xs text-slate-500">只建議同偶像、同年份且有不同 DAY 場次名稱的活動；確認後才合併大型演出統計，不修改原始行程。</p>
+                                <div v-for="group in seriesCandidateGroups" :key="group.id" class="bg-slate-50 rounded-xl p-3 space-y-2">
+                                    <p class="text-sm font-bold text-slate-700">{{ group.artist }} · {{ group.year }} · {{ group.count }} 場</p>
+                                    <p v-for="title in group.titles" :key="title" class="text-xs text-slate-600 break-words">{{ title }}</p>
+                                    <div class="flex gap-2"><button @click="acceptSeries(group)" class="flex-1 bg-slate-700 text-white text-xs rounded-lg p-2">確認合併</button><button @click="rejectSeries(group)" class="flex-1 bg-white border text-slate-600 text-xs rounded-lg p-2">略過</button></div>
+                                </div>
+                                <p v-if="!seriesCandidateGroups.length" class="text-xs text-slate-400">目前沒有待審核的 DAY 場次建議。</p>
+                                <button @click="resetSeries" class="text-xs text-slate-500 underline">清除系列合併與略過紀錄（可重新審核）</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-slate-100">
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-2">資料備份與轉移</p>
+                    <div class="flex flex-col gap-2">
+                        <button @click="downloadBackup" class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200">
+                            <i class="ph ph-download-simple text-lg"></i> 下載完整備份 JSON
+                        </button>
+                        <label class="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-200 cursor-pointer">
+                            <i class="ph ph-upload-simple text-lg"></i> 還原資料
+                            <input type="file" accept=".json" @change="restoreBackup" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <div class="pt-2 text-[10px] text-slate-400">
+                    <p class="mb-2">當前版本: {{ appVersion }}</p>
+                    <button @click="showChangelog" class="font-medium underline" :style="{ color: themeColor }">📄 查看更新日誌</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+        
+        <transition name="slide-up">
+            <div v-if="showFandomModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeFandomModal"></div>
+                <div class="fandom-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <h2 class="text-xl font-bold text-slate-800">{{ isFandomEditing ? '編輯入坑日' : '新增入坑日' }}</h2>
+                        <button @click="closeFandomModal" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
+                    </div>
+                    <div class="overflow-y-auto flex-1 no-scrollbar space-y-4 pb-32 pt-4">
+                   
+  
+                        <div class="space-y-4">
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">偶像名稱 <span class="text-red-500">*</span></label><input v-model="fandomForm.name" type="text" placeholder="SHINee" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+                            
+ 
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">入坑日期 <span class="text-red-500">*</span></label><input v-model="fandomForm.date" type="text" @change="fandomForm.date = fandomForm.date.replace(/\//g, '-')" placeholder="YYYY-MM-DD (2018-05-25)" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+                            
+                     
+                        <div><label class="block text-sm font-medium text-slate-500 mb-1">代表貼紙 (Emoji)</label><input v-model="fandomForm.sticker" type="text" placeholder="✨" maxlength="3" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800 text-xl text-center"></div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-500 mb-1">封面圖片 (選填)</label>
+                                
+                                <div v-if="fandomForm.coverUrl" class="mb-3">
+                                    <img :src="fandomForm.coverUrl" alt="封面預覽" class="w-full h-32 object-cover rounded-xl shadow-md border border-slate-100">
+                                    <button @click="fandomForm.coverUrl = ''; fandomForm.useUrl = false" class="mt-1 text-red-500 hover:text-red-600 text-xs font-medium flex items-center gap-1">
+                                        <i class="ph ph-x-circle-fill"></i> 清除圖片
+                                    </button>
+                                </div>
+
+                                <div v-else>
+                                    <div v-if="fandomForm.useUrl" class="relative">
+                                        <i class="ph ph-link absolute left-3 top-3.5 text-slate-400"></i>
+                                        <input v-model="fandomForm.coverUrl" type="text" placeholder="貼上圖片 URL..." class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800">
+                                    </div>
+                                    
+                                    <label v-else class="w-full py-3 bg-slate-50 text-slate-500 text-sm rounded-xl border-2 border-dashed border-slate-300 hover:bg-slate-100 cursor-pointer flex items-center justify-center gap-2">
+                                        <i class="ph ph-image-square text-lg"></i> 選擇圖片檔案 (Base64, < 1MB)
+                                        <input type="file" @change="handleFileUpload($event, 'fandom')" accept="image/*" class="hidden">
+                                    </label>
+
+                                    <button @click="fandomForm.useUrl = !fandomForm.useUrl; fandomForm.coverUrl = ''" class="mt-2 text-xs font-medium text-slate-500 hover:text-slate-700 underline">
+                                        {{ fandomForm.useUrl ? '改為上傳 Base64 圖片' : '改為貼上圖片 URL' }}
+                                    </button>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">建議使用橫式圖片。</p>
+                            </div>
+                            <hr class="border-slate-100 my-2">
+
+    
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">生日 (YYYY-MM-DD, 選填)</label><input v-model="fandomForm.birthday" type="text" @change="fandomForm.birthday = fandomForm.birthday.replace(/\//g, '-')" placeholder="1991-09-23" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+                            
+                          
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">出道日 (YYYY-MM-DD, 選填)</label><input v-model="fandomForm.debutDate" type="text" @change="fandomForm.debutDate = fandomForm.debutDate.replace(/\//g, '-')" placeholder="2008-05-25" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+
+                        </div>
+          
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
+                        <button @click="addFandom" :style="{ backgroundColor: themeColor }" class="w-full text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
+                    </div>
+                </div>
+            </div>
+        
+        </transition>
+
+
+        <transition name="slide-up">
+            <div v-if="showModal" class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModal"></div>
+                <div class="event-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                   
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <h2 class="text-xl font-bold text-slate-800">{{ isEditing ? '編輯行程' : '新增行程' }}</h2>
+                        <button @click="closeModal" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
+                    </div>
+                    <div class="overflow-y-auto flex-1 no-scrollbar space-y-4 pb-32 pt-4">
+                   
+  
+                        <div class="space-y-4">
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">活動名稱</label><input v-model="form.title" type="text" placeholder="例如: 2024 世界巡迴演唱會" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">活動類型（同偶像、同名稱一起套用）</label><select v-model="formActivityCategory" @change="formCategoryTouched = true" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800"><option v-for="type in activityTypes" :key="type.value" :value="type.value">{{ type.label }}</option></select><div v-if="formActivityCategory === 'other'" class="mt-2"><label class="block text-xs text-slate-500 mb-1">自訂活動類型</label><input v-model="formCustomCategory" type="text" maxlength="40" placeholder="例如：握手會、合照會" class="w-full bg-slate-50 rounded-xl p-3 text-slate-800" /></div><p class="text-xs text-slate-400 mt-1">可自行選擇類型；不確定時可選「尚未分類」。</p></div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-500 mb-1">封面圖片 (選填)</label>
+                                
+                                <div v-if="form.coverUrl" class="mb-3">
+                                    <img :src="form.coverUrl" alt="封面預覽" class="w-full h-32 object-cover rounded-xl shadow-md border border-slate-100">
+                                    <button @click="form.coverUrl = ''; form.useUrl = false" class="mt-1 text-red-500 hover:text-red-600 text-xs font-medium flex items-center gap-1">
+                                        <i class="ph ph-x-circle-fill"></i> 清除圖片
+                                    </button>
+                                </div>
+
+                                <div v-else>
+                                    <div v-if="form.useUrl" class="relative">
+                                        <i class="ph ph-link absolute left-3 top-3.5 text-slate-400"></i>
+                                        <input v-model="form.coverUrl" type="text" placeholder="貼上圖片 URL..." class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800">
+                                    </div>
+                                    
+                                    <label v-else class="w-full py-3 bg-slate-50 text-slate-500 text-sm rounded-xl border-2 border-dashed border-slate-300 hover:bg-slate-100 cursor-pointer flex items-center justify-center gap-2">
+                                        <i class="ph ph-image-square text-lg"></i> 選擇圖片檔案 (Base64, < 1MB)
+                                        <input type="file" @change="handleFileUpload($event, 'event')" accept="image/*" class="hidden">
+                                    </label>
+
+                                    <button @click="form.useUrl = !form.useUrl; form.coverUrl = ''" class="mt-2 text-xs font-medium text-slate-500 hover:text-slate-700 underline">
+                                        {{ form.useUrl ? '改為上傳 Base64 圖片' : '改為貼上圖片 URL' }}
+                                    </button>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">上傳圖片檔案，將其轉換為 Base64 儲存，豐富你的行程卡片！</p>
+                            </div>
+                            <div class="grid grid-cols-[minmax(0,1fr)_96px] gap-3 items-end">
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">歌手/團體</label><div class="w-full bg-slate-50 rounded-xl p-2 flex flex-wrap items-center gap-1 min-h-[46px]"><span v-for="a in (form.artists||[])" :key="a" class="text-xs bg-white border rounded-lg px-2 py-1 inline-flex gap-1 items-center">{{a}}<button type="button" @click="removeFormArtist(a)" aria-label="移除藝人"><i class="ph ph-x"></i></button></span><input v-model="artistDraft" @keydown.enter.prevent="addFormArtist" placeholder="輸入藝人按 Enter" class="min-w-[90px] flex-1 bg-transparent border-none p-1 text-sm focus:ring-0"><button type="button" @click="addFormArtist" :style="{color:themeColor}" aria-label="加入藝人"><i class="ph ph-plus-circle"></i></button></div></div>
+    
+       
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">應援色</label><div class="h-[46px] w-[46px] mx-auto relative overflow-hidden rounded-full border border-slate-200 bg-slate-50"><input v-model="form.color" type="color" aria-label="選擇應援色" class="absolute inset-0 w-full h-full cursor-pointer p-0 border-0 rounded-full"></div></div>
+                            </div>
+                
+                       
+      
+                            
+                             <div><label class="block text-sm font-medium text-slate-500 mb-1">心情貼紙 (Emoji)</label><input v-model="form.sticker" type="text" placeholder="輸入一個 Emoji" maxlength="3" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800 text-xl text-center"></div>
+
+                            <div class="grid grid-cols-2 gap-4">
+       
+             
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">日期</label><input v-model="form.date" type="date" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+                                <div><label class="block text-sm font-medium text-slate-500 mb-1">時間</label><input v-model="form.time" type="time" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+           
+                       
+                            </div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
+                            <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
+                            <div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
+                                <p class="text-xs text-slate-500 px-2 pb-1">常見場館搜尋建議 · 最多 5 筆</p>
+                                <button v-for="venue in windowVenueMatches(form.location)" :key="venue.country + venue.label" type="button"
+                                    class="block w-full rounded-lg px-2 py-2 text-left text-xs hover:bg-blue-50"
+                                    @click="form.location = venue.search; form.lat = null; form.lng = null; searchError = ''">
+                                    <span class="font-semibold text-slate-800">{{ venue.label }}</span>
+                                    <span class="text-slate-400 ml-1">· {{ venue.country }}</span>
+                                    <span class="block text-slate-500 mt-0.5">{{ venue.search }}</span>
+                                </button>
+                                <p class="text-xs text-slate-400 px-2 pt-1">點選只會填入搜尋名稱；請再按定位按鈕確認座標。</p>
+                            </div>
+                            <p v-if="searchError" class="text-xs font-medium mt-2 p-2 rounded-lg" :class="searchError.includes('成功') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+                                {{ searchError }}
+                            </p>
+                        </div>
+          
+ 
+                
+                        <div>
+                            <div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">必帶清單 ✅</label><button @click="addDefaultChecklist" class="text-xs text-primary hover:underline" :style="{color: themeColor}">加入常用項目</button></div>
+                 
+   
+                            <div class="space-y-2 mb-2"><div v-for="(item, index) in form.checklist" :key="index" class="flex gap-2 items-center"><input v-model="item.text" type="text" placeholder="項目" class="flex-1 bg-slate-50 border-none rounded-lg p-2 text-sm"><button @click="removeChecklistItem(index)" class="text-slate-400 hover:text-red-500 p-1"><i class="ph ph-x"></i></button></div></div>
+                            <button @click="addChecklistItem" class="w-full py-2 bg-slate-50 text-slate-500 text-xs rounded-lg border border-dashed border-slate-300 hover:bg-slate-100">+ 新增檢查項目</button>
+                    
+                        </div>
+
+  
+                        <hr class="border-slate-100 my-2">
+                        
+                        <div><div class="flex justify-between items-center mb-2"><label class="block text-sm font-medium text-slate-700">詳細支出記帳 💰</label><span class="text-xs font-bold" :style="{ color: themeColor }">總計: ${{ formatMoney(calculateTotal(form.expenses)) }}</span></div><div class="space-y-2 mb-2"><div v-for="(exp, index) in form.expenses" :key="index" class="grid grid-cols-[1fr,1fr,auto] gap-2 items-center"><input v-model="exp.item" type="text" placeholder="項目" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm"><input v-model.number="exp.amount" type="number" placeholder="金額" class="w-full bg-slate-50 border-none rounded-lg p-2 text-sm text-right"><button @click="removeExpenseItem(index)" class="text-slate-400 hover:text-red-500"><i class="ph ph-minus-circle text-lg"></i></button></div><div class="flex gap-2 overflow-x-auto items-center">
+    <button @click="addExpenseItem('門票')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">門票</button>
+    <button @click="addExpenseItem('交通')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">交通</button>
+    <button @click="addExpenseItem('住宿')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">住宿</button>
+    <button @click="addExpenseItem('周邊')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border">周邊</button>
+    <!-- 🌟 樣式跟旁邊完全一樣的自訂按鈕 -->
+    <button @click="addExpenseItem('')" class="px-3 py-1 bg-slate-100 text-xs rounded-full border shrink-0">+ 自訂</button>
+</div>
+</div>
+                        <div><label class="block text-sm font-medium text-slate-700 mb-1">心得筆記 📝</label><textarea v-model="form.memo" placeholder="寫下你的應援心情、觀後感..." class="w-full h-24 bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/50 text-slate-800 resize-none"></textarea></div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
+                        <button @click="saveEvent" :style="{ backgroundColor: themeColor }" class="w-full text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform">儲存</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </transition>
+
+        <div v-if="showShareModal" class="fixed inset-0 z-[9999] bg-black/70 overflow-y-auto p-4 pb-28 flex flex-col items-center gap-3"><div class="flex justify-between items-center text-white w-full max-w-sm"><strong>追星回顧 · 9:16 預覽</strong><button @click="showShareModal = false" class="text-2xl">×</button></div><div v-show="!shareImagePreview" id="share-template" class="shrink-0" :style="{width:'360px',height:'640px',boxSizing:'border-box',background:recapPalette.background,color:recapPalette.ink,position:'relative',overflow:'hidden',fontFamily:'Noto Sans TC, sans-serif'}">
+  <div style="position:absolute;left:0;right:0;top:213px;bottom:0;height:427px;overflow:hidden"
+    :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse at 30% 10%,#ff9cae,transparent 62%),radial-gradient(ellipse at 80% 15%,#e64c75,transparent 60%),#772c49' : selectedYear === '2024' ? 'radial-gradient(ellipse at 30% 10%,#ffe0a9,transparent 62%),radial-gradient(ellipse at 80% 15%,#ff9e8a,transparent 60%),#97536c' : selectedYear === '2025' ? 'radial-gradient(ellipse at 30% 10%,#dcb4a1,transparent 62%),radial-gradient(ellipse at 80% 15%,#a87a6c,transparent 60%),#573d42' : selectedYear === '2026' ? 'radial-gradient(ellipse at 30% 10%,#f9e7e2,transparent 62%),radial-gradient(ellipse at 80% 15%,#c4b9c5,transparent 60%),#79717c' : 'radial-gradient(ellipse at 30% 10%,#8d7aab,transparent 62%),radial-gradient(ellipse at 80% 15%,#bd8a9c,transparent 60%),#272439'}">
+    <div style="position:absolute;inset:0;background:repeating-conic-gradient(from 245deg at 50% 110%,transparent 0deg,rgba(255,241,255,.18) 8deg,transparent 20deg,transparent 38deg);opacity:.55"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:20px;background:radial-gradient(ellipse at 10% 100%,#faf0ff 0%,transparent 14%),radial-gradient(ellipse at 30% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 50% 100%,#fff3fb 0%,transparent 14%),radial-gradient(ellipse at 70% 100%,#d9c8ed 0%,transparent 15%),radial-gradient(ellipse at 90% 100%,#fff3fb 0%,transparent 14%)"></div>
+    <div style="position:absolute;inset:0;pointer-events:none" :style="{background:'linear-gradient(to bottom, '+recapPalette.background+' 0%, '+recapPalette.background+' 52%, transparent 94%)'}"></div>
+  </div>
+  <!-- Soft atmospheric haze and distant audience lights, behind the existing SVG silhouettes. -->
+  <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:128px;pointer-events:none;opacity:.52"
+    :style="{background: selectedYear === '2023' ? 'radial-gradient(ellipse 125px 68px at 50% 100%,rgba(255,202,220,.48),transparent 90%),radial-gradient(ellipse 100px 52px at 15% 92%,rgba(255,189,209,.30),transparent 90%),radial-gradient(ellipse 110px 56px at 88% 94%,rgba(255,213,226,.30),transparent 90%)' : selectedYear === '2024' ? 'radial-gradient(ellipse 125px 68px at 50% 100%,rgba(255,230,188,.44),transparent 90%),radial-gradient(ellipse 100px 52px at 15% 92%,rgba(255,190,169,.28),transparent 90%),radial-gradient(ellipse 110px 56px at 88% 94%,rgba(255,222,195,.30),transparent 90%)' : selectedYear === '2025' ? 'radial-gradient(ellipse 125px 68px at 50% 100%,rgba(242,212,183,.44),transparent 90%),radial-gradient(ellipse 100px 52px at 15% 92%,rgba(204,157,139,.27),transparent 90%),radial-gradient(ellipse 110px 56px at 88% 94%,rgba(246,217,193,.29),transparent 90%)' : selectedYear === '2026' ? 'radial-gradient(ellipse 125px 68px at 50% 100%,rgba(211,244,229,.38),transparent 90%),radial-gradient(ellipse 100px 52px at 15% 92%,rgba(178,212,205,.24),transparent 90%),radial-gradient(ellipse 110px 56px at 88% 94%,rgba(228,246,238,.27),transparent 90%)' : 'radial-gradient(ellipse 125px 68px at 50% 100%,rgba(232,204,245,.40),transparent 90%),radial-gradient(ellipse 100px 52px at 15% 92%,rgba(211,188,231,.26),transparent 90%),radial-gradient(ellipse 110px 56px at 88% 94%,rgba(242,221,245,.28),transparent 90%)'}"></div>
+  <!-- Inline SVG keeps the light-sea illustration local and exportable without external images. -->
+  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 130" preserveAspectRatio="none" style="position:absolute;left:0;bottom:0;width:360px;height:130px;pointer-events:none;overflow:hidden">
+    <defs>
+      <linearGradient id="recap-sea-wave" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fff" stop-opacity=".08"/>
+        <stop offset="100%" :stop-color="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" stop-opacity=".42"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 47 C72 37 108 29 161 38 S275 15 360 24 L360 130 L0 130 Z" fill="url(#recap-sea-wave)"/>
+    <path d="M0 52 C85 39 119 35 169 43 S283 22 360 30" fill="none" :stroke="selectedYear === '2023' ? '#f7a1b6' : selectedYear === '2024' ? '#ffbfaa' : selectedYear === '2025' ? '#c89c85' : selectedYear === '2026' ? '#8eaea3' : recapPalette.background" stroke-opacity=".38" stroke-width="1.5"/>
+    <g fill="#fff" fill-opacity=".25">
+      <circle cx="38" cy="84" r="1.5"/><circle cx="91" cy="78" r="2"/><circle cx="148" cy="89" r="1.3"/><circle cx="219" cy="81" r="1.8"/><circle cx="275" cy="91" r="1.4"/><circle cx="333" cy="82" r="1.7"/>
+    </g>
+    <!-- Single flowing handwritten heart with gently connected strokes on both sides. -->
+    <path d="M264 70 Q286 64 310 66 C299 58 292 49 293 40 C295 30 304 32 310 41 C317 31 327 32 330 40 C333 50 320 59 310 66 Q332 65 355 51" transform="translate(310 52) rotate(-15) scale(0.85) translate(-310 -52)" fill="none" stroke="#fff" stroke-opacity=".68" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M0 116 Q10 94 20 113 Q31 90 43 111 Q58 91 71 112 Q85 88 98 111 Q111 94 124 113 Q139 87 152 112 Q167 94 180 113 Q195 86 210 112 Q225 91 239 112 Q254 88 269 111 Q282 93 296 111 Q313 89 327 112 Q343 93 360 111 L360 130 L0 130 Z" :fill="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" fill-opacity=".23"/>
+    <g :fill="selectedYear === '2023' ? '#75213c' : selectedYear === '2024' ? '#875267' : selectedYear === '2025' ? '#4b3434' : selectedYear === '2026' ? '#526d68' : recapPalette.ink" fill-opacity=".27">
+      <circle cx="23" cy="108" r="10"/><circle cx="76" cy="108" r="11"/><circle cx="123" cy="110" r="10"/><circle cx="203" cy="110" r="12"/><circle cx="252" cy="109" r="10"/><circle cx="324" cy="108" r="12"/>
+    </g>
+  </svg>
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:6px;opacity:.34" :style="{background:'linear-gradient(90deg, '+recapPalette.ink+' 0%, '+recapPalette.background+' 50%, '+recapPalette.ink+' 100%)'}"></div>
+  <div aria-hidden="true" style="position:absolute;top:6px;left:0;right:0;height:106px;pointer-events:none;opacity:.075" :style="{background:'linear-gradient(180deg, '+recapPalette.ink+', transparent)'}"></div>
+  <p style="position:absolute;top:17px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:2px;text-align:center;margin:0;white-space:nowrap;font-weight:800">IDOL PLANNER · MY YEAR IN MUSIC</p>
+  <h2 style="position:absolute;top:35px;left:0;width:100%;font-family:Playfair Display, Georgia, serif;font-size:58px;font-weight:500;line-height:68px;letter-spacing:-2px;color:inherit;text-align:center;margin:0">{{ selectedYear === 'ALL' ? 'ALL YEARS' : selectedYear }}</h2>
+  <p style="position:absolute;top:110px;left:0;width:100%;font-size:10px;line-height:15px;letter-spacing:1.7px;text-align:center;font-weight:800;margin:0">THE YEAR I SHOWED UP</p>
+  <div style="position:absolute;top:137px;left:22px;right:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
+      <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4V6Z M12 6v3 M12 12v1 M12 16v2"/></svg><span>追星回憶</span></div>
+      <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;line-height:29px;overflow:hidden;overflow-wrap:anywhere">{{ statsData.count }}</div>
+      <div style="height:15px;min-height:15px;margin-top:2px;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">場回憶</div>
+    </div>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
+      <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg><span>最遠追星</span></div>
+      <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-weight:900;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;padding:0 2px" :style="{fontSize:(String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 4 ? 23 : String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 8 ? 18 : String(recapFarthestCity ? recapFarthestCity.city : '—').length <= 13 ? 14 : 11)+'px'}">{{ recapFarthestCity ? recapFarthestCity.city : '—' }}</div>
+      <div style="height:15px;min-height:15px;margin-top:2px;font-size:9px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ recapFarthestCity ? recapFarthestCity.km.toLocaleString() + ' km' : (recapHomeCity ? '尚無城市資料' : '請先設定出發城市') }}</div>
+    </div>
+    <div style="height:88px;background:white;border-radius:15px;text-align:center;padding:8px 3px;box-sizing:border-box;color:#342f35;display:flex;flex-direction:column;align-items:stretch;min-width:0">
+      <div style="height:18px;min-height:18px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;line-height:18px;white-space:nowrap"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 21V8l9-5 9 5v13H3Z M3 10h18 M9 21v-7h6v7"/></svg><span>最常去</span></div>
+      <div style="height:33px;min-height:33px;margin-top:3px;display:flex;align-items:center;justify-content:center;font-weight:900;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;padding:0 2px" :style="{fontSize:(String(recapTopVenue ? recapTopVenue.name : '—').length <= 4 ? 23 : String(recapTopVenue ? recapTopVenue.name : '—').length <= 8 ? 15 : String(recapTopVenue ? recapTopVenue.name : '—').length <= 13 ? 11 : 9)+'px'}">{{ recapTopVenue ? recapTopVenue.name : '—' }}</div>
+      <div style="height:15px;min-height:15px;margin-top:2px;font-size:10px;line-height:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ recapTopVenue ? recapTopVenue.count + ' 次' : '尚無資料' }}</div>
+    </div>
+  </div>
+    <div style="position:absolute;top:244px;left:22px;right:22px;height:177px;background:white;border-radius:17px;padding:14px 17px;box-sizing:border-box;color:#342f35">
+    <h3 style="font-size:15px;font-weight:900;line-height:20px;margin:0 0 12px;letter-spacing:.5px">TOP 3 ARTISTS</h3>
+    <p v-if="!statsData.topArtists.length" style="font-size:12px;color:#888">尚無排行資料</p>
+    <div v-for="(a,i) in statsData.topArtists.slice(0,3)" :key="a.name" style="height:43px;box-sizing:border-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;height:22px;line-height:20px">
+        <span style="display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto;font-weight:800"><span :style="{background:i===0?'#d9bc79':i===1?'#b9c0c9':'#c9987d',color:'#342c2d',borderRadius:'50%',width:'19px',height:'19px',flexShrink:0,textAlign:'center',lineHeight:'19px',fontSize:'11px'}">{{ i+1 }}</span><span style="display:block;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.name }}</span></span><span style="white-space:nowrap;flex:0 0 auto">{{ a.count }} 次見面</span>
+      </div>
+      <div style="height:6px;margin-top:3px;background:#eef0f3;border-radius:9px;overflow:hidden"><div :style="{height:'6px',borderRadius:'9px',background:'#383437',width:(a.count / statsData.maxArtistCount * 100)+'%'}"></div></div>
+    </div>
+  </div>
+  <div style="position:absolute;top:434px;left:22px;right:22px;height:77px">
+    <h3 style="font-size:11px;letter-spacing:1.3px;font-weight:900;line-height:15px;margin:0 0 7px">MONTHLY ACTIVITY</h3>
+    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;height:37px;align-items:end">
+      <div v-for="(n,i) in recapMonths" :key="i" style="height:100%;display:flex;align-items:flex-end"><div :style="{width:'100%',height:Math.max(5,n/recapMonthMax*100)+'%',background:recapPalette.ink,opacity:n?0.85:.16,borderRadius:'3px 3px 0 0'}"></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:5px;text-align:center;font-size:7px;line-height:10px">
+      <span v-for="month in ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']" :key="month">{{ month }}</span>
+    </div>
+  </div>
+  <p style="position:absolute;top:586px;left:22px;right:22px;font-size:10px;font-weight:700;line-height:14px;text-align:center;margin:0;color:#fff;z-index:2;text-shadow:0 1px 4px rgba(20,15,28,.75)">{{ recapQuote }}</p>
+  <p style="position:absolute;top:611px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0;color:#fff;z-index:2;text-shadow:0 1px 4px rgba(20,15,28,.75)">EVERY MOMENT MATTERS · IDOL PLANNER</p>
+</div>
+<div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
+            <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
+      
+                <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上表格</button><button @click="importMode = 'file'" class="flex-1 p-2 rounded-lg bg-slate-100">上傳檔案</button><button @click="importMode = 'json'" class="flex-1 p-2 rounded-lg bg-slate-100">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
+                
+                <div v-if="importMode === 'json'" class="bg-slate-50 p-3 rounded-xl mb-3 text-xs text-slate-500 leading-relaxed border border-slate-100">
+                    <p class="font-bold mb-1 text-slate-700">💡 如何使用：</p>
+                    
+                    請貼上行程用的 <b>JSON 陣列</b>；完整備份 JSON 請到「設定 → 還原資料」使用。務必包含**日期**、**歌手**和**活動名稱**。
+           
+                    <ul class="list-disc list-inside mt-1 ml-1">
+                        <li>**日期**：支援 `YYYY-MM-DD` 或六位數簡寫 `YYMMDD` (如 240101)。</li>
+                        <li>**費用**：請使用 `expenses` 欄位，格式為 `[{"項目": "門票", "金額": 5000}]`。</li>
+             
+                        <li>其他可選欄位：`地點`、`時間`、`座位`、`應援色`、`心得`。</li>
+    
+                    </ul>
+                </div>
+
+                <p v-if="importMode === 'table'" class="text-xs text-slate-500 mb-2">請直接從 Excel 或 Google 試算表複製含標題列的儲存格（日期,歌手,活動名稱,地點,金額），或貼上以逗號分隔的 CSV；手動輸入空格或頓號不算表格分隔符號。</p><textarea v-model="importJson" class="w-full h-40 bg-slate-50 border rounded-xl p-3 text-xs font-mono mb-4 leading-relaxed" :placeholder="importMode === 'table' ? '日期,歌手,活動名稱,地點,金額\n2026-11-22,BTS, BTS WORLD TOUR ’ARIRANG’,高雄國家體育場,5000' : importMode === 'file' ? '支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV' : 'JSON 範例：\n[\n  { &quot;日期&quot;: &quot;2026-11-22&quot;, &quot;歌手&quot;: &quot;BTS&quot;, &quot;活動名稱&quot;: &quot;BTS WORLD TOUR ’ARIRANG’&quot;, &quot;地點&quot;: &quot;高雄國家體育場&quot;, &quot;expenses&quot;: [{&quot;項目&quot;: &quot;門票&quot;, &quot;金額&quot;: 5000}] }\n]'"></textarea>
+                <div class="flex gap-2"><button @click="showImportModal = false" class="flex-1 py-2 text-slate-500">取消</button><button @click="processImport" :style="{ backgroundColor: themeColor }" class="flex-1 text-white py-2 rounded-lg font-bold shadow-sm">預覽並匯入</button></div>
+            </div>
+        </div>
+
+    </div>
+
+<script src="./js/map.js?v=1.1.1"></script><script src="./js/recap.js?v=1.1.4"></script><script src="./js/events.js?v=1.1.5"></script><script src="./js/venues.js?v=1.0.0"></script><script src="./js/app-222.js?v=1.1.75"></script>
+<script>(function(){const root=document.documentElement;const app=document.getElementById('app');function sync(){let c=getComputedStyle(app).getPropertyValue('--primary-color').trim();if(!/^#[0-9a-f]{6}$/i.test(c))return;const mix=(a,b,p)=>'#'+[1,3,5].map(i=>Math.round(parseInt(a.slice(i,i+2),16)*(1-p)+parseInt(b.slice(i,i+2),16)*p).toString(16).padStart(2,'0')).join('');root.style.setProperty('--brand',c);root.style.setProperty('--brand-secondary',mix(c,'#ffffff',.25));root.style.setProperty('--paper',mix(c,'#fff8ee',.91));root.style.setProperty('--outer',mix(c,'#eee7dd',.84));root.style.setProperty('--edge',mix(c,'#ffffff',.78));root.style.setProperty('--shadow',mix(c,'#e5ddd4',.80));root.style.setProperty('--tint',mix(c,'#ffffff',.82));root.style.setProperty('--soft',mix(c,'#ffffff',.95));root.style.setProperty('--ink',mix(c,'#101018',.58));const rgb=[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)/255);const luminance=rgb.map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)).reduce((v,n,i)=>v+n*[.2126,.7152,.0722][i],0);root.style.setProperty('--on',luminance>.38?'#25232b':'#ffffff')}new MutationObserver(sync).observe(app,{attributes:true,attributeFilter:['style']});sync()})();</script></body></html>
