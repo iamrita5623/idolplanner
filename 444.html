@@ -52,7 +52,7 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
-<link rel="stylesheet" href="./css/theme-444.css?v=7">
+<link rel="stylesheet" href="./css/theme-444.css?v=8">
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
@@ -165,7 +165,7 @@
 </div>
         </header>
 
-        <main data-rita-app-main class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
+        <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
             <div v-if="activeTab === 'home'" class="space-y-4 p-5 pb-32">
                 <div class="relative">
                     <i class="ph ph-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
@@ -989,6 +989,10 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 
                 <div>
                     <p class="text-xs text-slate-500 mb-2">全域主題色</p>
+                    <div class="rita-theme-preview mb-3 p-3 rounded-xl border" :style="{ backgroundColor: cssVars['--rita-page'], borderColor: cssVars['--rita-line'], color: cssVars['--rita-ink'] }">
+                        <div class="flex items-center justify-between gap-2"><span class="text-xs font-bold">目前選擇：{{ themeColor }}</span><span class="text-[10px]">即時配色預覽</span></div>
+                        <div class="flex gap-2 mt-2"><div class="flex-1 rounded-lg p-2 text-xs border" :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }">卡片背景</div><div class="flex-1 rounded-lg p-2 text-xs" :style="{ backgroundColor: cssVars['--rita-action-bg'], color: cssVars['--rita-on-primary'] }">按鈕顏色</div></div>
+                    </div>
                     <div class="grid grid-cols-4 gap-3 mb-3">
                         <button v-for="color in presetColors" :key="color" @click="setTheme(color)" :title="({ '#27243B': 'App 圖示色', '#63B3B0': '薄荷綠', '#C5F442': 'NCT Neo 綠', '#C9A1FF': 'aespa 紫' })[color]" :aria-label="({ '#27243B': 'App 圖示色', '#63B3B0': '薄荷綠', '#C5F442': 'NCT Neo 綠', '#C9A1FF': 'aespa 紫' })[color]" 
                                 class="w-full aspect-square rounded-full shadow-sm transition-transform hover:scale-110 border-2" 
@@ -997,7 +1001,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     </div>
                     <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl">
                         <p class="text-sm text-slate-500 shrink-0">自訂:</p>
-                        <input type="color" v-model="themeColor" @input="setTheme(themeColor)" class="w-full h-8 cursor-pointer rounded bg-transparent">
+                        <input type="color"  :value="themeColor" @input="setTheme($event.target.value)" class="w-full h-8 cursor-pointer rounded bg-transparent">
                     </div>
                 </div>
 
