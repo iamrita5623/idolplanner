@@ -1,0 +1,38 @@
+/* Idol Planner 2.0 — isolated visual system. Original 444 assets remain untouched. */
+:root{--v2-night:#121321;--v2-paper:#f6f0e7;--v2-ink:#29243a;--v2-accent:#c4a3ff}
+html[data-v2-mode="dark"]{--v2-bg:#10121e;--v2-panel:#252337;--v2-panel-alt:#302c42;--v2-text:#f7f0e7;--v2-muted:#c5bbd0;--v2-edge:#554b69;--v2-header:#171526;--v2-input:#302b42;--v2-nav:#171526;--v2-ticket:#282538;--v2-ticket-ink:#f7f0e7}
+html[data-v2-mode="light"]{--v2-bg:#eee8e1;--v2-panel:#fffaf3;--v2-panel-alt:#f4ece5;--v2-text:#30283a;--v2-muted:#685d71;--v2-edge:#d6c8d5;--v2-header:#282238;--v2-input:#f6f0eb;--v2-nav:#fffaf3;--v2-ticket:#fffaf3;--v2-ticket-ink:#30283a}
+html{background:var(--v2-bg)!important}
+body{background:var(--v2-bg)!important;color:var(--v2-text)!important}
+#app{--v2-radius:20px;background:var(--v2-bg)!important;color:var(--v2-text)!important;box-shadow:0 20px 80px #0005}
+#app>.concert-header{background:linear-gradient(150deg,var(--v2-header),#3b2b54)!important;color:#f9f0ff!important;border-radius:0!important;padding-top:18px!important;padding-bottom:22px!important;position:relative}
+#app>.concert-header:before{content:"THE CONCERT ARCHIVE  /  PERSONAL EDITION";display:block;letter-spacing:.24em;font:700 9px/1.6 "Quicksand",sans-serif;color:#e7d5fa;opacity:.85;margin-bottom:10px}
+#app>main[data-rita-app-main]{background:var(--v2-bg)!important;color:var(--v2-text)!important}
+#app>main :is(.bg-white,.bg-white\/95,.bg-white\/90){background-color:var(--v2-panel)!important}
+#app>main :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background-color:var(--v2-panel-alt)!important}
+#app>main :is(.border-slate-50,.border-slate-100,.border-slate-200,.border-slate-300){border-color:var(--v2-edge)!important}
+#app>main :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
+#app>main :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+#app>main :is(input,textarea,select){background-color:var(--v2-input)!important;color:var(--v2-text)!important;border-color:var(--v2-edge)!important}
+#app>main :is(input,textarea)::placeholder{color:var(--v2-muted)!important}
+#app>main :is(.rounded-2xl,.rounded-xl){border-radius:var(--v2-radius)}
+#app>main div[v-for="event in filteredEvents"]{background:var(--v2-ticket)!important;color:var(--v2-ticket-ink)!important}
+#app>main .rita-segmented{background:var(--v2-panel-alt)!important}
+#app>main .rita-segmented-indicator{background:var(--v2-panel)!important}
+#app>.app-bottom-nav{background:var(--v2-nav)!important;border-color:var(--v2-edge)!important;color:var(--v2-text)!important;box-shadow:0 -8px 32px #0002!important}
+#app>.app-bottom-nav button{color:var(--v2-muted)!important}
+#app>.app-bottom-nav button[aria-current="page"]{color:var(--v2-accent)!important}
+#app [data-rita-dialog],#app :is(.event-editor-sheet,.fandom-editor-sheet,.changelog-modal-panel){background:var(--v2-panel)!important;color:var(--v2-text)!important}
+#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(.bg-slate-50,.bg-slate-100,.bg-white){background:var(--v2-input)!important}
+#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(input,textarea,select){background:var(--v2-input)!important;color:var(--v2-text)!important;border-color:var(--v2-edge)!important}
+#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(.text-slate-600,.text-slate-700,.text-slate-800){color:var(--v2-text)!important}
+#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+#app .rita-primary-button{background:var(--v2-accent)!important;color:#201629!important}
+#app>.concert-header .v2-mode-toggle{position:absolute;top:12px;right:58px;z-index:15;background:#ffffff22;color:#fff;border:1px solid #ffffff55;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
+#app>.concert-header .v2-mode-toggle:focus-visible{outline:3px solid #e9c3ff;outline-offset:3px}
+#app>main :is(.shadow-sm,.shadow-lg){box-shadow:0 8px 28px #00000012!important}
+#app>main :is(.bg-white.rounded-2xl,.bg-white.p-4.rounded-2xl){border:1px solid var(--v2-edge)!important}
+#app>main .map-tab-panel .leaflet-container{color:#222!important}
+#app>main .map-tab-panel .leaflet-container *{--v2-text:#222}
+@media(min-width:600px){body{background:radial-gradient(ellipse at 50% 0%,#342849,var(--v2-bg) 75%)!important}#app{border-left:1px solid var(--v2-edge);border-right:1px solid var(--v2-edge)}}
+@media(prefers-reduced-motion:reduce){#app *,#app *:before,#app *:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
