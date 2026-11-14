@@ -60,3 +60,15 @@
 #app .rita-theme-map-replay :is(.border-slate-100,.border-slate-200){border-color:var(--rita-line)}
 /* Intentional exclusions: Leaflet tiles, photos, individual artist/event
    colors, success/error states and share-image export content. */
+
+/* V8: explicit 444-only cascade precedence over Tailwind utilities and
+   legacy component styles. Theme variables are Vue-reactive on #app. */
+#app>main[data-rita-app-main]{background-color:var(--rita-page)!important}
+#app>main[data-rita-app-main] :is(.bg-white,.bg-white\/95){background-color:var(--rita-card)!important}
+#app>main[data-rita-app-main] :is(.bg-slate-50,.bg-slate-100,.bg-slate-200,.bg-slate-300){background-color:var(--rita-soft)!important}
+#app>main[data-rita-app-main] :is(.border-slate-50,.border-slate-100,.border-slate-200,.border-slate-300){border-color:var(--rita-line)!important}
+#app [data-rita-dialog] :is(.bg-white,.bg-white\/95){background-color:var(--rita-card)!important}
+#app [data-rita-dialog] :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background-color:var(--rita-soft)!important}
+#app [data-rita-dialog] :is(.border-slate-50,.border-slate-100,.border-slate-200){border-color:var(--rita-line)!important}
+#app .rita-theme-preview{background-color:var(--rita-page)}
+/* Never override event-specific inline background colors or Leaflet tiles. */
