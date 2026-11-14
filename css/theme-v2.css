@@ -497,3 +497,51 @@ html[data-v2-mode="dark"] #app>.v5-site-navigation{background:#171526!important}
 @media(min-width:850px){#app>main .v5-yearbook-grid>.v5-cover-page{min-height:225px}#app>main .v5-show-gallery{padding-left:28px!important;padding-right:28px!important}}
 @media(max-width:599px){#app>main .v5-map-controls{max-height:35dvh!important}#app>main .v5-atlas-caption{bottom:12px;padding:9px 12px}#app>main .v5-show-gallery{gap:15px!important;padding-top:16px!important}#app>main .v5-cover-page{min-height:150px}}
 @media(max-width:350px){#app>main .v5-atlas-caption>strong{font-size:12px}#app>main .v5-atlas-caption{max-width:calc(100% - 28px)}}
+
+/* V20 audit: rebuilt masthead, readable controls, desktop and narrow iPhone alignment */
+#app>.v3-editorial-header{width:100%!important;max-width:100%!important;box-sizing:border-box!important;flex-shrink:0!important}
+#app>.v3-editorial-header .v3-main-title{word-break:break-word}
+#app>.v3-editorial-header .v3-masthead,#app>.v3-editorial-header .v3-hero,#app>.v3-editorial-header .v3-metrics{box-sizing:border-box;min-width:0}
+#app>.v3-editorial-header .v3-hero-copy{overflow:hidden}
+#app>.v3-editorial-header .v3-metric-expense strong{font-size:clamp(11px,3.5vw,16px)}
+#app>.v3-editorial-header .v3-budget-metric{overflow:hidden}
+#app>.v3-editorial-header .v3-budget-caption{display:block;max-width:100%}
+#app>main .v5-show-gallery>.v4-page-intro,#app>main .v5-show-gallery>.v4-search-box,#app>main .v5-show-gallery>.v4-ticket-switch{flex-shrink:0}
+#app>main .v5-ticket-issue{overflow:hidden!important}
+#app>main .v5-ticket-issue:before,#app>main .v5-ticket-issue:after{display:none!important}
+#app>main .v5-ticket-issue :is(button,input,textarea,select){max-width:100%}
+#app>main .v5-artist-issue{min-width:0}
+#app>main .v5-artist-issue :is(button,input,textarea,select){max-width:100%}
+#app>main .v5-map-controls{z-index:30!important}
+#app>main .v5-atlas-caption{z-index:20!important}
+#app>main .v5-map-layout .leaflet-control-container{position:relative;z-index:10}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){min-width:0;max-width:min(490px,100vw)!important}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor)>.overflow-y-auto{overscroll-behavior:contain;scrollbar-width:thin}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) :is(input,textarea,select){min-width:0;box-sizing:border-box}
+#app>.v5-site-navigation{box-sizing:border-box}
+#app>.v5-site-navigation button{touch-action:manipulation}
+#app>.v5-site-navigation button:focus-visible{outline:2px solid var(--rita-action-bg,var(--v2-highlight))!important;outline-offset:-3px}
+html[data-v2-mode="light"] #app>main .v5-ticket-issue,html[data-v2-mode="light"] #app>main .v5-artist-issue{background:var(--v2-panel)!important}
+html[data-v2-mode="dark"] #app>main .v5-ticket-issue,html[data-v2-mode="dark"] #app>main .v5-artist-issue{background:var(--v2-panel)!important}
+@media(min-width:600px){
+ #app>.v3-editorial-header{border-radius:0 0 16px 16px!important}
+ #app>.v3-editorial-header .v3-masthead{padding-left:22px;padding-right:22px}
+ #app>.v3-editorial-header .v3-hero{padding-left:26px;padding-right:26px}
+ #app>.v3-editorial-header .v3-metrics .v3-metric{padding:16px}
+ #app>main .v5-map-layout{height:max(500px,calc(100dvh - 240px))!important}
+}
+@media(max-width:599px){
+ #app>.v3-editorial-header .v3-masthead{padding-left:13px;padding-right:13px}
+ #app>.v3-editorial-header .v3-hero{padding:14px 16px 16px}
+ #app>.v3-editorial-header .v3-metrics .v3-metric{padding:11px 8px}
+ #app>.v3-editorial-header .v3-metric-label{font-size:8px}
+ #app>main .v5-map-layout{min-height:0}
+ #app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px)!important}
+}
+@media(max-width:375px){
+ #app>.v3-editorial-header .v3-hero-emblem{width:58px;height:58px}
+ #app>.v3-editorial-header .v3-hero-emblem span{font-size:24px}
+ #app>.v3-editorial-header .v3-hero-emblem small{font-size:7px}
+ #app>.v3-editorial-header .v3-metric{gap:5px}
+ #app>.v3-editorial-header .v3-budget-caption{font-size:8px}
+}
