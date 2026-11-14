@@ -86,3 +86,22 @@ html[data-v2-mode="dark"] #app>main .v2-ticket-card{background:#29253b!important
 #app>main .map-tab-panel .map-replay-controls :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
 html[data-v2-mode="dark"] #app :is(.ticket-preview-panel,.settings-modal-panel){color:var(--v2-text)}
 @media(max-width:599px){#app [data-rita-dialog] > div:nth-child(2){max-height:calc(100dvh - 30px);overflow-y:auto;overscroll-behavior:contain}}
+
+/* Phase 4 — Yearbook editorial and Tour Diary: never restyle #share-template export artwork */
+#app>main .v2-yearbook-page{position:relative}
+#app>main .v2-yearbook-page:before{content:"04 / ANNUAL ARCHIVE";display:block;font:700 10px/1.4 "Quicksand",sans-serif;letter-spacing:.2em;color:var(--v2-muted);padding-top:4px}
+#app>main .v2-yearbook-title{display:flex;flex-direction:column;gap:5px;max-width:235px}
+#app>main .v2-yearbook-title h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:clamp(20px,4.8vw,27px);line-height:1.3;margin:0;color:var(--v2-text)!important}
+#app>main .v2-overline{font:700 9px/1.4 "Quicksand",sans-serif;letter-spacing:.15em;color:var(--v2-accent)}
+#app>main .v2-yearbook-caption{font-size:11px;color:var(--v2-muted);line-height:1.6}
+#app>main .v2-yearbook-page>div:first-of-type{align-items:center;gap:10px}
+#app>main .v2-yearbook-page>div:first-of-type>.flex{flex-shrink:0;gap:6px}
+#app>main .v2-yearbook-page>div:first-of-type button{white-space:nowrap}
+#app>main .v2-yearbook-page :is(.rounded-2xl.bg-white,.bg-white.rounded-2xl){border:1px solid var(--v2-edge)!important;box-shadow:0 12px 32px #0000001c!important}
+#app>main .v2-yearbook-page :is(.text-2xl,.text-3xl).font-bold{font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+#app>main .v2-tour-map>.absolute.top-4{border:1px solid var(--v2-edge)!important;background:var(--v2-panel)!important;box-shadow:0 12px 32px #0004!important}
+#app>main .v2-tour-map>.absolute.top-4 h3{color:var(--v2-text)!important;font-family:"Playfair Display","Noto Sans TC",serif;font-size:17px}
+#app>main .v2-tour-map>.absolute.top-4 :is(.text-slate-500,.text-slate-600){color:var(--v2-muted)!important}
+#app>main .v2-tour-map .map-replay-controls{max-width:490px}
+#app>main .v2-tour-map .map-replay-controls>div{backdrop-filter:blur(16px);border-radius:16px!important}
+@media(max-width:370px){#app>main .v2-yearbook-page>div:first-of-type{flex-wrap:wrap}#app>main .v2-yearbook-title{max-width:100%}}
