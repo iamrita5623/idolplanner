@@ -114,3 +114,155 @@ body{margin:0;overflow-x:hidden}
 #app>main .v6-fandom-actions button{background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;white-space:nowrap}
 @media(max-width:370px){#app>main .v6-page-hero{grid-template-columns:minmax(0,1fr) 57px;padding:15px 13px}#app>main .v6-page-hero .v3-hero-emblem{width:57px;height:57px}#app>main .v6-page-hero .v3-hero-emblem span{font-size:23px}#app>main .v6-home-stats{gap:5px}#app>main .v6-home-stats .v3-metric{padding:10px 6px}#app>main .v6-home-toolbar{padding:10px}}
 
+
+
+/* Layout Lab 01 — exclusive to 444-layout-test.html. No production CSS changes. */
+body[data-layout-test="true"]{
+ --lab-ink:#26243c;--lab-purple:#7358a6;--lab-coral:#df777a;
+ --lab-cream:#fff9f4;--lab-mist:#f4ecf6;--lab-line:#e6d9e9;
+ --lab-shadow:0 14px 40px rgba(80,50,98,.10);
+ background:var(--lab-mist)!important;
+}
+html[data-v2-mode="dark"] body[data-layout-test="true"]{
+ --lab-ink:#f9f1ff;--lab-purple:#c7a9f7;--lab-coral:#f3a3a2;
+ --lab-cream:#242033;--lab-mist:#191624;--lab-line:#494056;
+ --lab-shadow:0 14px 40px rgba(0,0,0,.22);
+}
+body[data-layout-test="true"] #app{
+ --ui-bg:var(--lab-mist);--ui-surface:var(--lab-cream);
+ --ui-surface-2:var(--lab-mist);--ui-header:var(--lab-cream);
+ --ui-nav:var(--lab-cream);--ui-text:var(--lab-ink);
+ --ui-border:var(--lab-line);--ui-shadow:rgba(80,50,98,.12);
+ --ui-accent:var(--rita-action-bg,var(--lab-purple));
+ --ui-accent-text:var(--rita-on-primary,#fff);
+ background:var(--lab-mist)!important;
+}
+body[data-layout-test="true"] #app>.v3-editorial-header{
+ background:var(--lab-cream)!important;
+ border-bottom:1px solid var(--lab-line)!important;
+}
+body[data-layout-test="true"] #app>.v3-editorial-header:before{
+ background:linear-gradient(90deg,var(--ui-accent),var(--lab-coral))!important;height:5px;
+}
+body[data-layout-test="true"] #app>.v3-editorial-header .v3-masthead{
+ min-height:70px;padding:15px 23px!important;
+}
+body[data-layout-test="true"] #app>.v3-editorial-header .v3-edition{
+ font-size:12px;letter-spacing:.09em;
+}
+body[data-layout-test="true"] #app>.v3-editorial-header .v2-mode-toggle,
+body[data-layout-test="true"] #app>.v3-editorial-header .v3-settings-button{
+ border-radius:14px!important;min-height:40px;
+}
+body[data-layout-test="true"] #app>main{
+ background:var(--lab-mist)!important;
+}
+body[data-layout-test="true"] #app>main .v6-dashboard-lead{
+ border-bottom:0!important;gap:17px;
+}
+body[data-layout-test="true"] #app>main .v6-page-hero{
+ background:linear-gradient(125deg,var(--lab-cream),var(--lab-mist))!important;
+ border:1px solid var(--lab-line)!important;
+ border-left:6px solid var(--ui-accent)!important;
+ border-radius:27px!important;padding:25px!important;
+ box-shadow:var(--lab-shadow);
+}
+body[data-layout-test="true"] #app>main .v6-page-hero .v3-main-title{
+ font-family:"Noto Sans TC",sans-serif;font-weight:900;letter-spacing:-.04em;
+}
+body[data-layout-test="true"] #app>main .v6-page-hero .v3-hero-emblem{
+ border-style:solid!important;transform:rotate(-10deg);
+}
+body[data-layout-test="true"] #app>main .v6-home-stats .v3-metric{
+ border-radius:19px!important;box-shadow:var(--lab-shadow);
+}
+body[data-layout-test="true"] #app>main .v6-home-toolbar{
+ border-radius:20px!important;box-shadow:var(--lab-shadow);
+}
+body[data-layout-test="true"] #app>main .v5-ticket-issue,
+body[data-layout-test="true"] #app>main .v5-artist-issue{
+ border-radius:22px!important;box-shadow:var(--lab-shadow)!important;
+}
+body[data-layout-test="true"] #app>main .v5-ticket-issue:hover{
+ border-color:var(--ui-accent)!important;
+}
+body[data-layout-test="true"] #app>.v5-site-navigation>button[aria-current="page"]{
+ color:var(--ui-accent)!important;
+}
+body[data-layout-test="true"] #app :is(input,textarea,select){accent-color:var(--ui-accent)}
+body[data-layout-test="true"] #app [data-rita-dialog] :is(input,select,textarea){
+ background:var(--ui-input)!important;color:var(--ui-text)!important;
+}
+@media(min-width:900px){
+ body[data-layout-test="true"] #app{
+  max-width:1180px!important;min-height:100vh!important;
+  padding-left:216px;position:relative;
+ }
+ body[data-layout-test="true"] #app>.v3-editorial-header{
+  position:sticky;top:0;z-index:30;
+ }
+ body[data-layout-test="true"] #app>.v5-site-navigation{
+  position:fixed!important;top:0;bottom:0;
+  left:max(0px,calc((100vw - 1180px)/2))!important;
+  transform:none!important;width:216px!important;height:100dvh;
+  display:flex!important;flex-direction:column!important;
+  justify-content:flex-start!important;align-items:stretch!important;
+  gap:8px!important;padding:100px 14px 24px!important;
+  border-top:0!important;border-right:1px solid var(--lab-line)!important;
+  box-shadow:none!important;
+ }
+ body[data-layout-test="true"] #app>.v5-site-navigation:before{
+  content:"MY ARCHIVE / 導覽";font-size:10px;letter-spacing:.16em;
+  font-weight:900;color:var(--ui-sub);padding:0 12px 14px;
+ }
+ body[data-layout-test="true"] #app>.v5-site-navigation>button{
+  flex:0 0 auto!important;width:100%!important;min-height:52px!important;
+  flex-direction:row!important;justify-content:flex-start!important;
+  gap:13px!important;padding:12px 15px!important;
+  border-radius:14px!important;
+ }
+ body[data-layout-test="true"] #app>.v5-site-navigation>button span{
+  font-size:13px!important;
+ }
+ body[data-layout-test="true"] #app>.v5-site-navigation>button[aria-current="page"]:before{
+  top:10px;bottom:10px;left:0;right:auto;width:4px;height:auto;
+ }
+ body[data-layout-test="true"] #app>main{
+  min-height:calc(100vh - 75px)!important;padding-bottom:40px!important;
+ }
+ body[data-layout-test="true"] #app>main .v5-show-gallery,
+ body[data-layout-test="true"] #app>main .v6-fandom-page,
+ body[data-layout-test="true"] #app>main .v5-yearbook-grid{
+  padding:30px 34px 50px!important;
+ }
+ body[data-layout-test="true"] #app>main .v6-page-hero{min-height:185px}
+ body[data-layout-test="true"] #app>main .v6-page-hero .v3-main-title{font-size:35px}
+ body[data-layout-test="true"] #app>main .v6-home-stats{gap:14px}
+ body[data-layout-test="true"] #app>main .v6-home-stats .v3-metric{
+  min-height:112px;padding:18px;
+ }
+ body[data-layout-test="true"] #app>main .v6-home-toolbar{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.8fr);
+  align-items:center;gap:16px;
+ }
+ body[data-layout-test="true"] #app>main .v3-ticket-collection{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px!important;
+ }
+ body[data-layout-test="true"] #app>main .v3-ticket-collection>*{min-width:0}
+ body[data-layout-test="true"] #app>main .v5-map-layout{
+  height:max(550px,calc(100dvh - 150px))!important;
+ }
+}
+@media(min-width:600px) and (max-width:899px){
+ body[data-layout-test="true"] #app{max-width:760px!important}
+ body[data-layout-test="true"] #app>.v5-site-navigation{width:min(760px,100vw)!important}
+ body[data-layout-test="true"] #app>main .v5-show-gallery,
+ body[data-layout-test="true"] #app>main .v6-fandom-page{
+  padding-left:26px!important;padding-right:26px!important;
+ }
+}
+@media(max-width:599px){
+ body[data-layout-test="true"] #app>main .v6-page-hero{
+  padding:19px 15px!important;border-radius:20px!important;
+ }
+}
