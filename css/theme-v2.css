@@ -322,3 +322,31 @@ html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color
 #app .v2-artist-card button{min-width:32px;min-height:32px}
 @media(max-width:599px){#app [data-import-dialog="true"].fixed.inset-0{align-items:center!important}#app [data-import-dialog="true"] .v2-import-panel{width:100%!important;max-width:none!important}#app .ticket-preview-panel .ticket-stub .p-6{padding:20px!important}}
 @media(prefers-reduced-motion:reduce){#app [data-import-dialog="true"] .rita-import-mode{transition:none!important}}
+
+/* V14 accessibility and interaction polish: real mobile screenshots follow-up */
+#app>.v2-stage-header{overflow:visible}
+#app>.v2-stage-header .v2-mode-toggle{min-width:70px;touch-action:manipulation}
+#app>main[data-rita-app-main]{scrollbar-width:thin;scrollbar-color:var(--v2-edge) transparent}
+#app>main[data-rita-app-main] :is(button,a,input,select,textarea):focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:2px}
+#app>main[data-rita-app-main] :is(input,textarea,select){accent-color:var(--rita-action-bg,var(--v2-accent))}
+#app>main[data-rita-app-main] :is(input,textarea)::placeholder{opacity:.85}
+#app>main[data-rita-app-main] .v2-shows-page .v2-ticket-card button{touch-action:manipulation}
+#app>main[data-rita-app-main] .v2-shows-page .v2-ticket-card .flex{min-width:0}
+#app>main[data-rita-app-main] .v2-shows-page .v2-ticket-card :is(h3,h4,p){overflow-wrap:anywhere}
+#app>main[data-rita-app-main] .v2-yearbook-page .v2-stat-panel{overflow-wrap:anywhere}
+#app>main[data-rita-app-main] .v2-yearbook-page .v2-stat-panel :is(.text-xs,.text-sm){line-height:1.55}
+#app [data-rita-dialog] .event-editor-sheet{overscroll-behavior:contain}
+#app [data-rita-dialog] .event-editor-sheet>.overflow-y-auto{scroll-padding-bottom:125px}
+#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0{box-shadow:0 -8px 18px #00000014!important}
+#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0 button{touch-action:manipulation}
+#app [data-rita-dialog] :is(input,textarea,select){min-width:0;max-width:100%}
+#app [data-rita-dialog] .event-editor-sheet .flex>input{min-width:0}
+#app [data-rita-dialog] .event-editor-sheet button.border-dashed{min-height:42px}
+#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{white-space:normal;overflow-wrap:anywhere}
+#app [data-import-dialog="true"] .v2-import-panel .rita-primary-button{color:var(--rita-action-text,#fff)!important}
+#app .ticket-preview-panel{overflow:visible}
+#app .ticket-preview-panel .ticket-stub{box-sizing:border-box}
+#app .ticket-preview-panel .ticket-stub :is(.text-xs,.text-sm){overflow-wrap:anywhere}
+#app>.v2-bottom-nav button{min-height:58px;touch-action:manipulation}
+#app>.v2-bottom-nav button:focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:-2px}
+@media(max-width:599px){#app [data-rita-dialog] .event-editor-sheet{height:min(90dvh,860px)!important}#app [data-import-dialog="true"] .v2-import-panel{max-height:calc(100dvh - 32px)!important}#app>main[data-rita-app-main] .v2-yearbook-page{padding-bottom:140px!important}}
