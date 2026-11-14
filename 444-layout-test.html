@@ -2,52 +2,70 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7f2e9">
-<title>追星日記｜全新介面實驗室</title>
+<meta name="theme-color" content="#f5f7ff">
+<title>RITA FAN ARCHIVE｜追星日記</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <style>
-:root{font-family:"DM Sans","Noto Sans TC",sans-serif;color:#24382e;background:#f7f2e9;font-synthesis:none}
-*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #c86a53;outline-offset:2px}
-:root{--bg:#f7f2e9;--paper:#fffdfa;--ink:#24382e;--muted:#758176;--line:#dedfd4;--brand:#c65c45;--sage:#d8e6d6;--gold:#e7b45f;--blue:#d8e4ed}
+:root{font-family:"DM Sans","Noto Sans TC",sans-serif;color:#243f91;background:#f5f7ff;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #4565d9;outline-offset:2px}
+:root{--bg:#f5f7ff;--paper:#ffffff;--ink:#243f91;--muted:#6879a5;--line:#dce4fa;--brand:#4565d9;--sage:#dce4fa;--gold:#8fa5ee;--blue:#e9eefd;--brand-dark:#243f91;--brand-soft:#dce4fa}
 #app{min-height:100dvh;display:grid;grid-template-columns:248px minmax(0,1fr)}
-.sidebar{background:var(--ink);color:#fff;display:flex;flex-direction:column;padding:32px 18px;gap:28px;position:sticky;top:0;height:100dvh}
-.brand{display:flex;align-items:center;gap:13px;padding:4px 8px}.monogram{display:grid;place-items:center;width:49px;height:49px;border-radius:16px 5px;background:var(--gold);color:var(--ink);font-weight:900;font-size:26px;transform:rotate(-8deg)}
-.brand strong{display:block;font-size:18px;letter-spacing:-.06em}.brand small{display:block;font-size:10px;color:#bec9bf;letter-spacing:.12em;margin-top:4px}
-.nav-caption{font-size:10px;letter-spacing:.2em;color:#a3b6a6;margin:0 13px 12px;font-weight:800}.nav{display:grid;gap:6px}
-.nav button{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:15px 16px;border:0;border-radius:15px;background:transparent;color:#d1dbd1;font-weight:700}
-.nav button.active{background:#d8e6d6;color:var(--ink)}.nav button span{font-size:20px;width:25px;text-align:center}
-.sidebar-foot{margin-top:auto;border-top:1px solid #516258;padding:20px 10px;color:#b9c6ba;font-size:12px;line-height:1.7}
+.sidebar{background:var(--brand-dark);color:#fff;display:flex;flex-direction:column;padding:32px 18px;gap:28px;position:sticky;top:0;height:100dvh}
+.brand{display:flex;align-items:center;gap:13px;padding:4px 8px}.monogram{display:grid;place-items:center;width:49px;height:49px;border-radius:10px;background:var(--brand);color:white;font-weight:900;font-size:26px;transform:rotate(-8deg)}
+.brand strong{display:block;font-size:18px;letter-spacing:-.06em}.brand small{display:block;font-size:10px;color:#d8e1ff;letter-spacing:.12em;margin-top:4px}
+.nav-caption{font-size:10px;letter-spacing:.2em;color:#c2cdf1;margin:0 13px 12px;font-weight:800}.nav{display:grid;gap:6px}
+.nav button{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:15px 16px;border:0;border-radius:15px;background:transparent;color:#e1e8ff;font-weight:700}
+.nav button.active{background:var(--brand-soft);color:var(--ink)}.nav button span{font-size:20px;width:25px;text-align:center}
+.sidebar-foot{margin-top:auto;border-top:1px solid #6278aa;padding:20px 10px;color:#d8e1ff;font-size:12px;line-height:1.7}
 .workspace{min-width:0}.topbar{height:80px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 clamp(18px,4vw,64px);background:var(--paper)}
-.topbar .trail{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--muted)}.topbar .status{font-size:12px;color:var(--muted)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7ba47a;margin-right:7px}
+.topbar .trail{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--muted)}.topbar .status{font-size:12px;color:var(--muted)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4565d9;margin-right:7px}
 .content{padding:36px clamp(18px,4vw,64px) 110px;max-width:1540px;margin:auto}
 .eyebrow{font-size:11px;font-weight:900;letter-spacing:.2em;color:var(--brand);text-transform:uppercase}.heading{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:26px}.heading h1{font-size:clamp(30px,4vw,56px);letter-spacing:-.07em;line-height:1.15;margin:10px 0}.heading p{margin:0;color:var(--muted);font-size:14px}
 .primary{border:0;background:var(--brand);color:white;padding:14px 20px;border-radius:14px;font-weight:800;white-space:nowrap}.primary:hover{filter:brightness(.94)}
-.hero{display:grid;grid-template-columns:1.5fr .65fr;background:var(--sage);border-radius:32px 12px 32px 12px;overflow:hidden;min-height:238px;margin-bottom:22px}
-.hero-copy{padding:30px 36px;display:flex;flex-direction:column;justify-content:center}.hero h2{font-size:clamp(24px,3.2vw,42px);letter-spacing:-.055em;margin:14px 0}.hero p{font-size:13px;color:#516a59;line-height:1.8;margin:0}.hero-art{background:var(--brand);color:var(--gold);display:grid;place-items:center;font-size:clamp(90px,14vw,180px);border-radius:95px 0 0 0}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:34px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px}.metric small{display:block;font-size:11px;color:var(--muted);font-weight:800}.metric strong{display:block;font-size:32px;letter-spacing:-.05em;margin-top:9px}.metric:nth-child(2){background:#f6e9df}.metric:nth-child(3){background:#e6edf1}
+.hero{display:grid;grid-template-columns:1.5fr .65fr;background:var(--sage);border-radius:20px;overflow:hidden;min-height:238px;margin-bottom:22px}
+.hero-copy{padding:30px 36px;display:flex;flex-direction:column;justify-content:center}.hero h2{font-size:clamp(24px,3.2vw,42px);letter-spacing:-.055em;margin:14px 0}.hero p{font-size:13px;color:var(--muted);line-height:1.8;margin:0}.hero-art{background:var(--brand);color:#fff;display:grid;place-items:center;font-size:clamp(90px,14vw,180px);border-radius:0}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:34px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px}.metric small{display:block;font-size:11px;color:var(--muted);font-weight:800}.metric strong{display:block;font-size:32px;letter-spacing:-.05em;margin-top:9px}.metric:nth-child(2){background:var(--brand-soft)}.metric:nth-child(3){background:var(--blue)}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:25px 0 16px}.section-head h2{font-size:20px;letter-spacing:-.04em;margin:0}.search{border:1px solid var(--line);background:var(--paper);border-radius:13px;padding:12px 15px;min-width:240px;max-width:100%;color:var(--ink)}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px;min-width:0;display:flex;flex-direction:column;gap:12px}.card .meta{font-size:11px;letter-spacing:.12em;color:var(--brand);font-weight:900}.card h3{margin:0;font-size:20px;letter-spacing:-.03em}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}.card-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:14px;margin-top:auto;gap:12px}.subtle{background:transparent;border:0;color:var(--brand);font-weight:800;padding:8px}
-.empty{background:var(--paper);border:1px dashed #c9cec2;border-radius:22px;text-align:center;padding:65px 20px;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-size:20px;margin:12px}
+.empty{background:var(--paper);border:1px dashed #b5c5ed;border-radius:22px;text-align:center;padding:65px 20px;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-size:20px;margin:12px}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:25px}.panel h2{margin:0 0 12px}.panel p{color:var(--muted);line-height:1.8}
-.dialog-backdrop{position:fixed;inset:0;background:#15251caa;display:grid;place-items:center;z-index:90;padding:16px}.dialog{background:var(--paper);border-radius:25px;width:min(520px,100%);padding:26px;max-height:90dvh;overflow:auto}.dialog h2{margin:0 0 20px}.form{display:grid;gap:13px}.form label{font-size:12px;font-weight:800;display:grid;gap:6px}.form input,.form select,.form textarea{padding:12px;border:1px solid var(--line);border-radius:11px;background:white;width:100%}.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}.secondary{border:1px solid var(--line);background:white;border-radius:12px;padding:12px 18px;font-weight:800}
-.backup-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.backup-actions button{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:11px 15px;color:var(--ink);font-weight:800}.backup-actions button:hover{border-color:var(--brand)}.backup-result{font-size:12px;color:var(--ink);margin-top:10px;line-height:1.7}.notice{padding:12px 15px;background:#fff0db;border-radius:12px;color:#73522c;font-size:12px;margin-bottom:20px;line-height:1.7}
+.dialog-backdrop{position:fixed;inset:0;background:#14244aaf;display:grid;place-items:center;z-index:90;padding:16px}.dialog{background:var(--paper);border-radius:25px;width:min(520px,100%);padding:26px;max-height:90dvh;overflow:auto}.dialog h2{margin:0 0 20px}.form{display:grid;gap:13px}.form label{font-size:12px;font-weight:800;display:grid;gap:6px}.form input,.form select,.form textarea{padding:12px;border:1px solid var(--line);border-radius:11px;background:white;width:100%}.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}.secondary{border:1px solid var(--line);background:white;border-radius:12px;padding:12px 18px;font-weight:800}
+.backup-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.backup-actions button{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:11px 15px;color:var(--ink);font-weight:800}.backup-actions button:hover{border-color:var(--brand)}.backup-result{font-size:12px;color:var(--ink);margin-top:10px;line-height:1.7}.notice{padding:12px 15px;background:var(--brand-soft);border-radius:12px;color:var(--brand-dark);font-size:12px;margin-bottom:20px;line-height:1.7}
 @media(max-width:900px){#app{grid-template-columns:1fr}.sidebar{position:fixed;z-index:50;bottom:0;top:auto;height:75px;width:100%;padding:7px 8px;background:var(--ink)}.brand,.nav-caption,.sidebar-foot{display:none}.nav{display:flex;justify-content:space-around}.nav button{display:grid;place-items:center;gap:3px;flex:1;font-size:10px;padding:8px 3px}.nav button span{font-size:22px}.topbar{height:65px}.content{padding-top:25px}}
 @media(max-width:620px){.heading{align-items:start;flex-direction:column}.hero{grid-template-columns:minmax(0,1fr) 95px;min-height:190px}.hero-copy{padding:20px}.hero-art{font-size:92px}.metrics{gap:7px}.metric{padding:14px;border-radius:13px}.metric strong{font-size:24px}.metric small{font-size:10px}.cards{grid-template-columns:1fr}.section-head{align-items:stretch;flex-direction:column}.search{width:100%}.topbar .status{font-size:10px}}
+
+/* FAN ARCHIVE: one hue family; all accents derived from semantic tokens */
+body{background:var(--bg);color:var(--ink)}
+.sidebar{background:var(--brand-dark)}
+.brand strong{letter-spacing:-.035em}
+.hero{border:1px solid var(--line);background:var(--brand-soft)}
+.hero-art{font-size:clamp(70px,11vw,140px)}
+.hero h2{color:var(--brand-dark)}
+.metric:nth-child(2){background:var(--brand-soft)}
+.metric:nth-child(3){background:var(--blue)}
+.card{border-left:4px solid var(--brand);border-radius:13px}
+.card .meta{color:var(--brand)}
+.panel,.metric{border-radius:14px}
+.primary{border-radius:9px}
+.topbar{background:var(--paper)}
+.notice{background:var(--brand-soft);color:var(--brand-dark)}
+.backup-actions button:hover{border-color:var(--brand)}
+@media(max-width:900px){.sidebar{background:var(--brand-dark)}}
 </style>
 </head>
 <body>
 <div id="app">
- <aside class="sidebar"><div class="brand"><div class="monogram">R</div><div><strong>RITA ATELIER</strong><small>MEMORIES IN MOTION</small></div></div><div><p class="nav-caption">PERSONAL ARCHIVE</p><nav class="nav" aria-label="主選單"><button v-for="item in tabs" :key="item.id" :class="{active:tab===item.id}" @click="tab=item.id"><span aria-hidden="true">{{item.icon}}</span>{{item.label}}</button></nav></div><div class="sidebar-foot">每一次相遇，都值得留下。<br>DESIGN LAB / 01</div></aside>
+ <aside class="sidebar"><div class="brand"><div class="monogram">R</div><div><strong>RITA FAN ARCHIVE</strong><small>THE IDOL JOURNAL</small></div></div><div><p class="nav-caption">PERSONAL ARCHIVE</p><nav class="nav" aria-label="主選單"><button v-for="item in tabs" :key="item.id" :class="{active:tab===item.id}" @click="tab=item.id"><span aria-hidden="true">{{item.icon}}</span>{{item.label}}</button></nav></div><div class="sidebar-foot">每一次相遇，都值得留下。<br>FAN ARCHIVE / 01</div></aside>
  <div class="workspace"><header class="topbar"><div class="trail">RITA / {{tabs.find(x=>x.id===tab)?.en}}</div><div class="status"><i class="dot"></i>獨立設計預覽</div></header>
- <main class="content"><div class="heading"><div><div class="eyebrow">A personal collection of moments</div><h1>{{tabs.find(x=>x.id===tab)?.title}}</h1><p>{{tabs.find(x=>x.id===tab)?.desc}}</p></div><button v-if="tab==='home'" class="primary" @click="openCreate">＋ 新增行程</button></div>
- <template v-if="tab==='home'"><section class="hero"><div class="hero-copy"><div class="eyebrow">YOUR LIFE, YOUR ENCORE.</div><h2>把喜歡的每一天，<br>收進自己的故事裡。</h2><p>演唱會、見面會、每一次奔赴，都是值得收藏的片段。</p></div><div class="hero-art" aria-hidden="true">✳</div></section>
+ <main class="content"><div class="heading"><div><div class="eyebrow">FAN ARCHIVE / PERSONAL LOG</div><h1>{{tabs.find(x=>x.id===tab)?.title}}</h1><p>{{tabs.find(x=>x.id===tab)?.desc}}</p></div><button v-if="tab==='home'" class="primary" @click="openCreate">＋ 新增行程</button></div>
+ <template v-if="tab==='home'"><section class="hero"><div class="hero-copy"><div class="eyebrow">YOUR NEXT ENCORE STARTS HERE</div><h2>每一場應援，<br>都是你的獨家紀錄。</h2><p>演唱會、見面會、簽售與巡演——把每一次心動整理成自己的追星檔案。</p></div><div class="hero-art" aria-hidden="true">◈</div></section>
  <div class="metrics"><div class="metric"><small>全部行程 / ALL</small><strong>{{events.length}}</strong></div><div class="metric"><small>即將到來 / NEXT</small><strong>{{upcoming}}</strong></div><div class="metric"><small>已記錄支出 / TOTAL</small><strong>{{money(total)}}</strong></div></div>
  <div class="section-head"><h2>我的行程收藏 <span style="font-size:12px;color:var(--muted)">({{filtered.length}})</span></h2><input class="search" v-model="query" placeholder="搜尋活動、藝人或地點…" aria-label="搜尋行程"></div>
  <div v-if="!filtered.length" class="empty"><div style="font-size:38px">✳</div><strong>你的收藏故事，從這裡開始</strong><p>{{query?'沒有符合搜尋的行程':'按下「新增行程」記錄第一場難忘的活動。'}}</p></div>
  <div v-else class="cards"><article class="card" v-for="e in filtered" :key="e.id"><div class="meta">{{e.date}} / {{e.category||'LIVE EVENT'}}</div><h3>{{e.title}}</h3><p>♫ {{e.artist||'尚未填寫藝人'}}<br>⌁ {{e.place||'尚未填寫地點'}}</p><div class="card-foot"><strong>{{money(e.cost||0)}}</strong><div><button class="subtle" @click="edit(e)">編輯</button><button class="subtle" @click="remove(e)">刪除</button></div></div></article></div></template>
- <template v-else><div class="panel"><div class="eyebrow">NEW INTERFACE / IN DEVELOPMENT</div><h2>{{tabs.find(x=>x.id===tab)?.title}} — 新版工作區</h2><p>此頁已建立全新的獨立頁面結構。原始 222 的進階功能尚未移植，會在版型確認後逐項接入，不會假裝已經完成。</p></div></template>
+ <template v-else><div class="panel"><div class="eyebrow">FAN ARCHIVE / UNDER CONSTRUCTION</div><h2>{{tabs.find(x=>x.id===tab)?.title}} — 新版工作區</h2><p>此區將採用同一套鈷藍單色系與追星收藏視覺。原始 222 的進階功能尚未移植，待逐項驗證後才會接入。</p></div></template>
  <section class="panel" style="margin-top:30px" aria-label="測試資料備份"><div class="eyebrow">DATA SAFETY / LOCAL LAB</div><h2 style="margin-top:10px">資料備份與還原</h2><p>僅針對此測試版瀏覽器中的行程資料。下載 JSON 備份後可在此匯入；匯入採合併方式，不覆蓋同 ID 的既有紀錄，也不會接觸正式帳號資料。</p><div class="backup-actions"><button type="button" @click="exportBackup">↓ 下載測試資料備份</button><button type="button" @click="$refs.backupFile.click()">↑ 匯入測試資料備份</button><input ref="backupFile" type="file" accept=".json,application/json" style="display:none" @change="importBackup"></div><div v-if="backupStatus" class="backup-result" role="status">{{backupStatus}}</div></section>
  <div class="notice" style="margin-top:28px">此頁為全新設計原型，行程僅儲存在這個瀏覽器的獨立測試空間，不連接正式 Supabase 資料。請勿將它視為正式版。</div>
  </main></div>
