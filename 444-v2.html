@@ -97,7 +97,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=15">
+<link rel="stylesheet" href="./css/theme-v2.css?v=16">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -127,49 +127,27 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
             </template>
         </div>
 
-        <header :class="headerTextColor" class="v2-stage-header concert-header pt-4 pb-4 px-5 shadow-lg rounded-b-[1.5rem] z-20 shrink-0 transition-colors duration-200"
-            :style="{ backgroundColor: 'var(--rita-header-bg)' }">
-            <div class="flex justify-between items-center mb-3">
-                <div>
-                    <h1 class="text-xl font-bold tracking-wide">{{ customTitle }}</h1>
-                    <p :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-xs opacity-90">{{ greetingMessage }}</p>
-                </div>
-                <div :class="isThemeColorLight ?
-                    'bg-black/10 hover:bg-black/20 text-slate-700' : 'bg-white/20 hover:bg-white/30 text-white'" 
-                     class="p-2 rounded-full backdrop-blur-sm cursor-pointer transition-colors" @click="toggleSettingsModal">
-                    <i class="ph ph-gear text-lg"></i>
-
-                </div>
-            </div>
-            
-<div class="flex gap-2 mt-1" v-if="activeTab === 'home'">
-    <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5">
-        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">倒數中</div>
-        <div class="text-base font-bold leading-none">{{ upcomingCount }} 場</div>
+        <header class="v3-editorial-header shrink-0 z-20">
+  <div class="v3-masthead">
+    <div class="v3-edition"><span class="v3-live-dot" aria-hidden="true"></span> THE IDOL ARCHIVE <span class="v3-edition-number">VOL. 02 / PERSONAL EDITION</span></div>
+    <div class="v3-header-actions">
+      <button type="button" class="v2-mode-toggle" onclick="toggleV2Mode()" aria-label="切換至日間模式">☀ 日間</button>
+      <button type="button" class="v3-settings-button" @click="toggleSettingsModal" aria-label="開啟設定"><i class="ph ph-gear text-lg"></i></button>
     </div>
-
-    <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5 relative">
-        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">年支出</div>
-        <div class="text-base font-bold leading-none">{{ isYearlyPrivacy ? '****' : formatMoney(currentYearExpense) }}</div>
-        <button @click="isYearlyPrivacy = !isYearlyPrivacy" class="absolute top-1 right-1 opacity-50 p-1">
-            <i class="ph text-[10px]" :class="isYearlyPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i>
-        </button>
+  </div>
+  <div class="v3-hero">
+    <div class="v3-hero-copy">
+      <p class="v3-kicker">{{ activeTab === 'home' ? 'LIVE DIARY / CONCERT TICKETS' : activeTab === 'fandom' ? 'FAN ARCHIVE / THE ARTISTS' : activeTab === 'map' ? 'TOUR JOURNAL / THE PLACES' : 'THE YEARBOOK / ANNUAL RECAP' }}</p>
+      <h1 class="v3-main-title">{{ customTitle }}</h1>
+      <p class="v3-greeting">{{ greetingMessage }}</p>
     </div>
-
-    <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5">
-        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="rita-budget-label text-[10px] mb-1">預算已使用..</div>
-        <div class="px-1">
-            <div class="w-full h-1 bg-black/10 rounded-full overflow-hidden mb-1">
-                <div class="rita-budget-progress h-full bg-white transition-all duration-500" 
-                     :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></div>
-            </div>
-            <div class="rita-budget-reminder text-[8px] font-medium leading-none truncate">
-                {{ budgetNagging }}
-            </div>
-        </div>
-    </div>
-</div>
-        <button type="button" class="v2-mode-toggle" onclick="toggleV2Mode()" aria-label="切換至日間模式">☀ 日間</button>
+    <div class="v3-hero-emblem" aria-hidden="true"><span>★</span><small>ENCORE</small></div>
+  </div>
+  <div class="v3-metrics" v-if="activeTab === 'home'">
+    <div class="v3-metric"><span class="v3-metric-label">UPCOMING / 倒數中</span><strong>{{ upcomingCount }} <small>場</small></strong></div>
+    <div class="v3-metric v3-metric-expense"><span class="v3-metric-label">THIS YEAR / 年支出</span><strong>{{ isYearlyPrivacy ? '****' : formatMoney(currentYearExpense) }}</strong><button type="button" @click="isYearlyPrivacy = !isYearlyPrivacy" :aria-label="isYearlyPrivacy ? '顯示年支出' : '隱藏年支出'"><i class="ph" :class="isYearlyPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i></button></div>
+    <div class="v3-metric v3-budget-metric"><span class="v3-metric-label">BUDGET / 預算進度</span><div class="v3-budget-track"><span :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></span></div><small class="v3-budget-caption">{{ budgetNagging }}</small></div>
+  </div>
 </header>
 
         <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
