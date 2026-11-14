@@ -113,3 +113,77 @@ body{margin:0;overflow-x:hidden}
 #app>main .v6-fandom-actions h2{font-size:16px!important;color:var(--ui-text)!important}
 #app>main .v6-fandom-actions button{background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;white-space:nowrap}
 @media(max-width:370px){#app>main .v6-page-hero{grid-template-columns:minmax(0,1fr) 57px;padding:15px 13px}#app>main .v6-page-hero .v3-hero-emblem{width:57px;height:57px}#app>main .v6-page-hero .v3-hero-emblem span{font-size:23px}#app>main .v6-home-stats{gap:5px}#app>main .v6-home-stats .v3-metric{padding:10px 6px}#app>main .v6-home-toolbar{padding:10px}}
+
+
+/* V23 — responsive workspace layout, accent-first color tokens.
+   Existing Vue bindings, event handlers, and data models remain untouched. */
+#app{
+  --ui-accent:var(--rita-action-bg,var(--primary-color,#8762c9));
+  --ui-accent-text:var(--rita-on-primary,#fff);
+  --ui-radius:20px;
+}
+#app>.v3-editorial-header:before{height:4px;background:var(--ui-accent)!important}
+#app>.v3-editorial-header .v3-masthead{padding:15px 22px!important}
+#app>.v3-editorial-header .v3-edition{font-size:12px;letter-spacing:.09em}
+#app>.v3-editorial-header .v3-edition-number{font-size:9px}
+#app>.v3-editorial-header .v2-mode-toggle,
+#app>.v3-editorial-header .v3-settings-button{border-radius:12px!important;min-height:39px}
+#app>main .v6-page-hero{background:linear-gradient(115deg,var(--ui-surface),var(--ui-surface-2))!important;border-radius:26px!important;border-left:5px solid var(--ui-accent)!important;padding:26px!important}
+#app>main .v6-page-hero .v3-main-title{font-family:"Noto Sans TC",sans-serif;font-weight:900;letter-spacing:-.035em}
+#app>main .v6-home-stats .v3-metric{border-radius:19px!important;box-shadow:0 5px 20px var(--ui-shadow)}
+#app>main .v6-home-toolbar{border-radius:20px!important}
+#app>main .v5-ticket-issue{border-radius:22px!important;box-shadow:0 7px 24px var(--ui-shadow)!important}
+#app>main .v5-ticket-issue:hover{border-color:var(--ui-accent)!important}
+#app>main .v4-ticket-switch button[aria-pressed="true"]{color:var(--ui-accent)!important}
+#app>main .v5-artist-issue{border-radius:22px!important}
+#app>.v5-site-navigation>button[aria-current="page"]{color:var(--ui-accent)!important}
+#app :is(input,textarea,select){accent-color:var(--ui-accent)}
+#app :is(button,input,textarea,select){font:inherit}
+#app [data-rita-dialog] :is(input,select,textarea){background:var(--ui-input)!important;color:var(--ui-text)!important}
+#app [data-rita-dialog] :is(.v2-import-panel,.v3-event-editor,.v3-fandom-editor){background:var(--ui-surface)!important;color:var(--ui-text)!important}
+@media(min-width:900px){
+  :root{--ui-width:1180px}
+  #app{max-width:1180px!important;min-height:100vh!important;box-shadow:0 0 55px var(--ui-shadow);position:relative;padding-left:214px}
+  #app>.v3-editorial-header{width:100%;position:sticky;top:0}
+  #app>.v3-editorial-header .v3-masthead{min-height:76px}
+  #app>.v5-site-navigation{
+    position:fixed!important;top:0;bottom:0;left:max(0px,calc((100vw - 1180px)/2))!important;
+    transform:none!important;width:214px!important;height:100dvh;
+    display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+    align-items:stretch!important;gap:9px!important;padding:90px 14px 24px!important;
+    border-top:0!important;border-right:1px solid var(--ui-border)!important;
+    box-shadow:none!important
+  }
+  #app>.v5-site-navigation:before{content:"WORKSPACE / MENU";font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--ui-sub);padding:0 12px 15px}
+  #app>.v5-site-navigation>button{
+    width:100%!important;flex:0 0 auto!important;min-height:52px!important;
+    flex-direction:row!important;justify-content:flex-start!important;gap:13px!important;
+    padding:12px 15px!important;border-radius:14px!important
+  }
+  #app>.v5-site-navigation>button i{font-size:23px!important}
+  #app>.v5-site-navigation>button span{font-size:13px!important}
+  #app>.v5-site-navigation>button[aria-current="page"]{background:var(--ui-surface-2)!important}
+  #app>.v5-site-navigation>button[aria-current="page"]:before{left:0;right:auto;top:10px;bottom:10px;width:4px;height:auto}
+  #app>main{padding-bottom:40px!important;min-height:calc(100vh - 76px)!important}
+  #app>main .v5-show-gallery,#app>main .v6-fandom-page,#app>main .v5-yearbook-grid{padding:30px 34px 50px!important}
+  #app>main .v6-dashboard-lead{gap:19px}
+  #app>main .v6-page-hero{min-height:180px}
+  #app>main .v6-page-hero .v3-main-title{font-size:35px}
+  #app>main .v6-home-stats{gap:14px}
+  #app>main .v6-home-stats .v3-metric{min-height:112px;padding:18px}
+  #app>main .v6-home-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.8fr);align-items:center;gap:16px}
+  #app>main .v3-ticket-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px!important}
+  #app>main .v3-ticket-collection>*{min-width:0}
+  #app>main .v5-map-layout{height:max(550px,calc(100dvh - 150px))!important}
+}
+@media(min-width:600px) and (max-width:899px){
+  :root{--ui-width:760px}
+  #app{max-width:760px!important}
+  #app>.v5-site-navigation{width:min(760px,100vw)!important}
+  #app>main .v5-show-gallery,#app>main .v6-fandom-page{padding-left:26px!important;padding-right:26px!important}
+}
+@media(max-width:599px){
+  #app>main .v6-page-hero{padding:19px 15px!important;border-radius:20px!important}
+  #app>.v5-site-navigation{gap:2px!important}
+  #app>.v5-site-navigation>button{min-height:51px}
+}
