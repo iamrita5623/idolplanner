@@ -255,3 +255,21 @@ html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color
 #app .ticket-preview-panel .ticket-stub{background:#fff!important;color:#1f2937!important}
 #app .ticket-preview-panel .ticket-stub :is(.text-slate-600,.text-slate-700,.text-slate-800){color:#334155!important}
 #app #share-template,#app #share-template-legacy{color-scheme:light}
+
+/* v11 screenshot-driven mobile event editor: safe scrolling and legible chips */
+#app [data-rita-dialog] .event-editor-sheet{height:min(90dvh,860px)!important;max-height:calc(100dvh - env(safe-area-inset-top) - 14px)!important;min-height:0!important;padding:20px 20px 0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+#app [data-rita-dialog] .event-editor-sheet>div:first-child{flex:0 0 auto!important;margin-bottom:0!important;padding-bottom:14px!important}
+#app [data-rita-dialog] .event-editor-sheet>.overflow-y-auto{min-height:0!important;flex:1 1 auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding-top:16px!important;padding-bottom:110px!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0{position:absolute!important;bottom:0!important;left:0!important;right:0!important;padding:12px 20px max(16px,env(safe-area-inset-bottom))!important;background:var(--v2-panel)!important;background-image:none!important;border-top:1px solid var(--v2-edge)!important;z-index:5}
+#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0 button{min-height:50px!important;padding:12px!important;border-radius:14px!important}
+#app [data-rita-dialog] .event-editor-sheet :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background:var(--v2-panel-alt)!important;color:var(--v2-text)!important}
+#app [data-rita-dialog] .event-editor-sheet :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+#app [data-rita-dialog] .event-editor-sheet :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
+#app [data-rita-dialog] .event-editor-sheet button.bg-slate-100{color:var(--v2-text)!important;border-color:var(--v2-edge)!important;min-height:34px}
+#app [data-rita-dialog] .event-editor-sheet button.border-dashed{color:var(--v2-text)!important;border:1px dashed var(--v2-edge)!important}
+#app [data-rita-dialog] .event-editor-sheet .rita-ui-control{background:var(--v2-panel-alt)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important}
+#app [data-rita-dialog] .event-editor-sheet :is(input,textarea,select){font-size:16px!important}
+#app [data-rita-dialog] .event-editor-sheet input::placeholder,#app [data-rita-dialog] .event-editor-sheet textarea::placeholder{color:var(--v2-muted)!important}
+#app [data-rita-dialog] .event-editor-sheet input[type="checkbox"]{font-size:initial!important}
+#app [data-rita-dialog] .event-editor-sheet :is(button,input,textarea,select):focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:2px}
+@media(max-width:599px){#app [data-rita-dialog].fixed.inset-0{align-items:flex-end!important}#app [data-rita-dialog] .event-editor-sheet{width:100%!important;max-width:none!important;border-radius:22px 22px 0 0!important}}
