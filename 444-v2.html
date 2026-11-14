@@ -97,7 +97,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=17">
+<link rel="stylesheet" href="./css/theme-v2.css?v=18">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -151,8 +151,8 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
 </header>
 
         <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
-            <div v-if="activeTab === 'home'" class="v2-shows-page space-y-4 p-5 pb-32">
-                <div class="relative">
+            <div v-if="activeTab === 'home'" class="v2-shows-page v4-shows-layout space-y-4 p-5 pb-32"><div class="v4-page-intro"><span>CHAPTER 01 / LIVE MOMENTS</span><div><h2>每一張票，都是一段故事。</h2><small>YOUR PERSONAL CONCERT COLLECTION</small></div></div>
+                <div class="v4-search-box relative">
                     <i class="ph ph-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
                     <input v-model="searchQuery" type="text" placeholder="搜尋藝人、活動或地點..." 
                          :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="w-full bg-white border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow shadow-sm">
@@ -162,7 +162,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                     </button>
                 </div>
 
-                <div class="rita-segmented flex bg-slate-200 p-1 rounded-full relative mb-2">
+                <div class="v4-ticket-switch rita-segmented flex bg-slate-200 p-1 rounded-full relative mb-2">
                     <div class="rita-segmented-indicator w-1/2 h-full absolute bg-white rounded-full shadow-sm transition-all duration-300 transform"
                          :class="viewMode === 'upcoming' ? 'translate-x-0' : 'translate-x-full'"></div>
                     <button @click="viewMode = 'upcoming'" class="flex-1 py-2 text-sm font-medium z-10 transition-colors duration-300 text-center"
@@ -204,7 +204,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                 <div class="v3-section-heading"><div><span>01 / THE TICKET COLLECTION</span><h2>我的演唱會票券</h2></div><span class="v3-section-count">{{ filteredEvents.length }} EVENTS</span></div>
                 <transition-group name="fade" tag="div" class="v3-ticket-collection space-y-4">
                     <div v-for="event in filteredEvents" :key="event.id" 
-                         :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-ticket-card bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
+                         :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-ticket-card v4-admission-ticket bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
                          :class="{'ring-2 ring-primary/30': expandedEventId === event.id}">
                         
                  
@@ -442,7 +442,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
            </div>
                 
                 <div v-if="fandoms.length > 0" class="v3-fandom-collection space-y-4"><div class="v3-section-heading"><div><span>02 / THE FAN ARCHIVE</span><h2>我的偶像收藏誌</h2></div><span class="v3-section-count">{{ fandoms.length }} ARTISTS</span></div>
-                    <div v-for="(fan, index) in fandoms" :key="index"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-artist-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div v-for="(fan, index) in fandoms" :key="index"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-artist-card v4-artist-profile bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
                        
  
                         <div class="relative rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
@@ -596,7 +596,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
     <div v-else class="flex-1 min-w-0 text-xs text-slate-600 truncate">{{ replayStops.length ? '年度足跡 · ' + replayStops.length + ' 站' : '此年度沒有可定位活動' }}</div>
   </div>
 </div>
-   </div> <div v-if="activeTab === 'stats'" class="v2-yearbook-page v3-yearbook-layout v2-editorial-page space-y-6 p-5 pb-32"><div class="v3-yearbook-banner"><span>ISSUE 04 — THE YEAR IN MUSIC</span><strong>MY YEAR, MY ENCORE.</strong><small>每一場相遇，都值得收藏成冊。</small></div>
+   </div> <div v-if="activeTab === 'stats'" class="v2-yearbook-page v3-yearbook-layout v2-editorial-page space-y-6 p-5 pb-32"><div class="v3-yearbook-banner"><span>ISSUE 04 — THE YEAR IN MUSIC</span><strong>MY YEAR, MY ENCORE.</strong><small>每一場相遇，都值得收藏成冊。</small><div class="v4-yearbook-footer"><span>THE FAN JOURNAL</span><span>EST. IN MEMORIES ✦</span></div></div>
                  <div class="flex justify-between items-center mb-2">
                    
                     <div class="v2-yearbook-title"><span class="v2-overline">THE YEARBOOK · PERSONAL EDITION</span><h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2><p class="v2-yearbook-caption">把每一次相遇，編成自己的年度特刊。</p></div>
@@ -768,7 +768,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <i class="ph ph-plus text-2xl font-bold"></i>
         </button>
 
-        <nav aria-label="主要分頁導覽"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-bottom-nav app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
+        <nav aria-label="主要分頁導覽"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-bottom-nav v4-dock-nav app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
             <button @click="activeTab = 'home'" :aria-current="activeTab === 'home' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16" 
                 :class="activeTab === 'home' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-calendar-check" :class="{ 'ph-fill': activeTab === 'home', 'ph-bold': activeTab !== 'home' }"></i>
