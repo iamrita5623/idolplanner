@@ -97,9 +97,10 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=2">
+<link rel="stylesheet" href="./css/theme-v2.css?v=3">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
+document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
 function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark"?"light":"dark";document.documentElement.dataset.v2Mode=next;try{localStorage.setItem("idolplanner-v2-mode",next)}catch(e){};document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=next==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",next==="dark"?"切換至日間模式":"切換至午夜模式")})}
 </script>
 </head>
