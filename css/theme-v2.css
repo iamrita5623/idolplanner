@@ -412,3 +412,25 @@ html[data-v2-mode="light"] #app>.v3-editorial-header .v3-kicker{color:var(--v2-h
 #app>main .v3-fandom-collection>.v2-artist-card{border-radius:12px!important;border-top:4px solid var(--rita-action-bg,var(--v2-highlight))!important}
 #app>main .v3-fandom-collection>.v2-artist-card>div:first-child{border-radius:8px!important}
 @media(max-width:360px){#app>main .v3-section-heading h2{font-size:19px}#app>main .v3-section-count{font-size:8px;padding:4px 6px}}
+
+/* V17: new map atlas, yearbook cover, concert ticket and artist editor hierarchy */
+#app>main .v3-tour-atlas{background:var(--v2-bg)!important}
+#app>main .v3-tour-atlas #map-container{filter:saturate(.82)}
+#app>main .v3-tour-atlas .v3-map-console{top:12px!important;left:12px!important;right:12px!important;border-radius:18px!important;border:1px solid var(--v2-edge)!important;background:var(--v2-panel)!important;box-shadow:0 12px 36px #0003!important;padding:14px!important;max-height:min(42dvh,280px);overflow:auto;scrollbar-width:thin}
+#app>main .v3-tour-atlas .v3-map-console h3{font-family:"Playfair Display","Noto Sans TC",serif;font-size:17px!important;line-height:1.4;color:var(--v2-text)!important}
+#app>main .v3-tour-atlas .v3-map-console :is(select,button){min-height:34px}
+#app>main .v3-yearbook-layout{display:flex;flex-direction:column;gap:20px!important}
+#app>main .v3-yearbook-banner{position:relative;display:flex;flex-direction:column;gap:8px;padding:25px 22px 28px;border-radius:8px 26px 8px 26px;border:1px solid var(--v2-edge);border-left:5px solid var(--rita-action-bg,var(--v2-highlight));background:linear-gradient(125deg,var(--v2-panel),var(--v2-panel-alt));overflow:hidden}
+#app>main .v3-yearbook-banner:after{content:"★";position:absolute;right:-9px;top:-28px;font-size:135px;line-height:1;color:var(--v2-muted);opacity:.13;pointer-events:none}
+#app>main .v3-yearbook-banner>span{font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--v2-muted);position:relative;z-index:1}
+#app>main .v3-yearbook-banner>strong{font-family:"Playfair Display",Georgia,serif;font-size:clamp(22px,6vw,34px);line-height:1.12;letter-spacing:.025em;color:var(--v2-text);position:relative;z-index:1}
+#app>main .v3-yearbook-banner>small{font-size:11px;color:var(--v2-muted);position:relative;z-index:1}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){border-top:5px solid var(--rita-action-bg,var(--v2-highlight))!important;border-radius:22px 22px 0 0!important;box-shadow:0 -16px 55px #0005!important}
+#app [data-rita-dialog] .v3-editor-heading{min-width:0;display:flex;flex-direction:column;gap:3px}
+#app [data-rita-dialog] .v3-editor-heading>span{font-size:9px;letter-spacing:.13em;font-weight:800;color:var(--v2-muted)!important}
+#app [data-rita-dialog] .v3-editor-heading>h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:21px!important;color:var(--v2-text)!important}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor)>div:first-child{border-bottom:1px solid var(--v2-edge);padding-bottom:13px!important;margin-bottom:10px!important}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) .overflow-y-auto label{font-size:12px;letter-spacing:.02em;font-weight:750}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) .overflow-y-auto :is(input,textarea,select){border-radius:10px!important;border:1px solid var(--v2-edge)!important}
+@media(min-width:600px){#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){border-radius:22px!important}#app>main .v3-tour-atlas .v3-map-console{max-width:480px;right:auto!important;width:calc(100% - 24px)}}
+@media(max-width:360px){#app>main .v3-yearbook-banner{padding:21px 17px}#app>main .v3-tour-atlas .v3-map-console{padding:10px!important}}
