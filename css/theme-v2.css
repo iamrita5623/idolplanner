@@ -105,3 +105,39 @@ html[data-v2-mode="dark"] #app :is(.ticket-preview-panel,.settings-modal-panel){
 #app>main .v2-tour-map .map-replay-controls{max-width:490px}
 #app>main .v2-tour-map .map-replay-controls>div{backdrop-filter:blur(16px);border-radius:16px!important}
 @media(max-width:370px){#app>main .v2-yearbook-page>div:first-of-type{flex-wrap:wrap}#app>main .v2-yearbook-title{max-width:100%}}
+
+/* Phase 6: complete page composition pass; artist/event colors remain data-driven */
+html[data-v2-mode="dark"]{color-scheme:dark;--v2-surface:#211e30;--v2-soft:#302a40;--v2-highlight:#d5b8ff;--v2-contrast:#151020}
+html[data-v2-mode="light"]{color-scheme:light;--v2-surface:#fffaf4;--v2-soft:#eee5e9;--v2-highlight:#684580;--v2-contrast:#fffaf4}
+#app{min-width:0;isolation:isolate}
+#app>main[data-rita-app-main]{min-height:0;overscroll-behavior-y:contain}
+#app>main .v2-shows-page,#app>main .v2-editorial-page{padding:22px 20px 125px!important;display:flex;flex-direction:column;gap:20px}
+#app>main .v2-shows-page>.relative:first-child{margin:0}
+#app>main .v2-shows-page>.relative:first-child input{width:100%;height:48px;border-radius:14px!important;background:var(--v2-surface)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;box-shadow:none!important}
+#app>main .v2-shows-page .rita-segmented{background:var(--v2-soft)!important;border:1px solid var(--v2-edge);border-radius:16px!important;min-height:44px}
+#app>main .v2-shows-page .rita-segmented button{border-radius:12px!important;min-width:0}
+#app>main .v2-shows-page .v2-ticket-card{margin-bottom:5px;transition:transform .18s ease,box-shadow .18s ease}
+#app>main .v2-shows-page .v2-ticket-card:active{transform:scale(.995)}
+#app>main .v2-shows-page .v2-ticket-card img{object-fit:cover}
+#app>main .v2-shows-page .v2-ticket-card .text-xs{line-height:1.55}
+#app>main .v2-editorial-page .v2-artist-card{overflow:hidden}
+#app>main .v2-editorial-page .v2-artist-card>div{min-width:0}
+#app>main .v2-editorial-page .v2-artist-card :is(h3,p){overflow-wrap:anywhere}
+#app>main .v2-yearbook-page{gap:18px!important}
+#app>main .v2-yearbook-page>div:first-of-type{border-bottom:1px solid var(--v2-edge);padding-bottom:18px}
+#app>main .v2-yearbook-page .v2-yearbook-caption{max-width:260px}
+#app>.v2-bottom-nav{background:var(--v2-nav)!important;border-color:var(--v2-edge)!important;box-shadow:0 -8px 28px #00000012;padding:10px 16px max(12px,env(safe-area-inset-bottom))!important;gap:4px}
+#app>.v2-bottom-nav button{flex:1;width:auto;min-width:0;padding:7px 2px;border-radius:12px;transition:background .2s,color .2s,transform .2s}
+#app>.v2-bottom-nav button[aria-current="page"]{background:var(--v2-soft);color:var(--v2-highlight)!important}
+#app>.v2-bottom-nav button span{font-size:11px;letter-spacing:.03em}
+#app [data-rita-dialog] .event-editor-sheet,#app [data-rita-dialog] .fandom-editor-sheet{background:var(--v2-panel)!important;max-height:min(90dvh,850px)!important}
+#app [data-rita-dialog] .event-editor-sheet>div:first-child,#app [data-rita-dialog] .fandom-editor-sheet>div:first-child{padding-bottom:14px;border-bottom:1px solid var(--v2-edge)}
+#app [data-rita-dialog] :is(.event-editor-sheet,.fandom-editor-sheet) h2{font-size:22px;letter-spacing:.01em}
+#app [data-rita-dialog] :is(.event-editor-sheet,.fandom-editor-sheet) .overflow-y-auto{scrollbar-width:thin;scrollbar-color:var(--v2-edge) transparent}
+#app [data-rita-dialog] :is(input,textarea,select):focus{border-color:var(--v2-highlight)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--v2-highlight) 25%,transparent)!important}
+#app [data-rita-dialog] :is(input[type="checkbox"],input[type="radio"]){min-height:auto;accent-color:var(--rita-action-bg,var(--v2-highlight))}
+html[data-v2-mode="light"] #app>main .v2-ticket-card{color:var(--v2-text)!important}
+html[data-v2-mode="dark"] #app>main .v2-ticket-card{color:var(--v2-text)!important}
+@media(min-width:768px){#app>main .v2-shows-page,#app>main .v2-editorial-page{padding-left:26px!important;padding-right:26px!important}#app>main .v2-shows-page .v2-ticket-card:hover{transform:translateY(-2px);box-shadow:0 18px 38px #0003!important}}
+@media(max-width:390px){#app>main .v2-shows-page,#app>main .v2-editorial-page{padding-left:14px!important;padding-right:14px!important}#app>.v2-bottom-nav{padding-left:7px!important;padding-right:7px!important}#app>.v2-stage-header h1{font-size:22px}}
+@media(prefers-reduced-motion:reduce){#app .v2-ticket-card,#app>.v2-bottom-nav button{transition:none!important}}
