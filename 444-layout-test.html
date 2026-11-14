@@ -60,11 +60,7 @@
 
 
 <link rel="stylesheet" href="./css/layout-test.css?v=3">
-<script>
-(function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
-document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
-function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark"?"light":"dark";document.documentElement.dataset.v2Mode=next;try{localStorage.setItem("idolplanner-v2-mode",next)}catch(e){};document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=next==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",next==="dark"?"切換至日間模式":"切換至午夜模式")})}
-</script>
+<script>document.documentElement.dataset.v2Mode="light";function toggleV2Mode(){/* available after design approval */}</script>
 <style>body[data-layout-test]::after{content:"LAYOUT TEST · 非正式版";position:fixed;right:12px;top:72px;z-index:99999;background:#fae5b3;color:#493619;padding:6px 11px;border-radius:8px;font:700 11px sans-serif;pointer-events:none;box-shadow:0 3px 12px #0002}</style></head>
 <body data-layout-test="true" data-v2-page="concert-archive" class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
