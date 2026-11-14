@@ -359,3 +359,41 @@ html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color
 #app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="true"]{background:var(--v2-soft)!important;color:var(--v2-text)!important}
 #app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="false"]{background:var(--v2-panel-alt)!important;color:var(--v2-muted)!important}
 @media(max-width:599px){#app [data-import-dialog="true"] .v2-import-panel textarea{font-size:16px!important}#app [data-import-dialog="true"] .v2-import-panel input[type="file"]{font-size:14px!important}}
+
+/* V16 TRUE LAYOUT REBUILD — the new masthead does not inherit concert-header.
+   Accent stripe follows the user's selected theme; day and night change all surfaces. */
+html[data-v2-mode="dark"]{--v3-header-bg:#191726;--v3-header-secondary:#252038;--v3-hero-ink:#f8f1fc;--v3-hero-sub:#c9b9d5;--v3-metric-bg:#282337;--v3-metric-border:#4b405b;--v3-emblem-bg:#302640}
+html[data-v2-mode="light"]{--v3-header-bg:#fff9f1;--v3-header-secondary:#f0e7e8;--v3-hero-ink:#30223c;--v3-hero-sub:#75647b;--v3-metric-bg:#fffdf8;--v3-metric-border:#d9cbd6;--v3-emblem-bg:#e9dbe9}
+#app>.v3-editorial-header{position:relative;background:var(--v3-header-bg)!important;color:var(--v3-hero-ink)!important;border-bottom:1px solid var(--v3-metric-border)!important;box-shadow:0 8px 28px #00000015!important;padding:0!important;overflow:hidden}
+#app>.v3-editorial-header:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--rita-action-bg,var(--v2-highlight));z-index:2}
+#app>.v3-editorial-header:after{content:"";position:absolute;right:-72px;top:32px;width:230px;height:230px;border:1px solid var(--v3-metric-border);border-radius:50%;pointer-events:none;opacity:.45}
+#app>.v3-editorial-header .v3-masthead{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:52px;padding:12px 17px 8px;border-bottom:1px solid var(--v3-metric-border)}
+#app>.v3-editorial-header .v3-edition{display:flex;align-items:center;flex-wrap:wrap;gap:7px;color:var(--v3-hero-sub);font-size:9px;letter-spacing:.12em;font-weight:800;line-height:1.5}
+#app>.v3-editorial-header .v3-edition-number{font-weight:500;font-size:8px;opacity:.8}
+#app>.v3-editorial-header .v3-live-dot{width:7px;height:7px;flex:0 0 7px;background:var(--rita-action-bg,var(--v2-highlight));border-radius:50%;box-shadow:0 0 0 3px var(--v3-emblem-bg)}
+#app>.v3-editorial-header .v3-header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
+#app>.v3-editorial-header .v2-mode-toggle,#app>.v3-editorial-header .v3-settings-button{position:static!important;display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:1px solid var(--v3-metric-border);background:var(--v3-metric-bg)!important;color:var(--v3-hero-ink)!important;border-radius:11px;font-size:11px;font-weight:700;padding:6px 9px;white-space:nowrap;cursor:pointer}
+#app>.v3-editorial-header .v3-settings-button{width:34px;padding:6px}
+#app>.v3-editorial-header :is(.v2-mode-toggle,.v3-settings-button):focus-visible{outline:2px solid var(--rita-action-bg,var(--v2-highlight));outline-offset:2px}
+#app>.v3-editorial-header .v3-hero{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 20px 19px;background:linear-gradient(115deg,var(--v3-header-bg),var(--v3-header-secondary))!important}
+#app>.v3-editorial-header .v3-hero-copy{min-width:0;flex:1}
+#app>.v3-editorial-header .v3-kicker{font-size:9px;line-height:1.5;letter-spacing:.17em;font-weight:800;color:var(--rita-action-bg,var(--v2-highlight));margin-bottom:6px;overflow-wrap:anywhere}
+#app>.v3-editorial-header .v3-main-title{font-family:"Playfair Display","Noto Sans TC",serif;font-size:clamp(23px,5.5vw,30px);line-height:1.25;font-weight:800;color:var(--v3-hero-ink)!important;overflow-wrap:anywhere;letter-spacing:.015em}
+#app>.v3-editorial-header .v3-greeting{font-size:11px;color:var(--v3-hero-sub)!important;line-height:1.5;margin-top:6px}
+#app>.v3-editorial-header .v3-hero-emblem{width:77px;height:77px;border-radius:50%;border:1px dashed var(--v3-metric-border);background:var(--v3-emblem-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(12deg);flex-shrink:0;color:var(--v3-hero-ink)}
+#app>.v3-editorial-header .v3-hero-emblem span{font-size:30px;line-height:1.2;color:var(--rita-action-bg,var(--v2-highlight))}
+#app>.v3-editorial-header .v3-hero-emblem small{font-size:8px;font-weight:800;letter-spacing:.13em}
+#app>.v3-editorial-header .v3-metrics{display:grid;grid-template-columns:1fr 1.15fr 1.15fr;gap:0;background:var(--v3-metric-bg)!important;border-top:1px solid var(--v3-metric-border)}
+#app>.v3-editorial-header .v3-metric{min-width:0;position:relative;padding:13px 10px 14px;display:flex;flex-direction:column;justify-content:center;gap:7px}
+#app>.v3-editorial-header .v3-metric+.v3-metric{border-left:1px solid var(--v3-metric-border)}
+#app>.v3-editorial-header .v3-metric-label{font-size:9px;letter-spacing:.045em;line-height:1.35;color:var(--v3-hero-sub);font-weight:700}
+#app>.v3-editorial-header .v3-metric strong{font-size:15px;line-height:1.2;color:var(--v3-hero-ink);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#app>.v3-editorial-header .v3-metric strong small{font-size:10px;font-weight:500}
+#app>.v3-editorial-header .v3-metric-expense{padding-right:26px}
+#app>.v3-editorial-header .v3-metric-expense button{position:absolute;right:5px;bottom:12px;min-width:25px;min-height:25px;color:var(--v3-hero-sub);border-radius:7px}
+#app>.v3-editorial-header .v3-budget-track{height:6px;border-radius:99px;background:var(--v3-metric-border);overflow:hidden}
+#app>.v3-editorial-header .v3-budget-track>span{display:block;height:100%;background:var(--rita-action-bg,var(--v2-highlight));border-radius:99px;transition:width .3s}
+#app>.v3-editorial-header .v3-budget-caption{font-size:9px;color:var(--v3-hero-sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html[data-v2-mode="light"] #app>.v3-editorial-header .v3-kicker{color:var(--v2-highlight)}
+@media(max-width:360px){#app>.v3-editorial-header .v3-edition-number{display:none}#app>.v3-editorial-header .v3-hero-emblem{width:62px;height:62px}#app>.v3-editorial-header .v3-hero{padding:14px 15px}#app>.v3-editorial-header .v3-metric{padding:11px 7px}#app>.v3-editorial-header .v3-metric strong{font-size:13px}}
+@media(prefers-reduced-motion:reduce){#app>.v3-editorial-header .v3-budget-track>span{transition:none}}
