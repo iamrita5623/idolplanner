@@ -97,7 +97,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=3">
+<link rel="stylesheet" href="./css/theme-v2.css?v=4">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -555,7 +555,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                 </div>
             </div>
 
-            <div v-show="activeTab === 'map'" class="map-tab-panel w-full h-full relative">
+            <div v-show="activeTab === 'map'" class="v2-tour-map map-tab-panel w-full h-full relative">
                 <div id="map-container" class="w-full h-full bg-slate-200"></div>
 <div  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
     <div class="flex justify-between items-start">
@@ -617,10 +617,10 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
     <div v-else class="flex-1 min-w-0 text-xs text-slate-600 truncate">{{ replayStops.length ? '年度足跡 · ' + replayStops.length + ' 站' : '此年度沒有可定位活動' }}</div>
   </div>
 </div>
-   </div> <div v-if="activeTab === 'stats'" class="v2-editorial-page space-y-6 p-5 pb-32">
+   </div> <div v-if="activeTab === 'stats'" class="v2-yearbook-page v2-editorial-page space-y-6 p-5 pb-32">
                  <div class="flex justify-between items-center mb-2">
                    
-                    <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
+                    <div class="v2-yearbook-title"><span class="v2-overline">THE YEARBOOK · PERSONAL EDITION</span><h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2><p class="v2-yearbook-caption">把每一次相遇，編成自己的年度特刊。</p></div>
 <div class="flex gap-2">
     <button @click="openSharePreview" :style="{ backgroundColor: 'var(--rita-action-bg)' }" class="text-xs rita-primary-button px-4 py-2 rounded-full flex items-center gap-1 shadow-sm active:scale-95 transition-transform hover:opacity-90">
         <i class="ph ph-share-network text-lg"></i> 分享
