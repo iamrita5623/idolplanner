@@ -97,7 +97,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=11">
+<link rel="stylesheet" href="./css/theme-v2.css?v=12">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -1333,7 +1333,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   <p style="position:absolute;top:611px;left:0;right:0;font-size:8px;letter-spacing:1.2px;text-align:center;margin:0;color:#fff;z-index:2;text-shadow:0 1px 4px rgba(20,15,28,.75)">EVERY MOMENT MATTERS · IDOL PLANNER</p>
 </div>
 <div v-if="shareImagePreview" class="w-full max-w-sm flex flex-col items-center gap-2"><img :src="shareImagePreview" alt="年度追星回顧 PNG 圖片，長按可嘗試儲存" class="block w-full h-auto select-auto" style="-webkit-touch-callout:default;user-select:auto"/><p class="text-xs text-white/90 text-center">這是實際 PNG 圖片，可長按儲存，也可使用分享功能。</p><div class="flex gap-2"><button @click="shareImagePreview = ''" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">返回預覽</button><button @click="generateShareImage('share')" :disabled="shareBusy" class="rounded-lg bg-white px-4 py-2 text-sm font-bold text-slate-700">分享圖片</button></div></div><div v-if="shareError" class="text-xs bg-white text-red-600 p-2 rounded-lg">{{ shareError }}</div><button v-if="!shareImagePreview" @click="generateShareImage('preview')" :disabled="shareBusy" class="w-full max-w-sm rounded-xl bg-white p-3 text-sm font-bold">{{ shareBusy ? '製作中…' : '產生分享圖片・長按儲存' }}</button></div><div v-if="showImportModal" data-import-dialog="true" data-rita-dialog class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showImportModal = false">
-            <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4>
+            <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="v2-import-panel bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md m-4">
       
                 <h3 class="font-bold text-lg mb-2 text-slate-700">批次匯入行程</h3><div class="flex gap-1 mb-3 text-xs"><button @click="importMode = 'table'" class="rita-import-mode flex-1 p-2 rounded-lg bg-slate-100" :aria-pressed="importMode === 'table'">貼上表格</button><button @click="importMode = 'file'" class="rita-import-mode flex-1 p-2 rounded-lg bg-slate-100" :aria-pressed="importMode === 'file'">上傳檔案</button><button @click="importMode = 'json'" class="rita-import-mode flex-1 p-2 rounded-lg bg-slate-100" :aria-pressed="importMode === 'json'">貼上 JSON</button></div><div v-if="importMode === 'file'" class="text-xs mb-2">支援 CSV、TSV、TXT、JSON；Excel 請先另存 CSV。<input type="file" accept=".csv,.tsv,.txt,.json" @change="readImportFile" class="w-full mt-2"/></div>
                 
