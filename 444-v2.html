@@ -97,7 +97,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=1">
+<link rel="stylesheet" href="./css/theme-v2.css?v=2">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark"?"light":"dark";document.documentElement.dataset.v2Mode=next;try{localStorage.setItem("idolplanner-v2-mode",next)}catch(e){};document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=next==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",next==="dark"?"切換至日間模式":"切換至午夜模式")})}
@@ -126,7 +126,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
             </template>
         </div>
 
-        <header :class="headerTextColor" class="concert-header pt-4 pb-4 px-5 shadow-lg rounded-b-[1.5rem] z-20 shrink-0 transition-colors duration-200"
+        <header :class="headerTextColor" class="v2-stage-header concert-header pt-4 pb-4 px-5 shadow-lg rounded-b-[1.5rem] z-20 shrink-0 transition-colors duration-200"
             :style="{ backgroundColor: 'var(--rita-header-bg)' }">
             <div class="flex justify-between items-center mb-3">
                 <div>
@@ -172,7 +172,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
 </header>
 
         <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
-            <div v-if="activeTab === 'home'" class="space-y-4 p-5 pb-32">
+            <div v-if="activeTab === 'home'" class="v2-shows-page space-y-4 p-5 pb-32">
                 <div class="relative">
                     <i class="ph ph-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
                     <input v-model="searchQuery" type="text" placeholder="搜尋藝人、活動或地點..." 
@@ -224,7 +224,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
 
                 <transition-group name="fade" tag="div" class="space-y-4">
                     <div v-for="event in filteredEvents" :key="event.id" 
-                         :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
+                         :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-ticket-card bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
                          :class="{'ring-2 ring-primary/30': expandedEventId === event.id}">
                         
                  
@@ -451,7 +451,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                 </transition-group>
             </div>
 
-            <div v-if="activeTab === 'fandom'" class="space-y-6 p-5 pb-32">
+            <div v-if="activeTab === 'fandom'" class="v2-editorial-page space-y-6 p-5 pb-32">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-heart-straight-fill text-red-500"></i> 入坑紀念日 💖</h2>
              
@@ -462,7 +462,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
            </div>
                 
                 <div v-if="fandoms.length > 0" class="space-y-4">
-                    <div v-for="(fan, index) in fandoms" :key="index"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div v-for="(fan, index) in fandoms" :key="index"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-artist-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
                        
  
                         <div class="relative rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
@@ -616,7 +616,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
     <div v-else class="flex-1 min-w-0 text-xs text-slate-600 truncate">{{ replayStops.length ? '年度足跡 · ' + replayStops.length + ' 站' : '此年度沒有可定位活動' }}</div>
   </div>
 </div>
-   </div> <div v-if="activeTab === 'stats'" class="space-y-6 p-5 pb-32">
+   </div> <div v-if="activeTab === 'stats'" class="v2-editorial-page space-y-6 p-5 pb-32">
                  <div class="flex justify-between items-center mb-2">
                    
                     <h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2>
@@ -788,7 +788,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <i class="ph ph-plus text-2xl font-bold"></i>
         </button>
 
-        <nav aria-label="主要分頁導覽"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
+        <nav aria-label="主要分頁導覽"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-bottom-nav app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
             <button @click="activeTab = 'home'" :aria-current="activeTab === 'home' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16" 
                 :class="activeTab === 'home' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-calendar-check" :class="{ 'ph-fill': activeTab === 'home', 'ph-bold': activeTab !== 'home' }"></i>
