@@ -58,3 +58,31 @@ body{background:var(--v2-bg)!important;color:var(--v2-text)!important}
 html[data-v2-mode="light"] #app>.v2-stage-header{background:linear-gradient(140deg,#31233f,#554269)!important}
 html[data-v2-mode="light"] #app>main .v2-ticket-card{background:#fffaf3!important}
 html[data-v2-mode="dark"] #app>main .v2-ticket-card{background:#29253b!important}
+
+/* Phase 3: dialog, form and readability system */
+#app [data-rita-dialog]{color:var(--v2-text)}
+#app [data-rita-dialog] > div:nth-child(2){background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;box-shadow:0 24px 80px #0007!important}
+#app [data-rita-dialog] :is(.bg-white,.bg-white\/95){background:var(--v2-panel)!important}
+#app [data-rita-dialog] :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background:var(--v2-panel-alt)!important}
+#app [data-rita-dialog] :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
+#app [data-rita-dialog] :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+#app [data-rita-dialog] :is(.border-slate-100,.border-slate-200,.border-slate-300){border-color:var(--v2-edge)!important}
+#app [data-rita-dialog] :is(input,textarea,select){background:var(--v2-input)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;border-radius:12px;min-height:40px}
+#app [data-rita-dialog] :is(input,textarea)::placeholder{color:var(--v2-muted)!important;opacity:1}
+#app [data-rita-dialog] :is(input,textarea,select,button):focus-visible{outline:2px solid var(--v2-accent)!important;outline-offset:2px}
+#app [data-rita-dialog] :is(h2,h3){color:var(--v2-text)!important}
+#app [data-rita-dialog] :is(.rounded-3xl,.rounded-2xl){border-radius:22px}
+#app [data-rita-dialog] :is(.bg-primary,.bg-primary-dark){background:var(--v2-accent)!important;color:#21172b!important}
+#app [data-rita-dialog] .text-white:is(.bg-primary,.bg-primary-dark){color:#21172b!important}
+#app>main .v2-shows-page h2,#app>main .v2-editorial-page h2{font-family:"Playfair Display","Noto Sans TC",serif;letter-spacing:.015em;color:var(--v2-text)!important}
+#app>main .v2-ticket-card button:focus-visible,#app>.v2-bottom-nav button:focus-visible{outline:2px solid var(--v2-accent);outline-offset:2px}
+#app>main .v2-ticket-card :is(button,input){accent-color:var(--v2-accent)}
+#app>main .v2-artist-card :is(.border-b,.border-t){border-color:var(--v2-edge)!important}
+#app>main .v2-editorial-page .v2-artist-card h3{font-family:"Playfair Display","Noto Sans TC",serif;font-size:1.2rem}
+#app>main .v2-editorial-page .v2-artist-card img{max-height:250px}
+#app>main .map-tab-panel :is(.leaflet-control,.leaflet-popup){color:#222}
+#app>main .map-tab-panel .map-replay-controls>div{background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important}
+#app>main .map-tab-panel .map-replay-controls :is(.text-slate-600,.text-slate-700){color:var(--v2-text)!important}
+#app>main .map-tab-panel .map-replay-controls :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+html[data-v2-mode="dark"] #app :is(.ticket-preview-panel,.settings-modal-panel){color:var(--v2-text)}
+@media(max-width:599px){#app [data-rita-dialog] > div:nth-child(2){max-height:calc(100dvh - 30px);overflow-y:auto;overscroll-behavior:contain}}
