@@ -59,7 +59,7 @@
 
 
 
-<link rel="stylesheet" href="./css/theme-v2.css?v=21">
+<link rel="stylesheet" href="./css/theme-v2.css?v=22">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -97,7 +97,11 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
       <button type="button" class="v3-settings-button" @click="toggleSettingsModal" aria-label="開啟設定"><i class="ph ph-gear text-lg"></i></button>
     </div>
   </div>
-  <div class="v3-hero">
+
+</header>
+
+        <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
+            <div v-if="activeTab === 'home'" class="v2-shows-page v4-shows-layout v5-show-gallery space-y-4 p-5 pb-32"><section class="v6-dashboard-lead">  <div class="v3-hero v6-page-hero">
     <div class="v3-hero-copy">
       <p class="v3-kicker">{{ activeTab === 'home' ? 'LIVE DIARY / CONCERT TICKETS' : activeTab === 'fandom' ? 'FAN ARCHIVE / THE ARTISTS' : activeTab === 'map' ? 'TOUR JOURNAL / THE PLACES' : 'THE YEARBOOK / ANNUAL RECAP' }}</p>
       <h1 class="v3-main-title">{{ customTitle }}</h1>
@@ -105,16 +109,12 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
     </div>
     <div class="v3-hero-emblem" aria-hidden="true"><span>★</span><small>ENCORE</small></div>
   </div>
-  <div class="v3-metrics" v-if="activeTab === 'home'">
+  <div class="v3-metrics v6-home-stats">
     <div class="v3-metric"><span class="v3-metric-label">UPCOMING / 倒數中</span><strong>{{ upcomingCount }} <small>場</small></strong></div>
     <div class="v3-metric v3-metric-expense"><span class="v3-metric-label">THIS YEAR / 年支出</span><strong>{{ isYearlyPrivacy ? '****' : formatMoney(currentYearExpense) }}</strong><button type="button" @click="isYearlyPrivacy = !isYearlyPrivacy" :aria-label="isYearlyPrivacy ? '顯示年支出' : '隱藏年支出'"><i class="ph" :class="isYearlyPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i></button></div>
     <div class="v3-metric v3-budget-metric"><span class="v3-metric-label">BUDGET / 預算進度</span><div class="v3-budget-track"><span :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></span></div><small class="v3-budget-caption">{{ budgetNagging }}</small></div>
-  </div>
-</header>
-
-        <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
-            <div v-if="activeTab === 'home'" class="v2-shows-page v4-shows-layout v5-show-gallery space-y-4 p-5 pb-32"><div class="v4-page-intro"><span>CHAPTER 01 / LIVE MOMENTS</span><div><h2>每一張票，都是一段故事。</h2><small>YOUR PERSONAL CONCERT COLLECTION</small></div></div>
-                <div class="v4-search-box relative">
+  </div></section><div class="v4-page-intro"><span>CHAPTER 01 / LIVE MOMENTS</span><div><h2>每一張票，都是一段故事。</h2><small>YOUR PERSONAL CONCERT COLLECTION</small></div></div>
+                <section class="v6-home-toolbar" aria-label="搜尋及行程篩選"><div class="v4-search-box relative">
                     <i class="ph ph-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
                     <input v-model="searchQuery" type="text" placeholder="搜尋藝人、活動或地點..." 
                          :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="w-full bg-white border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow shadow-sm">
@@ -137,7 +137,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                             :class="viewMode === 'history' ? '' : 'text-slate-500'">
                         美好回憶 📸
                     </button>
-                </div>
+                </div></section>
 
                 <div v-if="filteredEvents.length === 0" class="text-center py-12 px-4 opacity-80 flex flex-col items-center">
                     <div class="bg-slate-100 p-6 rounded-full mb-4">
@@ -393,8 +393,8 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                 </transition-group>
             </div>
 
-            <div v-if="activeTab === 'fandom'" class="v2-editorial-page space-y-6 p-5 pb-32">
-                <div class="flex justify-between items-center">
+            <div v-if="activeTab === 'fandom'" class="v2-editorial-page v6-fandom-page space-y-6 p-5 pb-32"><div class="v6-archive-cover"><span>FAN ARCHIVE · VOL 02</span><h2>喜歡你的每一天，都值得記錄。</h2><p>MY ARTIST COLLECTION / ANNIVERSARIES</p></div>
+                <div class="v6-fandom-actions flex justify-between items-center">
                     <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-heart-straight-fill text-red-500"></i> 入坑紀念日 💖</h2>
              
                     <button @click="openFandomModal" class="bg-white border-2 border-slate-200 px-4 py-1.5 rounded-full font-bold shadow-sm active:scale-95 transition-transform text-sm flex items-center gap-1 text-slate-600">
