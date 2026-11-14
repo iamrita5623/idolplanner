@@ -52,7 +52,7 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
-<link rel="stylesheet" href="./css/theme-444.css?v=8">
+<link rel="stylesheet" href="./css/theme-444.css?v=9">
     <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
 
 
@@ -218,7 +218,7 @@
 
                 <transition-group name="fade" tag="div" class="space-y-4">
                     <div v-for="event in filteredEvents" :key="event.id" 
-                        class="bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
+                         :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
                          :class="{'ring-2 ring-primary/30': expandedEventId === event.id}">
                         
                  
@@ -456,7 +456,7 @@
            </div>
                 
                 <div v-if="fandoms.length > 0" class="space-y-4">
-                    <div v-for="(fan, index) in fandoms" :key="index" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div v-for="(fan, index) in fandoms" :key="index"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
                        
  
                         <div class="relative rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
@@ -640,7 +640,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 </div>
 
     <div class="space-y-3.5">
-<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+<div  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
     <h3 class="text-lg font-black text-slate-700 mb-2 uppercase tracking-tighter border-b pb-2 inline-block mx-auto">🏆 年度成就</h3>
     
     <div class="flex flex-wrap justify-between items-start text-slate-600">
@@ -751,7 +751,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
   
  
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <div  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-crown text-yellow-500"></i> 本命排行榜</h3><span class="text-[10px] text-slate-500 px-2 py-1 rounded-full">含見面/錄製/簽售</span></div>
                     <div v-if="statsData.topArtists.length > 0" class="space-y-4">
                  
@@ -763,7 +763,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                     <div v-else class="text-center text-slate-400 text-sm py-4">區間內無資料</div>
                 </div>
                 
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <div  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-trophy text-blue-500"></i> 大型演出/全勤成就</h3></div>
                   
                     <p class="text-xs text-slate-400 mb-3 bg-slate-50 p-2 rounded-lg"><i class="ph ph-info"></i> 僅計入：演唱會、音樂節、見面會、生日會（拼盤依活動名稱合併，不限偶像）</p>
@@ -782,7 +782,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
             <i class="ph ph-plus text-2xl font-bold"></i>
         </button>
 
-        <nav aria-label="主要分頁導覽" class="app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
+        <nav aria-label="主要分頁導覽"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="app-bottom-nav bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center shrink-0 w-full z-40 safe-pb">
             <button @click="activeTab = 'home'" :aria-current="activeTab === 'home' ? 'page' : null" class="flex flex-col items-center gap-1 transition-colors w-16" 
                 :class="activeTab === 'home' ? '' : 'text-slate-400'" >
                 <i class="ph text-2xl ph-calendar-check" :class="{ 'ph-fill': activeTab === 'home', 'ph-bold': activeTab !== 'home' }"></i>
@@ -923,7 +923,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         </transition>
 
 <div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
-    <div data-rita-dialog class="settings-modal-panel bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
+    <div data-rita-dialog  :style="{ backgroundColor: cssVars['--rita-card'] }" class="settings-modal-panel bg-white rounded-2xl shadow-2xl w-80 flex flex-col max-h-[85vh] overflow-hidden">
         
         <!-- 標題列 -->
         <div class="flex justify-between items-center p-6 pb-4 shrink-0">
@@ -1073,7 +1073,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <transition name="slide-up">
             <div v-if="showFandomModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeFandomModal"></div>
-                <div class="fandom-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="fandom-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h2 class="text-xl font-bold text-slate-800">{{ isFandomEditing ? '編輯入坑日' : '新增入坑日' }}</h2>
                         <button @click="closeFandomModal" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
@@ -1140,7 +1140,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <transition name="slide-up">
             <div v-if="showModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModal"></div>
-                <div class="event-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="event-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                    
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <h2 class="text-xl font-bold text-slate-800">{{ isEditing ? '編輯行程' : '新增行程' }}</h2>
