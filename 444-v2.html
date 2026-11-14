@@ -97,7 +97,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=16">
+<link rel="stylesheet" href="./css/theme-v2.css?v=17">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -534,9 +534,9 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                 </div>
             </div>
 
-            <div v-show="activeTab === 'map'" class="v2-tour-map map-tab-panel w-full h-full relative">
+            <div v-show="activeTab === 'map'" class="v2-tour-map v3-tour-atlas map-tab-panel w-full h-full relative">
                 <div id="map-container" class="w-full h-full bg-slate-200"></div>
-<div  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
+<div  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v3-map-console absolute top-4 left-4 right-4 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg border border-slate-100">
     <div class="flex justify-between items-start">
         <div class="flex flex-col gap-1.5 flex-1 min-w-0">
             <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
@@ -596,7 +596,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
     <div v-else class="flex-1 min-w-0 text-xs text-slate-600 truncate">{{ replayStops.length ? '年度足跡 · ' + replayStops.length + ' 站' : '此年度沒有可定位活動' }}</div>
   </div>
 </div>
-   </div> <div v-if="activeTab === 'stats'" class="v2-yearbook-page v2-editorial-page space-y-6 p-5 pb-32">
+   </div> <div v-if="activeTab === 'stats'" class="v2-yearbook-page v3-yearbook-layout v2-editorial-page space-y-6 p-5 pb-32"><div class="v3-yearbook-banner"><span>ISSUE 04 — THE YEAR IN MUSIC</span><strong>MY YEAR, MY ENCORE.</strong><small>每一場相遇，都值得收藏成冊。</small></div>
                  <div class="flex justify-between items-center mb-2">
                    
                     <div class="v2-yearbook-title"><span class="v2-overline">THE YEARBOOK · PERSONAL EDITION</span><h2 class="text-xl font-bold text-slate-800">追星儀表板 📊</h2><p class="v2-yearbook-caption">把每一次相遇，編成自己的年度特刊。</p></div>
@@ -1059,9 +1059,9 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <transition name="slide-up">
             <div v-if="showFandomModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeFandomModal"></div>
-                <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="fandom-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="fandom-editor-sheet v3-fandom-editor bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                     <div class="flex justify-between items-center mb-4 shrink-0">
-                        <h2 class="text-xl font-bold text-slate-800">{{ isFandomEditing ? '編輯入坑日' : '新增入坑日' }}</h2>
+                        <div class="v3-editor-heading"><span>FAN ARCHIVE / ARTIST PROFILE</span><h2 class="text-xl font-bold text-slate-800">{{ isFandomEditing ? '編輯入坑日' : '新增入坑日' }}</h2></div>
                         <button @click="closeFandomModal" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
                     </div>
                     <div class="overflow-y-auto flex-1 no-scrollbar space-y-4 pb-32 pt-4">
@@ -1126,10 +1126,10 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
         <transition name="slide-up">
             <div v-if="showModal" data-rita-dialog class="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModal"></div>
-                <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="event-editor-sheet bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
+                <div  :style="{ backgroundColor: cssVars['--rita-card'] }" class="event-editor-sheet v3-event-editor bg-white w-full max-w-md max-h-[90vh] sm:rounded-2xl rounded-t-3xl p-6 relative flex flex-col shadow-2xl overflow-hidden h-auto mb-safe">
                    
                     <div class="flex justify-between items-center mb-4 shrink-0">
-                        <h2 class="text-xl font-bold text-slate-800">{{ isEditing ? '編輯行程' : '新增行程' }}</h2>
+                        <div class="v3-editor-heading"><span>CONCERT TICKET / DETAILS</span><h2 class="text-xl font-bold text-slate-800">{{ isEditing ? '編輯行程' : '新增行程' }}</h2></div>
                         <button @click="closeModal" class="bg-slate-100 p-2 rounded-full text-slate-500 hover:bg-slate-200"><i class="ph ph-x"></i></button>
                     </div>
                     <div class="overflow-y-auto flex-1 no-scrollbar space-y-4 pb-32 pt-4">
