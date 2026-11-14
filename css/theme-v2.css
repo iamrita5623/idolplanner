@@ -350,3 +350,12 @@ html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color
 #app>.v2-bottom-nav button{min-height:58px;touch-action:manipulation}
 #app>.v2-bottom-nav button:focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:-2px}
 @media(max-width:599px){#app [data-rita-dialog] .event-editor-sheet{height:min(90dvh,860px)!important}#app [data-import-dialog="true"] .v2-import-panel{max-height:calc(100dvh - 32px)!important}#app>main[data-rita-app-main] .v2-yearbook-page{padding-bottom:140px!important}}
+
+/* V15: import help readability and safe mobile controls */
+#app [data-import-dialog="true"] .v2-import-panel strong{font-weight:750;color:var(--v2-text)!important}
+#app [data-import-dialog="true"] .v2-import-panel ul{padding-left:12px}
+#app [data-import-dialog="true"] .v2-import-panel li{margin-top:5px;line-height:1.6;overflow-wrap:anywhere}
+#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{flex:1 1 0;min-width:0;padding:9px 5px!important}
+#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="true"]{background:var(--v2-soft)!important;color:var(--v2-text)!important}
+#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="false"]{background:var(--v2-panel-alt)!important;color:var(--v2-muted)!important}
+@media(max-width:599px){#app [data-import-dialog="true"] .v2-import-panel textarea{font-size:16px!important}#app [data-import-dialog="true"] .v2-import-panel input[type="file"]{font-size:14px!important}}
