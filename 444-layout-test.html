@@ -89,26 +89,16 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
             </template>
         </div>
 
-        <header class="v3-editorial-header shrink-0 z-20">
-  <div class="v3-masthead">
-    <div class="v3-edition"><span class="v3-live-dot" aria-hidden="true"></span> THE IDOL ARCHIVE <span class="v3-edition-number">VOL. 02 / PERSONAL EDITION</span></div>
-    <div class="v3-header-actions">
-      <button type="button" class="v2-mode-toggle" onclick="toggleV2Mode()" aria-label="切換至日間模式">☀ 日間</button>
-      <button type="button" class="v3-settings-button" @click="toggleSettingsModal" aria-label="開啟設定"><i class="ph ph-gear text-lg"></i></button>
-    </div>
-  </div>
-
+        <header class="lab-topbar shrink-0 z-20">
+  <div class="lab-brand"><span class="lab-brand-mark">R<span>·</span></span><span class="lab-brand-text"><strong>RITA / LOGBOOK</strong><small>追星生活紀錄系統</small></span></div>
+  <div class="lab-topbar-right"><span class="lab-topbar-tag">PERSONAL SPACE <b>●</b> LIVE</span><button type="button" class="lab-mode-btn" onclick="toggleV2Mode()" aria-label="切換明暗模式"><i class="ph ph-moon-stars"></i><span>外觀</span></button><button type="button" class="lab-settings-btn" @click="toggleSettingsModal" aria-label="開啟設定"><i class="ph ph-sliders-horizontal"></i></button></div>
 </header>
 
         <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
-            <div v-if="activeTab === 'home'" class="v2-shows-page v4-shows-layout v5-show-gallery space-y-4 p-5 pb-32"><section class="v6-dashboard-lead">  <div class="v3-hero v6-page-hero">
-    <div class="v3-hero-copy">
-      <p class="v3-kicker">{{ activeTab === 'home' ? 'LIVE DIARY / CONCERT TICKETS' : activeTab === 'fandom' ? 'FAN ARCHIVE / THE ARTISTS' : activeTab === 'map' ? 'TOUR JOURNAL / THE PLACES' : 'THE YEARBOOK / ANNUAL RECAP' }}</p>
-      <h1 class="v3-main-title">{{ customTitle }}</h1>
-      <p class="v3-greeting">{{ greetingMessage }}</p>
-    </div>
-    <div class="v3-hero-emblem" aria-hidden="true"><span>★</span><small>ENCORE</small></div>
-  </div>
+            <div v-if="activeTab === 'home'" class="lab-home-page v2-shows-page v4-shows-layout v5-show-gallery space-y-4 p-5 pb-32"><section class="v6-dashboard-lead">  <div class="lab-home-intro">
+ <div class="lab-home-intro-top"><span>01 / MY LIVE JOURNAL</span><span class="lab-intro-date">✳ THE MOMENTS THAT MATTER</span></div>
+ <div class="lab-home-intro-grid"><div class="lab-home-intro-copy"><p class="lab-eyebrow">YOUR STORY, ON REPEAT.</p><h1>{{ customTitle }}</h1><p class="lab-intro-desc">{{ greetingMessage }}</p><div class="lab-intro-rule"><span></span>KEEP THE MEMORIES PLAYING</div></div><div class="lab-home-art" aria-hidden="true"><span class="lab-art-circle">✳</span><span class="lab-art-vertical">LIVE / LOVE / REPEAT</span><span class="lab-art-index">EST. YOUR FIRST SHOW</span></div></div>
+ </div>
   <div class="v3-metrics v6-home-stats">
     <div class="v3-metric"><span class="v3-metric-label">UPCOMING / 倒數中</span><strong>{{ upcomingCount }} <small>場</small></strong></div>
     <div class="v3-metric v3-metric-expense"><span class="v3-metric-label">THIS YEAR / 年支出</span><strong>{{ isYearlyPrivacy ? '****' : formatMoney(currentYearExpense) }}</strong><button type="button" @click="isYearlyPrivacy = !isYearlyPrivacy" :aria-label="isYearlyPrivacy ? '顯示年支出' : '隱藏年支出'"><i class="ph" :class="isYearlyPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i></button></div>
