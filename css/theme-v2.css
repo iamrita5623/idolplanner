@@ -434,3 +434,37 @@ html[data-v2-mode="light"] #app>.v3-editorial-header .v3-kicker{color:var(--v2-h
 #app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) .overflow-y-auto :is(input,textarea,select){border-radius:10px!important;border:1px solid var(--v2-edge)!important}
 @media(min-width:600px){#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){border-radius:22px!important}#app>main .v3-tour-atlas .v3-map-console{max-width:480px;right:auto!important;width:calc(100% - 24px)}}
 @media(max-width:360px){#app>main .v3-yearbook-banner{padding:21px 17px}#app>main .v3-tour-atlas .v3-map-console{padding:10px!important}}
+
+/* V18 comprehensive editorial layout: typography, home, admission tickets, artist cards, dock */
+#app>main .v4-page-intro{display:flex;flex-direction:column;gap:10px;padding:6px 0 14px;border-bottom:1px solid var(--v2-edge)}
+#app>main .v4-page-intro>span{font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--v2-muted)}
+#app>main .v4-page-intro>div{display:flex;align-items:end;justify-content:space-between;gap:14px}
+#app>main .v4-page-intro h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:clamp(19px,5vw,25px);font-weight:800;line-height:1.3;color:var(--v2-text)!important;max-width:300px}
+#app>main .v4-page-intro small{font-size:8px;letter-spacing:.1em;color:var(--v2-muted);max-width:110px;text-align:right;line-height:1.5}
+#app>main .v4-search-box{margin-top:4px}
+#app>main .v4-search-box input{border:1px solid var(--v2-edge)!important;border-radius:14px!important;min-height:46px;padding-left:43px!important;box-shadow:0 5px 16px #0000000c!important}
+#app>main .v4-search-box>.ph-magnifying-glass{left:15px!important;top:15px!important;color:var(--v2-muted)!important}
+#app>main .v4-ticket-switch{padding:5px!important;border-radius:13px!important;border:1px solid var(--v2-edge);background:var(--v2-panel-alt)!important;min-height:47px}
+#app>main .v4-ticket-switch .rita-segmented-indicator{border-radius:9px!important;background:var(--v2-panel)!important;box-shadow:0 2px 9px #0002!important}
+#app>main .v4-ticket-switch button{font-size:12px!important;letter-spacing:.025em;font-weight:800!important}
+#app>main .v4-admission-ticket{position:relative;border-radius:16px!important;isolation:isolate}
+#app>main .v4-admission-ticket:before,#app>main .v4-admission-ticket:after{content:"";position:absolute;top:116px;width:18px;height:18px;border-radius:50%;background:var(--v2-bg);z-index:4;pointer-events:none;border:1px solid var(--v2-edge)}
+#app>main .v4-admission-ticket:before{left:-11px}
+#app>main .v4-admission-ticket:after{right:-11px}
+#app>main .v4-admission-ticket>div:first-child{border-radius:12px 12px 0 0}
+#app>main .v4-admission-ticket :is(h3,h4){letter-spacing:.01em;line-height:1.4}
+#app>main .v4-artist-profile{position:relative;padding:11px!important;border-radius:20px!important;box-shadow:0 12px 30px #00000015!important}
+#app>main .v4-artist-profile>div:first-child{border-radius:13px!important}
+#app>main .v4-artist-profile img{object-position:center 35%}
+#app>main .v4-artist-profile h3{font-family:"Playfair Display","Noto Sans TC",serif;letter-spacing:.015em}
+#app>main .v4-artist-profile .border-b{border-color:var(--v2-edge)!important}
+#app>main .v3-yearbook-banner .v4-yearbook-footer{display:flex;justify-content:space-between;gap:8px;margin-top:15px;padding-top:11px;border-top:1px solid var(--v2-edge);font-size:8px;letter-spacing:.14em;font-weight:800;color:var(--v2-muted);position:relative;z-index:1}
+#app>.v4-dock-nav{display:flex;align-items:center;justify-content:space-around;gap:5px;padding:9px 10px calc(9px + env(safe-area-inset-bottom,0px))!important;border-top:1px solid var(--v2-edge)!important;background:var(--v2-nav)!important;box-shadow:0 -9px 30px #0002!important}
+#app>.v4-dock-nav>button{position:relative;display:flex;flex:1;align-items:center;justify-content:center;min-width:0;width:auto!important;gap:4px!important;border-radius:13px;padding:8px 3px!important;color:var(--v2-muted)!important;transition:background .2s,color .2s}
+#app>.v4-dock-nav>button[aria-current="page"]{background:var(--v2-panel-alt)!important;color:var(--v2-text)!important}
+#app>.v4-dock-nav>button[aria-current="page"]:before{content:"";position:absolute;top:2px;left:30%;right:30%;height:3px;background:var(--rita-action-bg,var(--v2-highlight));border-radius:99px}
+#app>.v4-dock-nav>button>i{font-size:21px!important}
+#app>.v4-dock-nav>button>span{font-size:10px!important;font-weight:800!important}
+@media(min-width:740px){#app>main .v3-ticket-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}#app>main .v3-fandom-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}#app>main .v3-fandom-collection>.v3-section-heading{grid-column:1/-1}}
+@media(max-width:390px){#app>main .v4-page-intro small{display:none}#app>.v4-dock-nav{gap:2px;padding-left:5px!important;padding-right:5px!important}#app>.v4-dock-nav>button{padding-left:1px!important;padding-right:1px!important}}
+@media(prefers-reduced-motion:reduce){#app>.v4-dock-nav>button{transition:none}}
