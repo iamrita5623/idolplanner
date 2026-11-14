@@ -201,7 +201,8 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                <button v-else @click="searchQuery = ''" class="text-slate-500 underline text-sm">清除搜尋</button>
                 </div>
 
-                <transition-group name="fade" tag="div" class="space-y-4">
+                <div class="v3-section-heading"><div><span>01 / THE TICKET COLLECTION</span><h2>我的演唱會票券</h2></div><span class="v3-section-count">{{ filteredEvents.length }} EVENTS</span></div>
+                <transition-group name="fade" tag="div" class="v3-ticket-collection space-y-4">
                     <div v-for="event in filteredEvents" :key="event.id" 
                          :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-ticket-card bg-white rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group transition-all duration-300"
                          :class="{'ring-2 ring-primary/30': expandedEventId === event.id}">
@@ -440,7 +441,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
                     </button>
            </div>
                 
-                <div v-if="fandoms.length > 0" class="space-y-4">
+                <div v-if="fandoms.length > 0" class="v3-fandom-collection space-y-4"><div class="v3-section-heading"><div><span>02 / THE FAN ARCHIVE</span><h2>我的偶像收藏誌</h2></div><span class="v3-section-count">{{ fandoms.length }} ARTISTS</span></div>
                     <div v-for="(fan, index) in fandoms" :key="index"  :style="{ backgroundColor: cssVars['--rita-card'], borderColor: cssVars['--rita-line'] }" class="v2-artist-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
                        
  
