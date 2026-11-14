@@ -209,3 +209,16 @@ html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color
 #app>.v2-stage-header h1{font-size:24px!important;line-height:1.2!important}
 #app>.v2-stage-header .v2-mode-toggle{top:14px!important}
 @media(max-width:390px){#app>main .v2-yearbook-page>div:first-of-type{flex-wrap:wrap}#app>main .v2-yearbook-page>div:first-of-type>.flex{width:100%;justify-content:flex-end}#app>.v2-stage-header h1{font-size:22px!important}}
+
+/* Screenshot fix v9: explicit stats panel surfaces, not legacy inline --rita-card white */
+#app>main .v2-yearbook-page .v2-stat-panel{background:var(--v2-panel)!important;background-image:none!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;box-shadow:0 10px 24px #00000012!important}
+#app>main .v2-yearbook-page .v2-stat-panel :is(h3,.text-slate-700,.text-slate-800,.text-slate-900,.text-slate-600){color:var(--v2-text)!important}
+#app>main .v2-yearbook-page .v2-stat-panel :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important;opacity:1!important}
+#app>main .v2-yearbook-page .v2-stat-panel .bg-slate-50{background:var(--v2-panel-alt)!important;color:var(--v2-muted)!important}
+#app>main .v2-yearbook-page .v2-stat-panel .border-slate-50{border-color:var(--v2-edge)!important}
+#app>main .v2-yearbook-page .v2-stat-panel .bg-slate-100{background:var(--v2-panel-alt)!important}
+#app>main .v2-yearbook-page .v2-stat-panel .text-center.text-slate-400{color:var(--v2-muted)!important}
+html[data-v2-mode="light"] #app>main .v2-yearbook-page .v2-stat-panel{background:#fffaf5!important;color:#30283a!important}
+html[data-v2-mode="light"] #app>main .v2-yearbook-page .v2-stat-panel :is(h3,.text-slate-700,.text-slate-800,.text-slate-900,.text-slate-600){color:#30283a!important}
+html[data-v2-mode="dark"] #app>main .v2-yearbook-page .v2-stat-panel{background:#252337!important;color:#f7f0e7!important}
+html[data-v2-mode="dark"] #app>main .v2-yearbook-page .v2-stat-panel :is(h3,.text-slate-700,.text-slate-800,.text-slate-900,.text-slate-600){color:#f7f0e7!important}
