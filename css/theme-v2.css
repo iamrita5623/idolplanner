@@ -36,3 +36,25 @@ body{background:var(--v2-bg)!important;color:var(--v2-text)!important}
 #app>main .map-tab-panel .leaflet-container *{--v2-text:#222}
 @media(min-width:600px){body{background:radial-gradient(ellipse at 50% 0%,#342849,var(--v2-bg) 75%)!important}#app{border-left:1px solid var(--v2-edge);border-right:1px solid var(--v2-edge)}}
 @media(prefers-reduced-motion:reduce){#app *,#app *:before,#app *:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* V2 editorial composition and unmistakable ticket treatment */
+#app>.v2-stage-header{padding-top:32px!important;padding-bottom:24px!important;background:radial-gradient(circle at 90% 5%,#6d478a55,transparent 42%),linear-gradient(145deg,#161525,#30233e)!important;border-bottom:1px solid #d8b2fa66}
+#app>.v2-stage-header h1{font-family:"Playfair Display","Noto Sans TC",serif;font-weight:600;letter-spacing:.035em;font-size:clamp(23px,5vw,30px);line-height:1.3;padding-right:65px}
+#app>.v2-stage-header .v2-mode-toggle{top:14px;right:66px}
+#app>main>.v2-shows-page:before{content:"01  /  THE SHOW ARCHIVE";display:block;font:700 10px/1.4 "Quicksand",sans-serif;letter-spacing:.2em;color:var(--v2-muted);padding-top:4px}
+#app>main>.v2-editorial-page:before{content:"THE PERSONAL EDITION";display:block;font:700 10px/1.4 "Quicksand",sans-serif;letter-spacing:.2em;color:var(--v2-muted);padding-top:4px}
+#app>main .v2-ticket-card{position:relative;background:var(--v2-ticket)!important;border:1px solid var(--v2-edge)!important;border-radius:20px!important;box-shadow:0 16px 35px #00000024!important;overflow:hidden}
+#app>main .v2-ticket-card:before,#app>main .v2-ticket-card:after{content:"";position:absolute;top:54%;width:18px;height:18px;border-radius:50%;background:var(--v2-bg);border:1px solid var(--v2-edge);z-index:4;pointer-events:none}
+#app>main .v2-ticket-card:before{left:-10px}
+#app>main .v2-ticket-card:after{right:-10px}
+#app>main .v2-ticket-card>.bg-slate-50,#app>main .v2-ticket-card>.border-t{border-top:1px dashed var(--v2-edge)!important}
+#app>main .v2-ticket-card :is(.text-slate-600,.text-slate-700,.text-slate-800){color:var(--v2-ticket-ink)!important}
+#app>main .v2-artist-card{background:var(--v2-panel)!important;border:1px solid var(--v2-edge)!important;border-radius:22px!important;box-shadow:0 12px 30px #0000001c!important}
+#app>main .v2-artist-card img{object-fit:cover}
+#app>.v2-bottom-nav{backdrop-filter:blur(16px);border-top:1px solid var(--v2-edge)!important}
+#app>.v2-bottom-nav button[aria-current="page"]{color:var(--v2-accent)!important;transform:translateY(-2px)}
+#app :is(.settings-modal-panel,.event-editor-sheet,.fandom-editor-sheet){border:1px solid var(--v2-edge);box-shadow:0 25px 80px #0006!important}
+#app :is(.settings-modal-panel,.event-editor-sheet,.fandom-editor-sheet) h2{font-family:"Playfair Display","Noto Sans TC",serif}
+html[data-v2-mode="light"] #app>.v2-stage-header{background:linear-gradient(140deg,#31233f,#554269)!important}
+html[data-v2-mode="light"] #app>main .v2-ticket-card{background:#fffaf3!important}
+html[data-v2-mode="dark"] #app>main .v2-ticket-card{background:#29253b!important}
