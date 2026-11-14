@@ -8,7 +8,7 @@
 追星行程管理、費用紀錄與地圖足跡</title>
     
     <link rel="manifest" href="./manifest.webmanifest?v=4">
-    <meta name="theme-color" content="#171a28">
+    <meta name="theme-color" content="#f8f4ec">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="IDOL PLANNER">
@@ -59,7 +59,7 @@
 
 
 
-<link rel="stylesheet" href="./css/layout-test.css?v=1">
+<link rel="stylesheet" href="./css/layout-test.css?v=3">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
@@ -91,7 +91,7 @@ function toggleV2Mode(){var next=document.documentElement.dataset.v2Mode==="dark
 
         <header class="lab-topbar shrink-0 z-20">
   <div class="lab-brand"><span class="lab-brand-mark">R<span>·</span></span><span class="lab-brand-text"><strong>RITA / LOGBOOK</strong><small>追星生活紀錄系統</small></span></div>
-  <div class="lab-topbar-right"><span class="lab-topbar-tag">PERSONAL SPACE <b>●</b> LIVE</span><button type="button" class="lab-mode-btn" onclick="toggleV2Mode()" aria-label="切換明暗模式"><i class="ph ph-moon-stars"></i><span>外觀</span></button><button type="button" class="lab-settings-btn" @click="toggleSettingsModal" aria-label="開啟設定"><i class="ph ph-sliders-horizontal"></i></button></div>
+  <div class="lab-topbar-right"><span class="lab-topbar-tag">PERSONAL SPACE <b>●</b> LIVE</span><span class="lab-mode-btn" title="設計定案後開放外觀設定"><i class="ph ph-palette"></i><span>設計預覽</span></span><button type="button" class="lab-settings-btn" @click="toggleSettingsModal" aria-label="開啟設定"><i class="ph ph-sliders-horizontal"></i></button></div>
 </header>
 
         <main data-rita-app-main :style="{ backgroundColor: cssVars['--rita-page'] }" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth w-full relative bg-slate-50">
