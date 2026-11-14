@@ -1,547 +1,77 @@
-/* Idol Planner 2.0 — isolated visual system. Original 444 assets remain untouched. */
-:root{--v2-night:#121321;--v2-paper:#f6f0e7;--v2-ink:#29243a;--v2-accent:#c4a3ff}
-html[data-v2-mode="dark"]{--v2-bg:#10121e;--v2-panel:#252337;--v2-panel-alt:#302c42;--v2-text:#f7f0e7;--v2-muted:#c5bbd0;--v2-edge:#554b69;--v2-header:#171526;--v2-input:#302b42;--v2-nav:#171526;--v2-ticket:#282538;--v2-ticket-ink:#f7f0e7}
-html[data-v2-mode="light"]{--v2-bg:#eee8e1;--v2-panel:#fffaf3;--v2-panel-alt:#f4ece5;--v2-text:#30283a;--v2-muted:#685d71;--v2-edge:#d6c8d5;--v2-header:#282238;--v2-input:#f6f0eb;--v2-nav:#fffaf3;--v2-ticket:#fffaf3;--v2-ticket-ink:#30283a}
-html{background:var(--v2-bg)!important}
-body{background:var(--v2-bg)!important;color:var(--v2-text)!important}
-#app{--v2-radius:20px;background:var(--v2-bg)!important;color:var(--v2-text)!important;box-shadow:0 20px 80px #0005}
-#app>.concert-header{background:linear-gradient(150deg,var(--v2-header),#3b2b54)!important;color:#f9f0ff!important;border-radius:0!important;padding-top:18px!important;padding-bottom:22px!important;position:relative}
-#app>.concert-header:before{content:"THE CONCERT ARCHIVE  /  PERSONAL EDITION";display:block;letter-spacing:.24em;font:700 9px/1.6 "Quicksand",sans-serif;color:#e7d5fa;opacity:.85;margin-bottom:10px}
-#app>main[data-rita-app-main]{background:var(--v2-bg)!important;color:var(--v2-text)!important}
-#app>main :is(.bg-white,.bg-white\/95,.bg-white\/90){background-color:var(--v2-panel)!important}
-#app>main :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background-color:var(--v2-panel-alt)!important}
-#app>main :is(.border-slate-50,.border-slate-100,.border-slate-200,.border-slate-300){border-color:var(--v2-edge)!important}
-#app>main :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app>main :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app>main :is(input,textarea,select){background-color:var(--v2-input)!important;color:var(--v2-text)!important;border-color:var(--v2-edge)!important}
-#app>main :is(input,textarea)::placeholder{color:var(--v2-muted)!important}
-#app>main :is(.rounded-2xl,.rounded-xl){border-radius:var(--v2-radius)}
-#app>main div[v-for="event in filteredEvents"]{background:var(--v2-ticket)!important;color:var(--v2-ticket-ink)!important}
-#app>main .rita-segmented{background:var(--v2-panel-alt)!important}
-#app>main .rita-segmented-indicator{background:var(--v2-panel)!important}
-#app>.app-bottom-nav{background:var(--v2-nav)!important;border-color:var(--v2-edge)!important;color:var(--v2-text)!important;box-shadow:0 -8px 32px #0002!important}
-#app>.app-bottom-nav button{color:var(--v2-muted)!important}
-#app>.app-bottom-nav button[aria-current="page"]{color:var(--v2-accent)!important}
-#app [data-rita-dialog],#app :is(.event-editor-sheet,.fandom-editor-sheet,.changelog-modal-panel){background:var(--v2-panel)!important;color:var(--v2-text)!important}
-#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(.bg-slate-50,.bg-slate-100,.bg-white){background:var(--v2-input)!important}
-#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(input,textarea,select){background:var(--v2-input)!important;color:var(--v2-text)!important;border-color:var(--v2-edge)!important}
-#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(.text-slate-600,.text-slate-700,.text-slate-800){color:var(--v2-text)!important}
-#app :is(.event-editor-sheet,.fandom-editor-sheet,.settings-modal-panel,.changelog-modal-panel) :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app .rita-primary-button{background:var(--v2-accent)!important;color:#201629!important}
-#app>.concert-header .v2-mode-toggle{position:absolute;top:12px;right:58px;z-index:15;background:#ffffff22;color:#fff;border:1px solid #ffffff55;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
-#app>.concert-header .v2-mode-toggle:focus-visible{outline:3px solid #e9c3ff;outline-offset:3px}
-#app>main :is(.shadow-sm,.shadow-lg){box-shadow:0 8px 28px #00000012!important}
-#app>main :is(.bg-white.rounded-2xl,.bg-white.p-4.rounded-2xl){border:1px solid var(--v2-edge)!important}
-#app>main .map-tab-panel .leaflet-container{color:#222!important}
-#app>main .map-tab-panel .leaflet-container *{--v2-text:#222}
-@media(min-width:600px){body{background:radial-gradient(ellipse at 50% 0%,#342849,var(--v2-bg) 75%)!important}#app{border-left:1px solid var(--v2-edge);border-right:1px solid var(--v2-edge)}}
-@media(prefers-reduced-motion:reduce){#app *,#app *:before,#app *:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-
-/* V2 editorial composition and unmistakable ticket treatment */
-#app>.v2-stage-header{padding-top:32px!important;padding-bottom:24px!important;background:radial-gradient(circle at 90% 5%,#6d478a55,transparent 42%),linear-gradient(145deg,#161525,#30233e)!important;border-bottom:1px solid #d8b2fa66}
-#app>.v2-stage-header h1{font-family:"Playfair Display","Noto Sans TC",serif;font-weight:600;letter-spacing:.035em;font-size:clamp(23px,5vw,30px);line-height:1.3;padding-right:65px}
-#app>.v2-stage-header .v2-mode-toggle{top:14px;right:66px}
-#app>main>.v2-shows-page:before{content:"01  /  THE SHOW ARCHIVE";display:block;font:700 10px/1.4 "Quicksand",sans-serif;letter-spacing:.2em;color:var(--v2-muted);padding-top:4px}
-#app>main>.v2-editorial-page:before{content:"THE PERSONAL EDITION";display:block;font:700 10px/1.4 "Quicksand",sans-serif;letter-spacing:.2em;color:var(--v2-muted);padding-top:4px}
-#app>main .v2-ticket-card{position:relative;background:var(--v2-ticket)!important;border:1px solid var(--v2-edge)!important;border-radius:20px!important;box-shadow:0 16px 35px #00000024!important;overflow:hidden}
-#app>main .v2-ticket-card:before,#app>main .v2-ticket-card:after{content:"";position:absolute;top:54%;width:18px;height:18px;border-radius:50%;background:var(--v2-bg);border:1px solid var(--v2-edge);z-index:4;pointer-events:none}
-#app>main .v2-ticket-card:before{left:-10px}
-#app>main .v2-ticket-card:after{right:-10px}
-#app>main .v2-ticket-card>.bg-slate-50,#app>main .v2-ticket-card>.border-t{border-top:1px dashed var(--v2-edge)!important}
-#app>main .v2-ticket-card :is(.text-slate-600,.text-slate-700,.text-slate-800){color:var(--v2-ticket-ink)!important}
-#app>main .v2-artist-card{background:var(--v2-panel)!important;border:1px solid var(--v2-edge)!important;border-radius:22px!important;box-shadow:0 12px 30px #0000001c!important}
-#app>main .v2-artist-card img{object-fit:cover}
-#app>.v2-bottom-nav{backdrop-filter:blur(16px);border-top:1px solid var(--v2-edge)!important}
-#app>.v2-bottom-nav button[aria-current="page"]{color:var(--v2-accent)!important;transform:translateY(-2px)}
-#app :is(.settings-modal-panel,.event-editor-sheet,.fandom-editor-sheet){border:1px solid var(--v2-edge);box-shadow:0 25px 80px #0006!important}
-#app :is(.settings-modal-panel,.event-editor-sheet,.fandom-editor-sheet) h2{font-family:"Playfair Display","Noto Sans TC",serif}
-html[data-v2-mode="light"] #app>.v2-stage-header{background:linear-gradient(140deg,#31233f,#554269)!important}
-html[data-v2-mode="light"] #app>main .v2-ticket-card{background:#fffaf3!important}
-html[data-v2-mode="dark"] #app>main .v2-ticket-card{background:#29253b!important}
-
-/* Phase 3: dialog, form and readability system */
-#app [data-rita-dialog]{color:var(--v2-text)}
-#app [data-rita-dialog] > div:nth-child(2){background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;box-shadow:0 24px 80px #0007!important}
-#app [data-rita-dialog] :is(.bg-white,.bg-white\/95){background:var(--v2-panel)!important}
-#app [data-rita-dialog] :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background:var(--v2-panel-alt)!important}
-#app [data-rita-dialog] :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app [data-rita-dialog] :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app [data-rita-dialog] :is(.border-slate-100,.border-slate-200,.border-slate-300){border-color:var(--v2-edge)!important}
-#app [data-rita-dialog] :is(input,textarea,select){background:var(--v2-input)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;border-radius:12px;min-height:40px}
-#app [data-rita-dialog] :is(input,textarea)::placeholder{color:var(--v2-muted)!important;opacity:1}
-#app [data-rita-dialog] :is(input,textarea,select,button):focus-visible{outline:2px solid var(--v2-accent)!important;outline-offset:2px}
-#app [data-rita-dialog] :is(h2,h3){color:var(--v2-text)!important}
-#app [data-rita-dialog] :is(.rounded-3xl,.rounded-2xl){border-radius:22px}
-#app [data-rita-dialog] :is(.bg-primary,.bg-primary-dark){background:var(--v2-accent)!important;color:#21172b!important}
-#app [data-rita-dialog] .text-white:is(.bg-primary,.bg-primary-dark){color:#21172b!important}
-#app>main .v2-shows-page h2,#app>main .v2-editorial-page h2{font-family:"Playfair Display","Noto Sans TC",serif;letter-spacing:.015em;color:var(--v2-text)!important}
-#app>main .v2-ticket-card button:focus-visible,#app>.v2-bottom-nav button:focus-visible{outline:2px solid var(--v2-accent);outline-offset:2px}
-#app>main .v2-ticket-card :is(button,input){accent-color:var(--v2-accent)}
-#app>main .v2-artist-card :is(.border-b,.border-t){border-color:var(--v2-edge)!important}
-#app>main .v2-editorial-page .v2-artist-card h3{font-family:"Playfair Display","Noto Sans TC",serif;font-size:1.2rem}
-#app>main .v2-editorial-page .v2-artist-card img{max-height:250px}
-#app>main .map-tab-panel :is(.leaflet-control,.leaflet-popup){color:#222}
-#app>main .map-tab-panel .map-replay-controls>div{background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important}
-#app>main .map-tab-panel .map-replay-controls :is(.text-slate-600,.text-slate-700){color:var(--v2-text)!important}
-#app>main .map-tab-panel .map-replay-controls :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-html[data-v2-mode="dark"] #app :is(.ticket-preview-panel,.settings-modal-panel){color:var(--v2-text)}
-@media(max-width:599px){#app [data-rita-dialog] > div:nth-child(2){max-height:calc(100dvh - 30px);overflow-y:auto;overscroll-behavior:contain}}
-
-/* Phase 4 — Yearbook editorial and Tour Diary: never restyle #share-template export artwork */
-#app>main .v2-yearbook-page{position:relative}
-#app>main .v2-yearbook-page:before{content:"04 / ANNUAL ARCHIVE";display:block;font:700 10px/1.4 "Quicksand",sans-serif;letter-spacing:.2em;color:var(--v2-muted);padding-top:4px}
-#app>main .v2-yearbook-title{display:flex;flex-direction:column;gap:5px;max-width:235px}
-#app>main .v2-yearbook-title h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:clamp(20px,4.8vw,27px);line-height:1.3;margin:0;color:var(--v2-text)!important}
-#app>main .v2-overline{font:700 9px/1.4 "Quicksand",sans-serif;letter-spacing:.15em;color:var(--v2-accent)}
-#app>main .v2-yearbook-caption{font-size:11px;color:var(--v2-muted);line-height:1.6}
-#app>main .v2-yearbook-page>div:first-of-type{align-items:center;gap:10px}
-#app>main .v2-yearbook-page>div:first-of-type>.flex{flex-shrink:0;gap:6px}
-#app>main .v2-yearbook-page>div:first-of-type button{white-space:nowrap}
-#app>main .v2-yearbook-page :is(.rounded-2xl.bg-white,.bg-white.rounded-2xl){border:1px solid var(--v2-edge)!important;box-shadow:0 12px 32px #0000001c!important}
-#app>main .v2-yearbook-page :is(.text-2xl,.text-3xl).font-bold{font-variant-numeric:tabular-nums;letter-spacing:-.025em}
-#app>main .v2-tour-map>.absolute.top-4{border:1px solid var(--v2-edge)!important;background:var(--v2-panel)!important;box-shadow:0 12px 32px #0004!important}
-#app>main .v2-tour-map>.absolute.top-4 h3{color:var(--v2-text)!important;font-family:"Playfair Display","Noto Sans TC",serif;font-size:17px}
-#app>main .v2-tour-map>.absolute.top-4 :is(.text-slate-500,.text-slate-600){color:var(--v2-muted)!important}
-#app>main .v2-tour-map .map-replay-controls{max-width:490px}
-#app>main .v2-tour-map .map-replay-controls>div{backdrop-filter:blur(16px);border-radius:16px!important}
-@media(max-width:370px){#app>main .v2-yearbook-page>div:first-of-type{flex-wrap:wrap}#app>main .v2-yearbook-title{max-width:100%}}
-
-/* Phase 6: complete page composition pass; artist/event colors remain data-driven */
-html[data-v2-mode="dark"]{color-scheme:dark;--v2-surface:#211e30;--v2-soft:#302a40;--v2-highlight:#d5b8ff;--v2-contrast:#151020}
-html[data-v2-mode="light"]{color-scheme:light;--v2-surface:#fffaf4;--v2-soft:#eee5e9;--v2-highlight:#684580;--v2-contrast:#fffaf4}
-#app{min-width:0;isolation:isolate}
-#app>main[data-rita-app-main]{min-height:0;overscroll-behavior-y:contain}
-#app>main .v2-shows-page,#app>main .v2-editorial-page{padding:22px 20px 125px!important;display:flex;flex-direction:column;gap:20px}
-#app>main .v2-shows-page>.relative:first-child{margin:0}
-#app>main .v2-shows-page>.relative:first-child input{width:100%;height:48px;border-radius:14px!important;background:var(--v2-surface)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;box-shadow:none!important}
-#app>main .v2-shows-page .rita-segmented{background:var(--v2-soft)!important;border:1px solid var(--v2-edge);border-radius:16px!important;min-height:44px}
-#app>main .v2-shows-page .rita-segmented button{border-radius:12px!important;min-width:0}
-#app>main .v2-shows-page .v2-ticket-card{margin-bottom:5px;transition:transform .18s ease,box-shadow .18s ease}
-#app>main .v2-shows-page .v2-ticket-card:active{transform:scale(.995)}
-#app>main .v2-shows-page .v2-ticket-card img{object-fit:cover}
-#app>main .v2-shows-page .v2-ticket-card .text-xs{line-height:1.55}
-#app>main .v2-editorial-page .v2-artist-card{overflow:hidden}
-#app>main .v2-editorial-page .v2-artist-card>div{min-width:0}
-#app>main .v2-editorial-page .v2-artist-card :is(h3,p){overflow-wrap:anywhere}
-#app>main .v2-yearbook-page{gap:18px!important}
-#app>main .v2-yearbook-page>div:first-of-type{border-bottom:1px solid var(--v2-edge);padding-bottom:18px}
-#app>main .v2-yearbook-page .v2-yearbook-caption{max-width:260px}
-#app>.v2-bottom-nav{background:var(--v2-nav)!important;border-color:var(--v2-edge)!important;box-shadow:0 -8px 28px #00000012;padding:10px 16px max(12px,env(safe-area-inset-bottom))!important;gap:4px}
-#app>.v2-bottom-nav button{flex:1;width:auto;min-width:0;padding:7px 2px;border-radius:12px;transition:background .2s,color .2s,transform .2s}
-#app>.v2-bottom-nav button[aria-current="page"]{background:var(--v2-soft);color:var(--v2-highlight)!important}
-#app>.v2-bottom-nav button span{font-size:11px;letter-spacing:.03em}
-#app [data-rita-dialog] .event-editor-sheet,#app [data-rita-dialog] .fandom-editor-sheet{background:var(--v2-panel)!important;max-height:min(90dvh,850px)!important}
-#app [data-rita-dialog] .event-editor-sheet>div:first-child,#app [data-rita-dialog] .fandom-editor-sheet>div:first-child{padding-bottom:14px;border-bottom:1px solid var(--v2-edge)}
-#app [data-rita-dialog] :is(.event-editor-sheet,.fandom-editor-sheet) h2{font-size:22px;letter-spacing:.01em}
-#app [data-rita-dialog] :is(.event-editor-sheet,.fandom-editor-sheet) .overflow-y-auto{scrollbar-width:thin;scrollbar-color:var(--v2-edge) transparent}
-#app [data-rita-dialog] :is(input,textarea,select):focus{border-color:var(--v2-highlight)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--v2-highlight) 25%,transparent)!important}
-#app [data-rita-dialog] :is(input[type="checkbox"],input[type="radio"]){min-height:auto;accent-color:var(--rita-action-bg,var(--v2-highlight))}
-html[data-v2-mode="light"] #app>main .v2-ticket-card{color:var(--v2-text)!important}
-html[data-v2-mode="dark"] #app>main .v2-ticket-card{color:var(--v2-text)!important}
-@media(min-width:768px){#app>main .v2-shows-page,#app>main .v2-editorial-page{padding-left:26px!important;padding-right:26px!important}#app>main .v2-shows-page .v2-ticket-card:hover{transform:translateY(-2px);box-shadow:0 18px 38px #0003!important}}
-@media(max-width:390px){#app>main .v2-shows-page,#app>main .v2-editorial-page{padding-left:14px!important;padding-right:14px!important}#app>.v2-bottom-nav{padding-left:7px!important;padding-right:7px!important}#app>.v2-stage-header h1{font-size:22px}}
-@media(prefers-reduced-motion:reduce){#app .v2-ticket-card,#app>.v2-bottom-nav button{transition:none!important}}
-
-/* V2 FINAL POLISH — scoped cascade fixes. Never force custom event colors. */
-html[data-v2-mode="dark"]{--v2-accent:#d9b8ff;--v2-accent-ink:#21152f;--v2-nav-selected:#3c3053;--v2-hairline:#554866}
-html[data-v2-mode="light"]{--v2-accent:#72508c;--v2-accent-ink:#fffaf3;--v2-nav-selected:#ede1f1;--v2-hairline:#d8c8d8}
-#app>.v2-stage-header{display:block!important;min-height:122px;background:radial-gradient(circle at 100% 0%,#a879bd33,transparent 55%),linear-gradient(150deg,#171323,#39294c)!important}
-#app>.v2-stage-header .flex.justify-between.items-center.mb-3{gap:12px;padding-right:74px}
-#app>.v2-stage-header .flex.justify-between.items-center.mb-3>div:first-child{min-width:0;flex:1}
-#app>.v2-stage-header h1{padding-right:0!important;overflow-wrap:anywhere;font-size:clamp(20px,4.8vw,27px)!important}
-#app>.v2-stage-header .v2-mode-toggle{right:12px!important;top:18px!important;min-width:62px;min-height:36px;padding:6px 9px!important;line-height:1.2}
-#app>.v2-stage-header .v2-mode-toggle:hover{background:#ffffff36}
-#app>.v2-stage-header .v2-mode-toggle:active{transform:scale(.97)}
-#app>main .v2-shows-page>.relative:first-child input{padding-left:42px!important}
-#app>main .v2-shows-page .rita-segmented{overflow:hidden}
-#app>main .v2-ticket-card{background:var(--v2-ticket)!important;color:var(--v2-ticket-ink)!important}
-#app>main .v2-ticket-card :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app>main .v2-ticket-card :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-ticket-ink)!important}
-#app>main .v2-artist-card{color:var(--v2-text)!important}
-#app>main .v2-artist-card :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app>main .v2-artist-card :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app>.v2-bottom-nav button[aria-current="page"]{color:var(--v2-accent)!important;background:var(--v2-nav-selected)!important}
-html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color:#543669!important}
-#app :is(.rita-primary-button,.bg-primary){border-color:transparent}
-#app .rita-primary-button{background:var(--rita-action-bg,var(--primary-color))!important;color:var(--rita-action-text,#fff)!important}
-#app>main .v2-yearbook-page>.flex button.rita-primary-button{background:var(--rita-action-bg,var(--primary-color))!important;color:var(--rita-action-text,#fff)!important}
-#app [data-rita-dialog]{background:transparent!important}
-#app [data-rita-dialog]>.absolute.inset-0{background:#080511aa!important}
-#app [data-rita-dialog]>.event-editor-sheet,#app [data-rita-dialog]>.fandom-editor-sheet{color:var(--v2-text)!important}
-#app [data-rita-dialog] :is(input,textarea,select){color-scheme:inherit}
-#app [data-rita-dialog] :is(input[type="color"],input[type="file"]){min-height:32px}
-#app [data-rita-dialog] :is(input[type="checkbox"],input[type="radio"]){appearance:auto}
-#app [data-rita-dialog] :is(.text-red-500,.text-red-600,.text-green-500,.text-green-600,.text-orange-500,.text-orange-600){filter:none}
-#app>main .v2-yearbook-page #share-template,#app>main .v2-yearbook-page #share-template *{color-scheme:light}
-#app>main .v2-tour-map .leaflet-container,#app>main .v2-tour-map .leaflet-container *{color-scheme:light}
-@media(min-width:600px){#app>.v2-stage-header{border-radius:0!important}#app>main[data-rita-app-main]{width:100%!important}#app>.v2-bottom-nav{width:min(490px,calc(100vw - 24px))!important}}
-@media(max-width:599px){#app>.v2-stage-header{padding-top:max(25px,env(safe-area-inset-top))!important}#app>.v2-stage-header .v2-mode-toggle{top:max(16px,env(safe-area-inset-top))!important}#app [data-rita-dialog]>.event-editor-sheet,#app [data-rita-dialog]>.fandom-editor-sheet{border-radius:22px 22px 0 0!important}}
-
-/* Screenshot-driven correction 2026-11-14: annual archive readability and density */
-#app>main .v2-yearbook-page{gap:14px!important;padding-top:16px!important}
-#app>main .v2-yearbook-page:before{padding-top:0!important;margin-bottom:0!important}
-#app>main .v2-yearbook-page>div:first-of-type{margin-bottom:0!important;padding-bottom:12px!important;gap:12px!important}
-#app>main .v2-yearbook-page .v2-yearbook-title{gap:4px}
-#app>main .v2-yearbook-page .v2-yearbook-title h2{font-size:23px!important}
-#app>main .v2-yearbook-page .v2-yearbook-caption{font-size:11px;line-height:1.5}
-#app>main .v2-yearbook-page>div:first-of-type>.flex{gap:6px!important}
-#app>main .v2-yearbook-page>div:first-of-type>.flex button{padding:9px 11px!important;border-radius:13px!important;font-size:12px!important;min-height:40px;gap:5px!important}
-#app>main .v2-yearbook-page>div:first-of-type>.flex button i{font-size:17px!important}
-#app>main .v2-yearbook-page>div.space-y-4{margin-top:0!important}
-#app>main .v2-yearbook-page>div.space-y-4>div.relative select{background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;min-height:52px;box-shadow:none!important}
-#app>main .v2-yearbook-page>div.space-y-4>div.relative select option{background:var(--v2-panel)!important;color:var(--v2-text)!important}
-#app>main .v2-yearbook-page>div.space-y-4>div.relative .text-slate-400{color:var(--v2-muted)!important}
-#app>main .v2-yearbook-page>div.space-y-4>div.bg-white{background:var(--v2-panel)!important;color:var(--v2-text)!important;border-color:var(--v2-accent)!important}
-#app>main .v2-yearbook-page>div.space-y-4>div.bg-white p{color:var(--v2-text)!important;opacity:1!important}
-#app>main .v2-yearbook-page>.grid.grid-cols-2>div{background:var(--v2-panel)!important;background-image:none!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;min-height:110px;box-shadow:none!important}
-#app>main .v2-yearbook-page>.grid.grid-cols-2>div :is(.text-slate-800,.text-slate-700,.text-slate-600){color:var(--v2-text)!important}
-#app>main .v2-yearbook-page>.grid.grid-cols-2>div :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important;opacity:1!important}
-#app>main .v2-yearbook-page>.grid.grid-cols-2>div .text-2xl{color:var(--v2-text)!important}
-#app>main .v2-yearbook-page>.grid.grid-cols-2>div button{color:var(--v2-muted)!important}
-#app>main .v2-yearbook-page>.grid.grid-cols-2{gap:10px!important}
-#app>main .v2-yearbook-page #share-template-legacy{color-scheme:light}
-#app>main .v2-yearbook-page #share-template-legacy .text-slate-700{color:#334155!important}
-#app>main .v2-yearbook-page #share-template-legacy .text-slate-600{color:#475569!important}
-#app>main .v2-yearbook-page #share-template-legacy .text-slate-500{color:#64748b!important}
-#app>.v2-stage-header{min-height:0!important;padding-top:16px!important;padding-bottom:17px!important}
-#app>.v2-stage-header:before{margin-bottom:7px!important;letter-spacing:.14em!important;font-size:8px!important}
-#app>.v2-stage-header .flex.justify-between.items-center.mb-3{margin-bottom:4px!important}
-#app>.v2-stage-header h1{font-size:24px!important;line-height:1.2!important}
-#app>.v2-stage-header .v2-mode-toggle{top:14px!important}
-@media(max-width:390px){#app>main .v2-yearbook-page>div:first-of-type{flex-wrap:wrap}#app>main .v2-yearbook-page>div:first-of-type>.flex{width:100%;justify-content:flex-end}#app>.v2-stage-header h1{font-size:22px!important}}
-
-/* Screenshot fix v9: explicit stats panel surfaces, not legacy inline --rita-card white */
-#app>main .v2-yearbook-page .v2-stat-panel{background:var(--v2-panel)!important;background-image:none!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;box-shadow:0 10px 24px #00000012!important}
-#app>main .v2-yearbook-page .v2-stat-panel :is(h3,.text-slate-700,.text-slate-800,.text-slate-900,.text-slate-600){color:var(--v2-text)!important}
-#app>main .v2-yearbook-page .v2-stat-panel :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important;opacity:1!important}
-#app>main .v2-yearbook-page .v2-stat-panel .bg-slate-50{background:var(--v2-panel-alt)!important;color:var(--v2-muted)!important}
-#app>main .v2-yearbook-page .v2-stat-panel .border-slate-50{border-color:var(--v2-edge)!important}
-#app>main .v2-yearbook-page .v2-stat-panel .bg-slate-100{background:var(--v2-panel-alt)!important}
-#app>main .v2-yearbook-page .v2-stat-panel .text-center.text-slate-400{color:var(--v2-muted)!important}
-html[data-v2-mode="light"] #app>main .v2-yearbook-page .v2-stat-panel{background:#fffaf5!important;color:#30283a!important}
-html[data-v2-mode="light"] #app>main .v2-yearbook-page .v2-stat-panel :is(h3,.text-slate-700,.text-slate-800,.text-slate-900,.text-slate-600){color:#30283a!important}
-html[data-v2-mode="dark"] #app>main .v2-yearbook-page .v2-stat-panel{background:#252337!important;color:#f7f0e7!important}
-html[data-v2-mode="dark"] #app>main .v2-yearbook-page .v2-stat-panel :is(h3,.text-slate-700,.text-slate-800,.text-slate-900,.text-slate-600){color:#f7f0e7!important}
-
-/* V10 systematic contrast audit: all ordinary app panels use matching surface/ink */
-html[data-v2-mode="dark"] #app>main[data-rita-app-main] :is(.bg-white,.bg-slate-50,.bg-slate-100,.bg-slate-200,.from-slate-50,.to-slate-100):not(.leaflet-container):not(.leaflet-popup):not(.leaflet-control):not(.ticket-stub){background-color:var(--v2-panel-alt)!important}
-html[data-v2-mode="light"] #app>main[data-rita-app-main] :is(.bg-white,.bg-slate-50,.bg-slate-100,.bg-slate-200,.from-slate-50,.to-slate-100):not(.leaflet-container):not(.leaflet-popup):not(.leaflet-control):not(.ticket-stub){background-color:var(--v2-panel)!important}
-#app>main[data-rita-app-main] :is(.bg-gradient-to-br.from-slate-50,.bg-gradient-to-br.to-slate-100){background-image:none!important}
-#app>main[data-rita-app-main] :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app>main[data-rita-app-main] :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app>main[data-rita-app-main] :is(.border-slate-100,.border-slate-200,.border-slate-300){border-color:var(--v2-edge)!important}
-#app>main[data-rita-app-main] .v2-yearbook-page .v2-stat-panel{background:var(--v2-panel)!important}
-#app>main[data-rita-app-main] .v2-yearbook-page>.grid.grid-cols-2>div{background:var(--v2-panel)!important}
-#app>main[data-rita-app-main] .v2-yearbook-page>div.space-y-4>div.bg-white{background:var(--v2-panel)!important}
-#app>main[data-rita-app-main] .v2-ticket-card{background:var(--v2-ticket)!important}
-#app>main[data-rita-app-main] .v2-artist-card{background:var(--v2-panel)!important}
-#app>main[data-rita-app-main] .v2-tour-map .leaflet-popup-content-wrapper,#app>main[data-rita-app-main] .v2-tour-map .leaflet-popup-tip{background:#fff!important;color:#222!important}
-#app>main[data-rita-app-main] .v2-tour-map .leaflet-popup-content-wrapper :is(.text-slate-600,.text-slate-700,.text-slate-800){color:#222!important}
-#app>main[data-rita-app-main] .v2-tour-map .leaflet-control{color:#222!important}
-#app>.v2-bottom-nav{color:var(--v2-text)!important}
-#app>.v2-bottom-nav button:not([aria-current="page"]){color:var(--v2-muted)!important}
-#app>.v2-bottom-nav button[aria-current="page"]{color:var(--v2-highlight)!important}
-html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color:#543669!important}
-#app .settings-modal-panel,#app .changelog-modal-panel{background:var(--v2-panel)!important;color:var(--v2-text)!important}
-#app .settings-modal-panel :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900),#app .changelog-modal-panel :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app .settings-modal-panel :is(.text-slate-400,.text-slate-500),#app .changelog-modal-panel :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app .settings-modal-panel :is(.bg-white,.bg-slate-50,.bg-slate-100),#app .changelog-modal-panel :is(.bg-white,.bg-slate-50,.bg-slate-100){background:var(--v2-panel-alt)!important}
-#app .settings-modal-panel :is(input,textarea,select),#app .changelog-modal-panel :is(input,textarea,select){background:var(--v2-input)!important;color:var(--v2-text)!important;border-color:var(--v2-edge)!important}
-#app [data-rita-dialog] :is(.bg-white,.bg-slate-50,.bg-slate-100){background:var(--v2-panel-alt)!important}
-#app [data-rita-dialog] :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app [data-rita-dialog] :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app [data-import-dialog="true"]>div{background:var(--v2-panel)!important;color:var(--v2-text)!important}
-#app [data-import-dialog="true"] :is(input,textarea,select){background:var(--v2-input)!important;color:var(--v2-text)!important}
-#app .ticket-preview-panel .ticket-stub{background:#fff!important;color:#1f2937!important}
-#app .ticket-preview-panel .ticket-stub :is(.text-slate-600,.text-slate-700,.text-slate-800){color:#334155!important}
-#app #share-template,#app #share-template-legacy{color-scheme:light}
-
-/* v11 screenshot-driven mobile event editor: safe scrolling and legible chips */
-#app [data-rita-dialog] .event-editor-sheet{height:min(90dvh,860px)!important;max-height:calc(100dvh - env(safe-area-inset-top) - 14px)!important;min-height:0!important;padding:20px 20px 0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-#app [data-rita-dialog] .event-editor-sheet>div:first-child{flex:0 0 auto!important;margin-bottom:0!important;padding-bottom:14px!important}
-#app [data-rita-dialog] .event-editor-sheet>.overflow-y-auto{min-height:0!important;flex:1 1 auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding-top:16px!important;padding-bottom:110px!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0{position:absolute!important;bottom:0!important;left:0!important;right:0!important;padding:12px 20px max(16px,env(safe-area-inset-bottom))!important;background:var(--v2-panel)!important;background-image:none!important;border-top:1px solid var(--v2-edge)!important;z-index:5}
-#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0 button{min-height:50px!important;padding:12px!important;border-radius:14px!important}
-#app [data-rita-dialog] .event-editor-sheet :is(.bg-slate-50,.bg-slate-100,.bg-slate-200){background:var(--v2-panel-alt)!important;color:var(--v2-text)!important}
-#app [data-rita-dialog] .event-editor-sheet :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app [data-rita-dialog] .event-editor-sheet :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
-#app [data-rita-dialog] .event-editor-sheet button.bg-slate-100{color:var(--v2-text)!important;border-color:var(--v2-edge)!important;min-height:34px}
-#app [data-rita-dialog] .event-editor-sheet button.border-dashed{color:var(--v2-text)!important;border:1px dashed var(--v2-edge)!important}
-#app [data-rita-dialog] .event-editor-sheet .rita-ui-control{background:var(--v2-panel-alt)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important}
-#app [data-rita-dialog] .event-editor-sheet :is(input,textarea,select){font-size:16px!important}
-#app [data-rita-dialog] .event-editor-sheet input::placeholder,#app [data-rita-dialog] .event-editor-sheet textarea::placeholder{color:var(--v2-muted)!important}
-#app [data-rita-dialog] .event-editor-sheet input[type="checkbox"]{font-size:initial!important}
-#app [data-rita-dialog] .event-editor-sheet :is(button,input,textarea,select):focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:2px}
-@media(max-width:599px){#app [data-rita-dialog].fixed.inset-0{align-items:flex-end!important}#app [data-rita-dialog] .event-editor-sheet{width:100%!important;max-width:none!important;border-radius:22px 22px 0 0!important}}
-
-/* V12 real-device fixes: venue results, import modal and ticket legibility */
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white{background:var(--v2-panel-alt)!important;border-color:var(--v2-edge)!important}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button{background:transparent!important;color:var(--v2-text)!important;border-radius:10px!important}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button:hover,#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button:focus-visible{background:var(--v2-soft)!important}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button span{color:var(--v2-text)!important}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button span.text-slate-400,#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button span.text-slate-500{color:var(--v2-muted)!important}
-#app [data-import-dialog="true"] .v2-import-panel{width:calc(100% - 28px)!important;max-width:490px!important;max-height:min(86dvh,760px)!important;overflow-y:auto!important;margin:14px!important;padding:22px!important;border:1px solid var(--v2-edge)!important;border-radius:22px!important;background:var(--v2-panel)!important;color:var(--v2-text)!important;box-shadow:0 24px 60px #0004!important;overscroll-behavior:contain}
-#app [data-import-dialog="true"] .v2-import-panel h3{color:var(--v2-text)!important;font-size:20px!important}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{background:var(--v2-panel-alt)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;min-height:42px!important;font-size:13px!important;white-space:nowrap}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="true"]{background:var(--v2-soft)!important;border-color:var(--v2-highlight)!important;color:var(--v2-text)!important;font-weight:700}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="false"]{opacity:.85}
-#app [data-import-dialog="true"] .v2-import-panel :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
-#app [data-import-dialog="true"] .v2-import-panel :is(.text-slate-600,.text-slate-700,.text-slate-800){color:var(--v2-text)!important}
-#app [data-import-dialog="true"] .v2-import-panel textarea{min-height:140px!important;max-height:35dvh!important;resize:vertical;background:var(--v2-input)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;font-size:14px!important;line-height:1.55}
-#app [data-import-dialog="true"] .v2-import-panel textarea::placeholder{color:var(--v2-muted)!important;opacity:.9}
-#app [data-import-dialog="true"] .v2-import-panel input[type="file"]{color:var(--v2-text)!important;background:var(--v2-input)!important;border:1px solid var(--v2-edge)!important;border-radius:12px!important;padding:8px!important;font-size:13px!important}
-#app [data-import-dialog="true"] .v2-import-panel input[type="file"]::file-selector-button{color:var(--v2-text)!important;background:var(--v2-soft)!important;border:1px solid var(--v2-edge)!important;border-radius:9px!important;padding:6px 10px!important;margin-right:10px}
-#app [data-import-dialog="true"] .v2-import-panel>.flex:last-child{margin-top:14px;gap:10px}
-#app [data-import-dialog="true"] .v2-import-panel>.flex:last-child button{min-height:44px!important;border-radius:12px!important}
-#app [data-import-dialog="true"] .v2-import-panel>.flex:last-child button:first-child{color:var(--v2-text)!important}
-#app .ticket-preview-panel .ticket-stub{background:#fff!important;color:#202638!important;color-scheme:light}
-#app .ticket-preview-panel .ticket-stub :is(.text-slate-400,.text-slate-500){color:#7b879a!important}
-#app .ticket-preview-panel .ticket-stub :is(.text-slate-700,.text-slate-800,.text-slate-900){color:#202638!important}
-#app .ticket-preview-panel .ticket-stub .text-white{color:#fff!important}
-#app .ticket-preview-panel .ticket-stub .border-slate-100{border-color:#e8edf3!important}
-@media(max-width:390px){#app [data-import-dialog="true"] .v2-import-panel{padding:16px!important}#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{font-size:12px!important;padding:6px!important}}
-
-/* V13: targeted QA corrections; keep all modal backdrops and native map/ticket colors independent */
-#app [data-rita-dialog].fixed.inset-0{background:rgba(7,6,15,.70)!important;backdrop-filter:blur(8px)}
-#app [data-import-dialog="true"].fixed.inset-0{padding:14px!important;box-sizing:border-box}
-#app [data-import-dialog="true"] .v2-import-panel{margin:0!important;max-height:calc(100dvh - 42px)!important;scrollbar-width:thin}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{transition:background-color .15s,border-color .15s}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode:focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:2px}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--v2-highlight)!important}
-#app [data-import-dialog="true"] .v2-import-panel :is(input,textarea,button){max-width:100%;box-sizing:border-box}
-#app [data-import-dialog="true"] .v2-import-panel textarea{overflow-wrap:anywhere}
-#app [data-rita-dialog] .event-editor-sheet>.overflow-y-auto{scrollbar-width:thin;scrollbar-color:var(--v2-edge) transparent}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white{max-height:230px;overflow-y:auto}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button{display:block;width:100%;text-align:left;overflow-wrap:anywhere}
-#app [data-rita-dialog] .event-editor-sheet .mt-2.rounded-xl.border.border-slate-200.bg-white>button:focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:-2px}
-#app .ticket-preview-panel{max-width:min(340px,calc(100vw - 32px))!important}
-#app .ticket-preview-panel .ticket-stub{overflow:hidden!important}
-#app .ticket-preview-panel .ticket-stub :is(h2,h3){overflow-wrap:anywhere}
-#app .ticket-preview-panel .ticket-stub .break-all{overflow-wrap:anywhere}
-#app .v2-artist-card :is(h3,p){overflow-wrap:anywhere}
-#app .v2-artist-card button{min-width:32px;min-height:32px}
-@media(max-width:599px){#app [data-import-dialog="true"].fixed.inset-0{align-items:center!important}#app [data-import-dialog="true"] .v2-import-panel{width:100%!important;max-width:none!important}#app .ticket-preview-panel .ticket-stub .p-6{padding:20px!important}}
-@media(prefers-reduced-motion:reduce){#app [data-import-dialog="true"] .rita-import-mode{transition:none!important}}
-
-/* V14 accessibility and interaction polish: real mobile screenshots follow-up */
-#app>.v2-stage-header{overflow:visible}
-#app>.v2-stage-header .v2-mode-toggle{min-width:70px;touch-action:manipulation}
-#app>main[data-rita-app-main]{scrollbar-width:thin;scrollbar-color:var(--v2-edge) transparent}
-#app>main[data-rita-app-main] :is(button,a,input,select,textarea):focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:2px}
-#app>main[data-rita-app-main] :is(input,textarea,select){accent-color:var(--rita-action-bg,var(--v2-accent))}
-#app>main[data-rita-app-main] :is(input,textarea)::placeholder{opacity:.85}
-#app>main[data-rita-app-main] .v2-shows-page .v2-ticket-card button{touch-action:manipulation}
-#app>main[data-rita-app-main] .v2-shows-page .v2-ticket-card .flex{min-width:0}
-#app>main[data-rita-app-main] .v2-shows-page .v2-ticket-card :is(h3,h4,p){overflow-wrap:anywhere}
-#app>main[data-rita-app-main] .v2-yearbook-page .v2-stat-panel{overflow-wrap:anywhere}
-#app>main[data-rita-app-main] .v2-yearbook-page .v2-stat-panel :is(.text-xs,.text-sm){line-height:1.55}
-#app [data-rita-dialog] .event-editor-sheet{overscroll-behavior:contain}
-#app [data-rita-dialog] .event-editor-sheet>.overflow-y-auto{scroll-padding-bottom:125px}
-#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0{box-shadow:0 -8px 18px #00000014!important}
-#app [data-rita-dialog] .event-editor-sheet>.absolute.bottom-0 button{touch-action:manipulation}
-#app [data-rita-dialog] :is(input,textarea,select){min-width:0;max-width:100%}
-#app [data-rita-dialog] .event-editor-sheet .flex>input{min-width:0}
-#app [data-rita-dialog] .event-editor-sheet button.border-dashed{min-height:42px}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{white-space:normal;overflow-wrap:anywhere}
-#app [data-import-dialog="true"] .v2-import-panel .rita-primary-button{color:var(--rita-action-text,#fff)!important}
-#app .ticket-preview-panel{overflow:visible}
-#app .ticket-preview-panel .ticket-stub{box-sizing:border-box}
-#app .ticket-preview-panel .ticket-stub :is(.text-xs,.text-sm){overflow-wrap:anywhere}
-#app>.v2-bottom-nav button{min-height:58px;touch-action:manipulation}
-#app>.v2-bottom-nav button:focus-visible{outline:2px solid var(--v2-highlight)!important;outline-offset:-2px}
-@media(max-width:599px){#app [data-rita-dialog] .event-editor-sheet{height:min(90dvh,860px)!important}#app [data-import-dialog="true"] .v2-import-panel{max-height:calc(100dvh - 32px)!important}#app>main[data-rita-app-main] .v2-yearbook-page{padding-bottom:140px!important}}
-
-/* V15: import help readability and safe mobile controls */
-#app [data-import-dialog="true"] .v2-import-panel strong{font-weight:750;color:var(--v2-text)!important}
-#app [data-import-dialog="true"] .v2-import-panel ul{padding-left:12px}
-#app [data-import-dialog="true"] .v2-import-panel li{margin-top:5px;line-height:1.6;overflow-wrap:anywhere}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode{flex:1 1 0;min-width:0;padding:9px 5px!important}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="true"]{background:var(--v2-soft)!important;color:var(--v2-text)!important}
-#app [data-import-dialog="true"] .v2-import-panel .rita-import-mode[aria-pressed="false"]{background:var(--v2-panel-alt)!important;color:var(--v2-muted)!important}
-@media(max-width:599px){#app [data-import-dialog="true"] .v2-import-panel textarea{font-size:16px!important}#app [data-import-dialog="true"] .v2-import-panel input[type="file"]{font-size:14px!important}}
-
-/* V16 TRUE LAYOUT REBUILD — the new masthead does not inherit concert-header.
-   Accent stripe follows the user's selected theme; day and night change all surfaces. */
-html[data-v2-mode="dark"]{--v3-header-bg:#191726;--v3-header-secondary:#252038;--v3-hero-ink:#f8f1fc;--v3-hero-sub:#c9b9d5;--v3-metric-bg:#282337;--v3-metric-border:#4b405b;--v3-emblem-bg:#302640}
-html[data-v2-mode="light"]{--v3-header-bg:#fff9f1;--v3-header-secondary:#f0e7e8;--v3-hero-ink:#30223c;--v3-hero-sub:#75647b;--v3-metric-bg:#fffdf8;--v3-metric-border:#d9cbd6;--v3-emblem-bg:#e9dbe9}
-#app>.v3-editorial-header{position:relative;background:var(--v3-header-bg)!important;color:var(--v3-hero-ink)!important;border-bottom:1px solid var(--v3-metric-border)!important;box-shadow:0 8px 28px #00000015!important;padding:0!important;overflow:hidden}
-#app>.v3-editorial-header:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--rita-action-bg,var(--v2-highlight));z-index:2}
-#app>.v3-editorial-header:after{content:"";position:absolute;right:-72px;top:32px;width:230px;height:230px;border:1px solid var(--v3-metric-border);border-radius:50%;pointer-events:none;opacity:.45}
-#app>.v3-editorial-header .v3-masthead{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:52px;padding:12px 17px 8px;border-bottom:1px solid var(--v3-metric-border)}
-#app>.v3-editorial-header .v3-edition{display:flex;align-items:center;flex-wrap:wrap;gap:7px;color:var(--v3-hero-sub);font-size:9px;letter-spacing:.12em;font-weight:800;line-height:1.5}
-#app>.v3-editorial-header .v3-edition-number{font-weight:500;font-size:8px;opacity:.8}
-#app>.v3-editorial-header .v3-live-dot{width:7px;height:7px;flex:0 0 7px;background:var(--rita-action-bg,var(--v2-highlight));border-radius:50%;box-shadow:0 0 0 3px var(--v3-emblem-bg)}
-#app>.v3-editorial-header .v3-header-actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
-#app>.v3-editorial-header .v2-mode-toggle,#app>.v3-editorial-header .v3-settings-button{position:static!important;display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:1px solid var(--v3-metric-border);background:var(--v3-metric-bg)!important;color:var(--v3-hero-ink)!important;border-radius:11px;font-size:11px;font-weight:700;padding:6px 9px;white-space:nowrap;cursor:pointer}
-#app>.v3-editorial-header .v3-settings-button{width:34px;padding:6px}
-#app>.v3-editorial-header :is(.v2-mode-toggle,.v3-settings-button):focus-visible{outline:2px solid var(--rita-action-bg,var(--v2-highlight));outline-offset:2px}
-#app>.v3-editorial-header .v3-hero{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 20px 19px;background:linear-gradient(115deg,var(--v3-header-bg),var(--v3-header-secondary))!important}
-#app>.v3-editorial-header .v3-hero-copy{min-width:0;flex:1}
-#app>.v3-editorial-header .v3-kicker{font-size:9px;line-height:1.5;letter-spacing:.17em;font-weight:800;color:var(--rita-action-bg,var(--v2-highlight));margin-bottom:6px;overflow-wrap:anywhere}
-#app>.v3-editorial-header .v3-main-title{font-family:"Playfair Display","Noto Sans TC",serif;font-size:clamp(23px,5.5vw,30px);line-height:1.25;font-weight:800;color:var(--v3-hero-ink)!important;overflow-wrap:anywhere;letter-spacing:.015em}
-#app>.v3-editorial-header .v3-greeting{font-size:11px;color:var(--v3-hero-sub)!important;line-height:1.5;margin-top:6px}
-#app>.v3-editorial-header .v3-hero-emblem{width:77px;height:77px;border-radius:50%;border:1px dashed var(--v3-metric-border);background:var(--v3-emblem-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(12deg);flex-shrink:0;color:var(--v3-hero-ink)}
-#app>.v3-editorial-header .v3-hero-emblem span{font-size:30px;line-height:1.2;color:var(--rita-action-bg,var(--v2-highlight))}
-#app>.v3-editorial-header .v3-hero-emblem small{font-size:8px;font-weight:800;letter-spacing:.13em}
-#app>.v3-editorial-header .v3-metrics{display:grid;grid-template-columns:1fr 1.15fr 1.15fr;gap:0;background:var(--v3-metric-bg)!important;border-top:1px solid var(--v3-metric-border)}
-#app>.v3-editorial-header .v3-metric{min-width:0;position:relative;padding:13px 10px 14px;display:flex;flex-direction:column;justify-content:center;gap:7px}
-#app>.v3-editorial-header .v3-metric+.v3-metric{border-left:1px solid var(--v3-metric-border)}
-#app>.v3-editorial-header .v3-metric-label{font-size:9px;letter-spacing:.045em;line-height:1.35;color:var(--v3-hero-sub);font-weight:700}
-#app>.v3-editorial-header .v3-metric strong{font-size:15px;line-height:1.2;color:var(--v3-hero-ink);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-#app>.v3-editorial-header .v3-metric strong small{font-size:10px;font-weight:500}
-#app>.v3-editorial-header .v3-metric-expense{padding-right:26px}
-#app>.v3-editorial-header .v3-metric-expense button{position:absolute;right:5px;bottom:12px;min-width:25px;min-height:25px;color:var(--v3-hero-sub);border-radius:7px}
-#app>.v3-editorial-header .v3-budget-track{height:6px;border-radius:99px;background:var(--v3-metric-border);overflow:hidden}
-#app>.v3-editorial-header .v3-budget-track>span{display:block;height:100%;background:var(--rita-action-bg,var(--v2-highlight));border-radius:99px;transition:width .3s}
-#app>.v3-editorial-header .v3-budget-caption{font-size:9px;color:var(--v3-hero-sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-html[data-v2-mode="light"] #app>.v3-editorial-header .v3-kicker{color:var(--v2-highlight)}
-@media(max-width:360px){#app>.v3-editorial-header .v3-edition-number{display:none}#app>.v3-editorial-header .v3-hero-emblem{width:62px;height:62px}#app>.v3-editorial-header .v3-hero{padding:14px 15px}#app>.v3-editorial-header .v3-metric{padding:11px 7px}#app>.v3-editorial-header .v3-metric strong{font-size:13px}}
-@media(prefers-reduced-motion:reduce){#app>.v3-editorial-header .v3-budget-track>span{transition:none}}
-
-/* V16 editorial collection layouts, distinct from original 444 stacked cards */
-#app>main .v3-section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:8px 0 3px;padding:0 1px 12px;border-bottom:1px solid var(--v2-edge)}
-#app>main .v3-section-heading>div{min-width:0}
-#app>main .v3-section-heading>div>span{display:block;font-size:9px;letter-spacing:.16em;font-weight:800;color:var(--v2-muted);margin-bottom:5px}
-#app>main .v3-section-heading h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:21px;line-height:1.3;font-weight:800;color:var(--v2-text)!important}
-#app>main .v3-section-count{font-size:9px;letter-spacing:.08em;font-weight:800;color:var(--v2-highlight);white-space:nowrap;border:1px solid var(--v2-edge);border-radius:99px;padding:5px 8px}
-#app>main .v3-ticket-collection{display:flex;flex-direction:column;gap:18px}
-#app>main .v3-ticket-collection>.v2-ticket-card{border-radius:10px 22px 22px 10px!important;border-left:5px solid var(--rita-action-bg,var(--v2-highlight))!important;box-shadow:0 12px 26px #0000001b!important}
-#app>main .v3-ticket-collection>.v2-ticket-card:before{left:-11px}
-#app>main .v3-ticket-collection>.v2-ticket-card:after{right:-10px}
-#app>main .v3-fandom-collection{display:flex;flex-direction:column;gap:18px}
-#app>main .v3-fandom-collection>.v2-artist-card{border-radius:12px!important;border-top:4px solid var(--rita-action-bg,var(--v2-highlight))!important}
-#app>main .v3-fandom-collection>.v2-artist-card>div:first-child{border-radius:8px!important}
-@media(max-width:360px){#app>main .v3-section-heading h2{font-size:19px}#app>main .v3-section-count{font-size:8px;padding:4px 6px}}
-
-/* V17: new map atlas, yearbook cover, concert ticket and artist editor hierarchy */
-#app>main .v3-tour-atlas{background:var(--v2-bg)!important}
-#app>main .v3-tour-atlas #map-container{filter:saturate(.82)}
-#app>main .v3-tour-atlas .v3-map-console{top:12px!important;left:12px!important;right:12px!important;border-radius:18px!important;border:1px solid var(--v2-edge)!important;background:var(--v2-panel)!important;box-shadow:0 12px 36px #0003!important;padding:14px!important;max-height:min(42dvh,280px);overflow:auto;scrollbar-width:thin}
-#app>main .v3-tour-atlas .v3-map-console h3{font-family:"Playfair Display","Noto Sans TC",serif;font-size:17px!important;line-height:1.4;color:var(--v2-text)!important}
-#app>main .v3-tour-atlas .v3-map-console :is(select,button){min-height:34px}
-#app>main .v3-yearbook-layout{display:flex;flex-direction:column;gap:20px!important}
-#app>main .v3-yearbook-banner{position:relative;display:flex;flex-direction:column;gap:8px;padding:25px 22px 28px;border-radius:8px 26px 8px 26px;border:1px solid var(--v2-edge);border-left:5px solid var(--rita-action-bg,var(--v2-highlight));background:linear-gradient(125deg,var(--v2-panel),var(--v2-panel-alt));overflow:hidden}
-#app>main .v3-yearbook-banner:after{content:"★";position:absolute;right:-9px;top:-28px;font-size:135px;line-height:1;color:var(--v2-muted);opacity:.13;pointer-events:none}
-#app>main .v3-yearbook-banner>span{font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--v2-muted);position:relative;z-index:1}
-#app>main .v3-yearbook-banner>strong{font-family:"Playfair Display",Georgia,serif;font-size:clamp(22px,6vw,34px);line-height:1.12;letter-spacing:.025em;color:var(--v2-text);position:relative;z-index:1}
-#app>main .v3-yearbook-banner>small{font-size:11px;color:var(--v2-muted);position:relative;z-index:1}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){border-top:5px solid var(--rita-action-bg,var(--v2-highlight))!important;border-radius:22px 22px 0 0!important;box-shadow:0 -16px 55px #0005!important}
-#app [data-rita-dialog] .v3-editor-heading{min-width:0;display:flex;flex-direction:column;gap:3px}
-#app [data-rita-dialog] .v3-editor-heading>span{font-size:9px;letter-spacing:.13em;font-weight:800;color:var(--v2-muted)!important}
-#app [data-rita-dialog] .v3-editor-heading>h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:21px!important;color:var(--v2-text)!important}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor)>div:first-child{border-bottom:1px solid var(--v2-edge);padding-bottom:13px!important;margin-bottom:10px!important}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) .overflow-y-auto label{font-size:12px;letter-spacing:.02em;font-weight:750}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) .overflow-y-auto :is(input,textarea,select){border-radius:10px!important;border:1px solid var(--v2-edge)!important}
-@media(min-width:600px){#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){border-radius:22px!important}#app>main .v3-tour-atlas .v3-map-console{max-width:480px;right:auto!important;width:calc(100% - 24px)}}
-@media(max-width:360px){#app>main .v3-yearbook-banner{padding:21px 17px}#app>main .v3-tour-atlas .v3-map-console{padding:10px!important}}
-
-/* V18 comprehensive editorial layout: typography, home, admission tickets, artist cards, dock */
-#app>main .v4-page-intro{display:flex;flex-direction:column;gap:10px;padding:6px 0 14px;border-bottom:1px solid var(--v2-edge)}
-#app>main .v4-page-intro>span{font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--v2-muted)}
-#app>main .v4-page-intro>div{display:flex;align-items:end;justify-content:space-between;gap:14px}
-#app>main .v4-page-intro h2{font-family:"Playfair Display","Noto Sans TC",serif;font-size:clamp(19px,5vw,25px);font-weight:800;line-height:1.3;color:var(--v2-text)!important;max-width:300px}
-#app>main .v4-page-intro small{font-size:8px;letter-spacing:.1em;color:var(--v2-muted);max-width:110px;text-align:right;line-height:1.5}
-#app>main .v4-search-box{margin-top:4px}
-#app>main .v4-search-box input{border:1px solid var(--v2-edge)!important;border-radius:14px!important;min-height:46px;padding-left:43px!important;box-shadow:0 5px 16px #0000000c!important}
-#app>main .v4-search-box>.ph-magnifying-glass{left:15px!important;top:15px!important;color:var(--v2-muted)!important}
-#app>main .v4-ticket-switch{padding:5px!important;border-radius:13px!important;border:1px solid var(--v2-edge);background:var(--v2-panel-alt)!important;min-height:47px}
-#app>main .v4-ticket-switch .rita-segmented-indicator{border-radius:9px!important;background:var(--v2-panel)!important;box-shadow:0 2px 9px #0002!important}
-#app>main .v4-ticket-switch button{font-size:12px!important;letter-spacing:.025em;font-weight:800!important}
-#app>main .v4-admission-ticket{position:relative;border-radius:16px!important;isolation:isolate}
-#app>main .v4-admission-ticket:before,#app>main .v4-admission-ticket:after{content:"";position:absolute;top:116px;width:18px;height:18px;border-radius:50%;background:var(--v2-bg);z-index:4;pointer-events:none;border:1px solid var(--v2-edge)}
-#app>main .v4-admission-ticket:before{left:-11px}
-#app>main .v4-admission-ticket:after{right:-11px}
-#app>main .v4-admission-ticket>div:first-child{border-radius:12px 12px 0 0}
-#app>main .v4-admission-ticket :is(h3,h4){letter-spacing:.01em;line-height:1.4}
-#app>main .v4-artist-profile{position:relative;padding:11px!important;border-radius:20px!important;box-shadow:0 12px 30px #00000015!important}
-#app>main .v4-artist-profile>div:first-child{border-radius:13px!important}
-#app>main .v4-artist-profile img{object-position:center 35%}
-#app>main .v4-artist-profile h3{font-family:"Playfair Display","Noto Sans TC",serif;letter-spacing:.015em}
-#app>main .v4-artist-profile .border-b{border-color:var(--v2-edge)!important}
-#app>main .v3-yearbook-banner .v4-yearbook-footer{display:flex;justify-content:space-between;gap:8px;margin-top:15px;padding-top:11px;border-top:1px solid var(--v2-edge);font-size:8px;letter-spacing:.14em;font-weight:800;color:var(--v2-muted);position:relative;z-index:1}
-#app>.v4-dock-nav{display:flex;align-items:center;justify-content:space-around;gap:5px;padding:9px 10px calc(9px + env(safe-area-inset-bottom,0px))!important;border-top:1px solid var(--v2-edge)!important;background:var(--v2-nav)!important;box-shadow:0 -9px 30px #0002!important}
-#app>.v4-dock-nav>button{position:relative;display:flex;flex:1;align-items:center;justify-content:center;min-width:0;width:auto!important;gap:4px!important;border-radius:13px;padding:8px 3px!important;color:var(--v2-muted)!important;transition:background .2s,color .2s}
-#app>.v4-dock-nav>button[aria-current="page"]{background:var(--v2-panel-alt)!important;color:var(--v2-text)!important}
-#app>.v4-dock-nav>button[aria-current="page"]:before{content:"";position:absolute;top:2px;left:30%;right:30%;height:3px;background:var(--rita-action-bg,var(--v2-highlight));border-radius:99px}
-#app>.v4-dock-nav>button>i{font-size:21px!important}
-#app>.v4-dock-nav>button>span{font-size:10px!important;font-weight:800!important}
-@media(min-width:740px){#app>main .v3-ticket-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}#app>main .v3-fandom-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}#app>main .v3-fandom-collection>.v3-section-heading{grid-column:1/-1}}
-@media(max-width:390px){#app>main .v4-page-intro small{display:none}#app>.v4-dock-nav{gap:2px;padding-left:5px!important;padding-right:5px!important}#app>.v4-dock-nav>button{padding-left:1px!important;padding-right:1px!important}}
-@media(prefers-reduced-motion:reduce){#app>.v4-dock-nav>button{transition:none}}
-
-/* V19 full-page composition, mobile viewport, theme-independent navigation */
-#app>main .v5-show-gallery{display:flex;flex-direction:column;gap:18px!important;padding-top:22px!important}
-#app>main .v5-show-gallery>.v4-page-intro{margin-bottom:2px}
-#app>main .v5-ticket-issue{background:var(--v2-panel)!important;border-color:var(--v2-edge)!important;overflow:visible!important;box-shadow:0 14px 38px #00000018!important}
-#app>main .v5-ticket-issue>*{max-width:100%}
-#app>main .v5-ticket-issue img{border-radius:12px 12px 0 0}
-#app>main .v5-artist-issue{background:var(--v2-panel)!important;border-color:var(--v2-edge)!important;overflow:hidden!important}
-#app>main .v5-artist-issue>div:first-child{background:var(--v2-panel-alt)!important}
-#app>main .v5-artist-issue :is(h3,h4){overflow-wrap:anywhere}
-#app>main .v5-map-layout{isolation:isolate}
-#app>main .v5-atlas-caption{position:absolute;z-index:21;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:14px;right:14px;display:flex;flex-direction:column;gap:4px;padding:12px 15px;background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge);border-left:4px solid var(--rita-action-bg,var(--v2-highlight));border-radius:12px;box-shadow:0 10px 30px #0003;pointer-events:none;max-width:390px}
-#app>main .v5-atlas-caption>span{font-size:9px;font-weight:800;letter-spacing:.16em;color:var(--v2-muted)}
-#app>main .v5-atlas-caption>strong{font-family:"Playfair Display","Noto Sans TC",serif;font-size:14px;line-height:1.3}
-#app>main .v5-map-controls{max-width:520px;backdrop-filter:blur(16px);color:var(--v2-text)!important}
-#app>main .v5-map-controls :is(.text-slate-800,.text-slate-700,.text-slate-600){color:var(--v2-text)!important}
-#app>main .v5-map-controls :is(.text-slate-500,.text-slate-400){color:var(--v2-muted)!important}
-#app>main .v5-map-controls select{background:var(--v2-input)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important}
-#app>main .v5-yearbook-grid{gap:22px!important}
-#app>main .v5-cover-page{min-height:175px;justify-content:center}
-#app>.v5-site-navigation{background:var(--v2-nav)!important;border-color:var(--v2-edge)!important}
-#app>.v5-site-navigation>button[aria-current="page"]{color:var(--v2-text)!important}
-#app>.v5-site-navigation>button[aria-current="page"] i{color:var(--rita-action-bg,var(--v2-highlight))!important}
-html[data-v2-mode="light"] #app>.v3-editorial-header{background:var(--v3-header-bg)!important}
-html[data-v2-mode="light"] #app>.v5-site-navigation{background:#fffaf3!important}
-html[data-v2-mode="dark"] #app>.v5-site-navigation{background:#171526!important}
-@media(min-width:850px){#app>main .v5-yearbook-grid>.v5-cover-page{min-height:225px}#app>main .v5-show-gallery{padding-left:28px!important;padding-right:28px!important}}
-@media(max-width:599px){#app>main .v5-map-controls{max-height:35dvh!important}#app>main .v5-atlas-caption{bottom:12px;padding:9px 12px}#app>main .v5-show-gallery{gap:15px!important;padding-top:16px!important}#app>main .v5-cover-page{min-height:150px}}
-@media(max-width:350px){#app>main .v5-atlas-caption>strong{font-size:12px}#app>main .v5-atlas-caption{max-width:calc(100% - 28px)}}
-
-/* V20 audit: rebuilt masthead, readable controls, desktop and narrow iPhone alignment */
-#app>.v3-editorial-header{width:100%!important;max-width:100%!important;box-sizing:border-box!important;flex-shrink:0!important}
-#app>.v3-editorial-header .v3-main-title{word-break:break-word}
-#app>.v3-editorial-header .v3-masthead,#app>.v3-editorial-header .v3-hero,#app>.v3-editorial-header .v3-metrics{box-sizing:border-box;min-width:0}
-#app>.v3-editorial-header .v3-hero-copy{overflow:hidden}
-#app>.v3-editorial-header .v3-metric-expense strong{font-size:clamp(11px,3.5vw,16px)}
-#app>.v3-editorial-header .v3-budget-metric{overflow:hidden}
-#app>.v3-editorial-header .v3-budget-caption{display:block;max-width:100%}
-#app>main .v5-show-gallery>.v4-page-intro,#app>main .v5-show-gallery>.v4-search-box,#app>main .v5-show-gallery>.v4-ticket-switch{flex-shrink:0}
-#app>main .v5-ticket-issue{overflow:hidden!important}
-#app>main .v5-ticket-issue:before,#app>main .v5-ticket-issue:after{display:none!important}
-#app>main .v5-ticket-issue :is(button,input,textarea,select){max-width:100%}
-#app>main .v5-artist-issue{min-width:0}
-#app>main .v5-artist-issue :is(button,input,textarea,select){max-width:100%}
-#app>main .v5-map-controls{z-index:30!important}
-#app>main .v5-atlas-caption{z-index:20!important}
-#app>main .v5-map-layout .leaflet-control-container{position:relative;z-index:10}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){min-width:0;max-width:min(490px,100vw)!important}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor)>.overflow-y-auto{overscroll-behavior:contain;scrollbar-width:thin}
-#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) :is(input,textarea,select){min-width:0;box-sizing:border-box}
-#app>.v5-site-navigation{box-sizing:border-box}
-#app>.v5-site-navigation button{touch-action:manipulation}
-#app>.v5-site-navigation button:focus-visible{outline:2px solid var(--rita-action-bg,var(--v2-highlight))!important;outline-offset:-3px}
-html[data-v2-mode="light"] #app>main .v5-ticket-issue,html[data-v2-mode="light"] #app>main .v5-artist-issue{background:var(--v2-panel)!important}
-html[data-v2-mode="dark"] #app>main .v5-ticket-issue,html[data-v2-mode="dark"] #app>main .v5-artist-issue{background:var(--v2-panel)!important}
-@media(min-width:600px){
- #app>.v3-editorial-header{border-radius:0 0 16px 16px!important}
- #app>.v3-editorial-header .v3-masthead{padding-left:22px;padding-right:22px}
- #app>.v3-editorial-header .v3-hero{padding-left:26px;padding-right:26px}
- #app>.v3-editorial-header .v3-metrics .v3-metric{padding:16px}
- #app>main .v5-map-layout{height:max(500px,calc(100dvh - 240px))!important}
-}
-@media(max-width:599px){
- #app>.v3-editorial-header .v3-masthead{padding-left:13px;padding-right:13px}
- #app>.v3-editorial-header .v3-hero{padding:14px 16px 16px}
- #app>.v3-editorial-header .v3-metrics .v3-metric{padding:11px 8px}
- #app>.v3-editorial-header .v3-metric-label{font-size:8px}
- #app>main .v5-map-layout{min-height:0}
- #app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px)!important}
-}
-@media(max-width:375px){
- #app>.v3-editorial-header .v3-hero-emblem{width:58px;height:58px}
- #app>.v3-editorial-header .v3-hero-emblem span{font-size:24px}
- #app>.v3-editorial-header .v3-hero-emblem small{font-size:7px}
- #app>.v3-editorial-header .v3-metric{gap:5px}
- #app>.v3-editorial-header .v3-budget-caption{font-size:8px}
-}
+/* IDOL PLANNER 2.0 / V21 — independent design system. No inherited 444 theme. */
+:root{color-scheme:dark;--ui-radius:18px;--ui-width:490px}
+html[data-v2-mode="dark"]{color-scheme:dark;--ui-bg:#10131e;--ui-surface:#202637;--ui-surface-2:#2b3144;--ui-text:#f5f1f5;--ui-sub:#b5b8c8;--ui-border:#41465b;--ui-input:#292e40;--ui-header:#191f30;--ui-nav:#191f30;--ui-shadow:#0005}
+html[data-v2-mode="light"]{color-scheme:light;--ui-bg:#f3f0eb;--ui-surface:#fffdf9;--ui-surface-2:#f4eee8;--ui-text:#292d3b;--ui-sub:#626779;--ui-border:#dad5d1;--ui-input:#f8f5f1;--ui-header:#fffaf5;--ui-nav:#fffdf9;--ui-shadow:#24283816}
+html,body{background:var(--ui-bg)!important;color:var(--ui-text)!important}
+body{margin:0;overflow-x:hidden}
+#app{--ui-accent:var(--rita-action-bg,#9374db);--ui-accent-text:var(--rita-on-primary,#fff);background:var(--ui-bg)!important;color:var(--ui-text)!important;max-width:var(--ui-width);width:100%;min-width:0;margin:0 auto;box-shadow:0 12px 55px var(--ui-shadow)}
+#app *{box-sizing:border-box}
+#app>.v3-editorial-header{width:100%;background:var(--ui-header)!important;color:var(--ui-text)!important;border-bottom:1px solid var(--ui-border);border-radius:0!important;position:relative;z-index:20}
+#app>.v3-editorial-header:before{content:"";display:block;height:5px;background:var(--ui-accent)}
+#app>.v3-editorial-header :is(h1,h2,h3,p,span,small,strong){color:inherit}
+#app>.v3-editorial-header .v3-masthead{background:transparent!important;border-bottom:1px solid var(--ui-border);padding:12px 17px}
+#app>.v3-editorial-header .v3-hero{background:transparent!important;padding:18px 20px}
+#app>.v3-editorial-header .v3-hero :is(h1,h2){color:var(--ui-text)!important}
+#app>.v3-editorial-header .v3-hero :is(p,small){color:var(--ui-sub)!important}
+#app>.v3-editorial-header .v3-metrics{background:transparent!important;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:0 12px 13px}
+#app>.v3-editorial-header .v3-metric{background:var(--ui-surface-2)!important;border:1px solid var(--ui-border)!important;border-radius:12px!important;min-width:0;padding:10px 7px}
+#app>.v3-editorial-header .v3-metric :is(strong,b){color:var(--ui-text)!important}
+#app>.v3-editorial-header .v3-metric :is(small,span){color:var(--ui-sub)}
+#app>.v3-editorial-header .v2-mode-toggle{background:var(--ui-surface-2)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;border-radius:99px;padding:7px 10px;cursor:pointer}
+#app>.v3-editorial-header button{touch-action:manipulation}
+#app>main{background:var(--ui-bg)!important;color:var(--ui-text)!important;min-width:0;scrollbar-width:thin}
+#app>main>div:not(.map-tab-panel){min-width:0;max-width:100%}
+#app>main .v4-page-intro{padding:8px 0 16px;border-bottom:1px solid var(--ui-border);display:flex;flex-direction:column;gap:8px}
+#app>main .v4-page-intro>span,#app>main .v3-section-heading span{color:var(--ui-sub)!important;font-size:10px;letter-spacing:.15em;font-weight:800}
+#app>main .v4-page-intro>div{display:flex;align-items:end;justify-content:space-between;gap:12px}
+#app>main .v4-page-intro h2{color:var(--ui-text)!important;font-family:Georgia,"Noto Sans TC",serif;font-size:clamp(20px,5vw,26px);font-weight:800;line-height:1.25}
+#app>main .v4-page-intro small{color:var(--ui-sub);font-size:9px;max-width:120px;text-align:right}
+#app>main .v5-show-gallery{display:flex;flex-direction:column;gap:16px!important;padding:18px 17px 120px!important}
+#app>main .v4-search-box input{background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;border-radius:12px!important;min-height:44px;box-shadow:none!important}
+#app>main .v4-search-box .ph-magnifying-glass{color:var(--ui-sub)!important}
+#app>main .v4-ticket-switch{background:var(--ui-surface-2)!important;border:1px solid var(--ui-border);border-radius:12px!important;padding:5px!important;min-height:46px}
+#app>main .v4-ticket-switch .rita-segmented-indicator{background:var(--ui-surface)!important;border-radius:9px!important;box-shadow:0 2px 8px var(--ui-shadow)}
+#app>main .v4-ticket-switch button{color:var(--ui-text)!important;font-weight:750}
+#app>main .v3-ticket-collection{display:flex;flex-direction:column;gap:16px!important}
+#app>main .v3-ticket-collection>.v3-section-heading{margin:5px 0}
+#app>main .v5-ticket-issue{position:relative;overflow:hidden!important;background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;border-radius:17px!important;box-shadow:0 8px 26px var(--ui-shadow)!important;min-width:0}
+#app>main .v5-ticket-issue :is(h2,h3,h4,strong){color:var(--ui-text)}
+#app>main .v5-ticket-issue :is(p,small){color:var(--ui-sub)}
+#app>main .v5-ticket-issue :is(.border-b,.border-t){border-color:var(--ui-border)!important}
+#app>main .v3-fandom-collection{display:flex;flex-direction:column;gap:15px!important}
+#app>main .v5-artist-issue{background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;border-radius:17px!important;padding:11px!important;overflow:hidden;box-shadow:0 8px 26px var(--ui-shadow)!important}
+#app>main .v5-artist-issue>div:first-child{background:var(--ui-surface-2)!important;border-radius:11px!important}
+#app>main .v5-artist-issue :is(h3,h4,strong){color:var(--ui-text)!important}
+#app>main .v5-artist-issue :is(.border-b,.border-t){border-color:var(--ui-border)!important}
+#app>main .v5-yearbook-grid{padding:18px 17px 120px!important;display:flex;flex-direction:column;gap:20px!important}
+#app>main .v5-cover-page{background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;border-left:5px solid var(--ui-accent)!important;border-radius:9px 23px 9px 23px!important;padding:23px 20px;min-height:160px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+#app>main .v5-cover-page>span{font-size:10px;letter-spacing:.17em;color:var(--ui-sub)!important}
+#app>main .v5-cover-page>strong{font-family:Georgia,serif;font-size:clamp(24px,6vw,33px);line-height:1.15;color:var(--ui-text)!important}
+#app>main .v5-cover-page>small{color:var(--ui-sub)!important}
+#app>main .v4-yearbook-footer{display:flex;justify-content:space-between;gap:7px;margin-top:14px;padding-top:10px;border-top:1px solid var(--ui-border);font-size:9px;color:var(--ui-sub)!important}
+#app>main .v5-map-layout{position:relative;isolation:isolate}
+#app>main .v5-map-layout>#map-container{width:100%!important;height:100%!important;min-height:450px}
+#app>main .v5-map-controls{background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;box-shadow:0 8px 25px var(--ui-shadow)!important;border-radius:15px!important;left:12px!important;right:12px!important;top:12px!important;max-height:35dvh;overflow:auto;padding:12px!important;z-index:30!important}
+#app>main .v5-map-controls :is(h3,.text-slate-800,.text-slate-700){color:var(--ui-text)!important}
+#app>main .v5-map-controls :is(.text-slate-600,.text-slate-500){color:var(--ui-sub)!important}
+#app>main .v5-map-controls select{background:var(--ui-input)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important}
+#app>main .v5-atlas-caption{position:absolute;bottom:12px;left:12px;right:12px;z-index:20;background:var(--ui-surface);color:var(--ui-text);border:1px solid var(--ui-border);border-left:4px solid var(--ui-accent);padding:10px 12px;border-radius:12px;display:flex;flex-direction:column;gap:4px;pointer-events:none}
+#app>main .v5-atlas-caption span{font-size:9px;letter-spacing:.14em;color:var(--ui-sub)}
+#app>main .v5-atlas-caption strong{font-size:13px}
+#app>.v5-site-navigation{background:var(--ui-nav)!important;border-top:1px solid var(--ui-border)!important;display:flex;justify-content:space-around;gap:3px;padding:9px 8px calc(9px + env(safe-area-inset-bottom,0px))!important;z-index:40;box-shadow:0 -4px 20px var(--ui-shadow)}
+#app>.v5-site-navigation>button{flex:1;width:auto!important;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px!important;padding:8px 2px!important;border-radius:11px;color:var(--ui-sub)!important;position:relative}
+#app>.v5-site-navigation>button[aria-current="page"]{background:var(--ui-surface-2)!important;color:var(--ui-text)!important}
+#app>.v5-site-navigation>button[aria-current="page"]:before{content:"";position:absolute;top:2px;left:32%;right:32%;height:3px;background:var(--ui-accent);border-radius:5px}
+#app>.v5-site-navigation>button i{font-size:21px!important}
+#app>.v5-site-navigation>button span{font-size:10px!important;font-weight:800}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){background:var(--ui-surface)!important;color:var(--ui-text)!important;border-top:4px solid var(--ui-accent);max-height:90dvh!important;border-radius:20px 20px 0 0!important;min-width:0}
+#app [data-rita-dialog] .v3-editor-heading span{display:block;font-size:9px;letter-spacing:.14em;color:var(--ui-sub)}
+#app [data-rita-dialog] .v3-editor-heading h2{color:var(--ui-text)!important;font-family:Georgia,"Noto Sans TC",serif;font-size:22px!important}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) .overflow-y-auto{overscroll-behavior:contain}
+#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor) :is(input,select,textarea){border:1px solid var(--ui-border)!important;border-radius:10px!important;max-width:100%;min-width:0}
+#app :is(.rita-primary-button,.bg-primary){background:var(--ui-accent)!important;color:var(--ui-accent-text)!important}
+#app button:focus-visible,#app input:focus-visible,#app select:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
+@media(min-width:600px){html,body{min-height:100%;height:auto!important;overflow-y:auto!important}#app{height:auto!important;min-height:100vh!important}#app>main{height:auto!important;min-height:350px!important;overflow:visible!important;padding-bottom:90px}#app>.v5-site-navigation{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(490px,100vw)}#app>main .v5-map-layout{height:max(500px,calc(100dvh - 220px))!important}#app>main .v5-map-layout>#map-container{min-height:500px}#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){border-radius:20px!important}}
+@media(max-width:599px){html,body{height:100%!important;overflow:hidden!important}#app{height:100dvh!important;max-height:100dvh!important;overflow:hidden}#app>main{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important}#app>main .v5-map-layout{height:100%!important;min-height:0}#app>.v5-site-navigation{position:relative;flex-shrink:0}#app [data-rita-dialog] :is(.v3-event-editor,.v3-fandom-editor){max-height:calc(100dvh - 12px)!important}}
+@media(max-width:370px){#app>.v3-editorial-header .v3-metrics{gap:4px;padding:0 7px 9px}#app>.v3-editorial-header .v3-metric{padding:8px 4px}#app>main .v4-page-intro small{display:none}#app>.v5-site-navigation{padding-left:4px!important;padding-right:4px!important}}
+@media(prefers-reduced-motion:reduce){#app *{scroll-behavior:auto!important;transition-duration:.01ms!important}}
