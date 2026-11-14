@@ -8,7 +8,7 @@
 追星行程管理、費用紀錄與地圖足跡</title>
     
     <link rel="manifest" href="./manifest.webmanifest?v=4">
-    <meta name="theme-color" content="#27243B">
+    <meta name="theme-color" content="#171a28">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="IDOL PLANNER">
@@ -52,52 +52,14 @@
     </script>
 
     <link rel="stylesheet" href="./css/main.css?v=1.1.24">
-<link rel="stylesheet" href="./css/theme-444.css?v=10">
-    <style>:root { --primary-color: #27243B; --primary-dark: #171426; --primary-light: #E9BFDD; }</style>
+<!-- 2.0 visual system: legacy 444 theme intentionally disconnected -->
+    
 
 
 
 
-<style id="match-444-width-only">
-/* 444 shell width: 490px. Width only; preserve existing mobile layout and scrolling. */
-@media (min-width:600px){
- #app{width:min(100%,490px)!important;max-width:490px!important;margin-left:auto!important;margin-right:auto!important;}
-}
-</style>
 
-<style id="desktop-outer-scroll-222">
-/* On desktop, use the browser's outer scrollbar like 444. */
-@media (min-width:600px){
- html{height:auto!important;overflow-y:scroll!important;scrollbar-gutter:stable both-edges!important}
- body{width:100%!important;height:auto!important;min-height:100vh!important;overflow-y:auto!important;overflow-x:hidden!important}
- #app{height:auto!important;min-height:100vh!important;width:490px!important;max-width:calc(100vw - 24px)!important;min-width:0!important;box-sizing:border-box!important;margin-inline:auto!important;align-self:center!important}
- /* One width reference for header, every tab and bottom navigation. */
- #app>.v3-editorial-header,#app>main,#app>.app-bottom-nav{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important}
- #app>main>div{max-width:100%;min-width:0;box-sizing:border-box}
- #app>main>.map-tab-panel,#app>main>.map-tab-panel>#map-container{width:100%!important;max-width:100%!important}
- #app>.app-bottom-nav{width:490px!important;max-width:calc(100vw - 24px)!important}
- #app>main{flex:0 0 auto!important;height:auto!important;min-height:0!important;overflow:visible!important;padding-bottom:90px}
- #app>main:has(>.map-tab-panel:not([style*="display: none"])){padding-bottom:0!important}
- #app>.app-bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:490px;max-width:calc(100vw - 24px);z-index:40}
- #app>button.absolute.bottom-24.right-6{position:fixed;bottom:86px;right:max(24px,calc((100vw - 490px)/2 + 24px))}
-}
-/* Desktop map: the outer-scrolling main has auto height, so percentage-height
-   Leaflet descendants need an explicit viewport-relative containing block.
-   Mobile retains its original flex-fill layout. */
-@media (min-width:600px){
- /* Map desktop layout: flush edges, no floating corner cutouts or extra bottom strip. */
- #app:has(>.app-bottom-nav)>.v3-editorial-header{width:100%;box-sizing:border-box}
- /* Keep the original rounded header corners on the map tab. */
- #app>main>.map-tab-panel{height:max(500px,calc(100dvh - 150px))!important;min-height:500px;overflow:hidden}
- #app>main>.map-tab-panel .leaflet-container{width:100%!important}
- /* Keep replay controls above the fixed navigation during desktop page scrolling. */
- #app>main>.map-tab-panel .map-replay-controls{position:fixed!important;left:50%!important;right:auto!important;bottom:calc(80px + env(safe-area-inset-bottom))!important;width:calc(min(100vw,490px) - 24px)!important;transform:translateX(-50%)!important;z-index:39!important}
- #app>main>.map-tab-panel .map-replay-controls>div{box-sizing:border-box;max-width:100%}
- #app>.app-bottom-nav{box-sizing:border-box;min-height:72px;padding-bottom:max(12px,env(safe-area-inset-bottom));box-shadow:0 -5px 18px #00000010;border-radius:0!important}
- #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
-}
-</style>
-<link rel="stylesheet" href="./css/theme-v2.css?v=20">
+<link rel="stylesheet" href="./css/theme-v2.css?v=21">
 <script>
 (function(){try{var m=localStorage.getItem("idolplanner-v2-mode");document.documentElement.dataset.v2Mode=m==="light"?"light":"dark"}catch(e){document.documentElement.dataset.v2Mode="dark"}})();
 document.addEventListener("DOMContentLoaded",function(){var m=document.documentElement.dataset.v2Mode;document.querySelectorAll(".v2-mode-toggle").forEach(function(b){b.textContent=m==="dark"?"☀ 日間":"☾ 午夜";b.setAttribute("aria-label",m==="dark"?"切換至日間模式":"切換至午夜模式")})});
