@@ -176,3 +176,36 @@ html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color
 #app>main .v2-tour-map .leaflet-container,#app>main .v2-tour-map .leaflet-container *{color-scheme:light}
 @media(min-width:600px){#app>.v2-stage-header{border-radius:0!important}#app>main[data-rita-app-main]{width:100%!important}#app>.v2-bottom-nav{width:min(490px,calc(100vw - 24px))!important}}
 @media(max-width:599px){#app>.v2-stage-header{padding-top:max(25px,env(safe-area-inset-top))!important}#app>.v2-stage-header .v2-mode-toggle{top:max(16px,env(safe-area-inset-top))!important}#app [data-rita-dialog]>.event-editor-sheet,#app [data-rita-dialog]>.fandom-editor-sheet{border-radius:22px 22px 0 0!important}}
+
+/* Screenshot-driven correction 2026-11-14: annual archive readability and density */
+#app>main .v2-yearbook-page{gap:14px!important;padding-top:16px!important}
+#app>main .v2-yearbook-page:before{padding-top:0!important;margin-bottom:0!important}
+#app>main .v2-yearbook-page>div:first-of-type{margin-bottom:0!important;padding-bottom:12px!important;gap:12px!important}
+#app>main .v2-yearbook-page .v2-yearbook-title{gap:4px}
+#app>main .v2-yearbook-page .v2-yearbook-title h2{font-size:23px!important}
+#app>main .v2-yearbook-page .v2-yearbook-caption{font-size:11px;line-height:1.5}
+#app>main .v2-yearbook-page>div:first-of-type>.flex{gap:6px!important}
+#app>main .v2-yearbook-page>div:first-of-type>.flex button{padding:9px 11px!important;border-radius:13px!important;font-size:12px!important;min-height:40px;gap:5px!important}
+#app>main .v2-yearbook-page>div:first-of-type>.flex button i{font-size:17px!important}
+#app>main .v2-yearbook-page>div.space-y-4{margin-top:0!important}
+#app>main .v2-yearbook-page>div.space-y-4>div.relative select{background:var(--v2-panel)!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;min-height:52px;box-shadow:none!important}
+#app>main .v2-yearbook-page>div.space-y-4>div.relative select option{background:var(--v2-panel)!important;color:var(--v2-text)!important}
+#app>main .v2-yearbook-page>div.space-y-4>div.relative .text-slate-400{color:var(--v2-muted)!important}
+#app>main .v2-yearbook-page>div.space-y-4>div.bg-white{background:var(--v2-panel)!important;color:var(--v2-text)!important;border-color:var(--v2-accent)!important}
+#app>main .v2-yearbook-page>div.space-y-4>div.bg-white p{color:var(--v2-text)!important;opacity:1!important}
+#app>main .v2-yearbook-page>.grid.grid-cols-2>div{background:var(--v2-panel)!important;background-image:none!important;color:var(--v2-text)!important;border:1px solid var(--v2-edge)!important;min-height:110px;box-shadow:none!important}
+#app>main .v2-yearbook-page>.grid.grid-cols-2>div :is(.text-slate-800,.text-slate-700,.text-slate-600){color:var(--v2-text)!important}
+#app>main .v2-yearbook-page>.grid.grid-cols-2>div :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important;opacity:1!important}
+#app>main .v2-yearbook-page>.grid.grid-cols-2>div .text-2xl{color:var(--v2-text)!important}
+#app>main .v2-yearbook-page>.grid.grid-cols-2>div button{color:var(--v2-muted)!important}
+#app>main .v2-yearbook-page>.grid.grid-cols-2{gap:10px!important}
+#app>main .v2-yearbook-page #share-template-legacy{color-scheme:light}
+#app>main .v2-yearbook-page #share-template-legacy .text-slate-700{color:#334155!important}
+#app>main .v2-yearbook-page #share-template-legacy .text-slate-600{color:#475569!important}
+#app>main .v2-yearbook-page #share-template-legacy .text-slate-500{color:#64748b!important}
+#app>.v2-stage-header{min-height:0!important;padding-top:16px!important;padding-bottom:17px!important}
+#app>.v2-stage-header:before{margin-bottom:7px!important;letter-spacing:.14em!important;font-size:8px!important}
+#app>.v2-stage-header .flex.justify-between.items-center.mb-3{margin-bottom:4px!important}
+#app>.v2-stage-header h1{font-size:24px!important;line-height:1.2!important}
+#app>.v2-stage-header .v2-mode-toggle{top:14px!important}
+@media(max-width:390px){#app>main .v2-yearbook-page>div:first-of-type{flex-wrap:wrap}#app>main .v2-yearbook-page>div:first-of-type>.flex{width:100%;justify-content:flex-end}#app>.v2-stage-header h1{font-size:22px!important}}
