@@ -141,3 +141,38 @@ html[data-v2-mode="dark"] #app>main .v2-ticket-card{color:var(--v2-text)!importa
 @media(min-width:768px){#app>main .v2-shows-page,#app>main .v2-editorial-page{padding-left:26px!important;padding-right:26px!important}#app>main .v2-shows-page .v2-ticket-card:hover{transform:translateY(-2px);box-shadow:0 18px 38px #0003!important}}
 @media(max-width:390px){#app>main .v2-shows-page,#app>main .v2-editorial-page{padding-left:14px!important;padding-right:14px!important}#app>.v2-bottom-nav{padding-left:7px!important;padding-right:7px!important}#app>.v2-stage-header h1{font-size:22px}}
 @media(prefers-reduced-motion:reduce){#app .v2-ticket-card,#app>.v2-bottom-nav button{transition:none!important}}
+
+/* V2 FINAL POLISH — scoped cascade fixes. Never force custom event colors. */
+html[data-v2-mode="dark"]{--v2-accent:#d9b8ff;--v2-accent-ink:#21152f;--v2-nav-selected:#3c3053;--v2-hairline:#554866}
+html[data-v2-mode="light"]{--v2-accent:#72508c;--v2-accent-ink:#fffaf3;--v2-nav-selected:#ede1f1;--v2-hairline:#d8c8d8}
+#app>.v2-stage-header{display:block!important;min-height:122px;background:radial-gradient(circle at 100% 0%,#a879bd33,transparent 55%),linear-gradient(150deg,#171323,#39294c)!important}
+#app>.v2-stage-header .flex.justify-between.items-center.mb-3{gap:12px;padding-right:74px}
+#app>.v2-stage-header .flex.justify-between.items-center.mb-3>div:first-child{min-width:0;flex:1}
+#app>.v2-stage-header h1{padding-right:0!important;overflow-wrap:anywhere;font-size:clamp(20px,4.8vw,27px)!important}
+#app>.v2-stage-header .v2-mode-toggle{right:12px!important;top:18px!important;min-width:62px;min-height:36px;padding:6px 9px!important;line-height:1.2}
+#app>.v2-stage-header .v2-mode-toggle:hover{background:#ffffff36}
+#app>.v2-stage-header .v2-mode-toggle:active{transform:scale(.97)}
+#app>main .v2-shows-page>.relative:first-child input{padding-left:42px!important}
+#app>main .v2-shows-page .rita-segmented{overflow:hidden}
+#app>main .v2-ticket-card{background:var(--v2-ticket)!important;color:var(--v2-ticket-ink)!important}
+#app>main .v2-ticket-card :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+#app>main .v2-ticket-card :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-ticket-ink)!important}
+#app>main .v2-artist-card{color:var(--v2-text)!important}
+#app>main .v2-artist-card :is(.text-slate-600,.text-slate-700,.text-slate-800,.text-slate-900){color:var(--v2-text)!important}
+#app>main .v2-artist-card :is(.text-slate-400,.text-slate-500){color:var(--v2-muted)!important}
+#app>.v2-bottom-nav button[aria-current="page"]{color:var(--v2-accent)!important;background:var(--v2-nav-selected)!important}
+html[data-v2-mode="light"] #app>.v2-bottom-nav button[aria-current="page"]{color:#543669!important}
+#app :is(.rita-primary-button,.bg-primary){border-color:transparent}
+#app .rita-primary-button{background:var(--rita-action-bg,var(--primary-color))!important;color:var(--rita-action-text,#fff)!important}
+#app>main .v2-yearbook-page>.flex button.rita-primary-button{background:var(--rita-action-bg,var(--primary-color))!important;color:var(--rita-action-text,#fff)!important}
+#app [data-rita-dialog]{background:transparent!important}
+#app [data-rita-dialog]>.absolute.inset-0{background:#080511aa!important}
+#app [data-rita-dialog]>.event-editor-sheet,#app [data-rita-dialog]>.fandom-editor-sheet{color:var(--v2-text)!important}
+#app [data-rita-dialog] :is(input,textarea,select){color-scheme:inherit}
+#app [data-rita-dialog] :is(input[type="color"],input[type="file"]){min-height:32px}
+#app [data-rita-dialog] :is(input[type="checkbox"],input[type="radio"]){appearance:auto}
+#app [data-rita-dialog] :is(.text-red-500,.text-red-600,.text-green-500,.text-green-600,.text-orange-500,.text-orange-600){filter:none}
+#app>main .v2-yearbook-page #share-template,#app>main .v2-yearbook-page #share-template *{color-scheme:light}
+#app>main .v2-tour-map .leaflet-container,#app>main .v2-tour-map .leaflet-container *{color-scheme:light}
+@media(min-width:600px){#app>.v2-stage-header{border-radius:0!important}#app>main[data-rita-app-main]{width:100%!important}#app>.v2-bottom-nav{width:min(490px,calc(100vw - 24px))!important}}
+@media(max-width:599px){#app>.v2-stage-header{padding-top:max(25px,env(safe-area-inset-top))!important}#app>.v2-stage-header .v2-mode-toggle{top:max(16px,env(safe-area-inset-top))!important}#app [data-rita-dialog]>.event-editor-sheet,#app [data-rita-dialog]>.fandom-editor-sheet{border-radius:22px 22px 0 0!important}}
