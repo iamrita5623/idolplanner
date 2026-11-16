@@ -38,7 +38,7 @@
 
 /* FAN ARCHIVE: one hue family; all accents derived from semantic tokens */
 body{background:var(--bg);color:var(--ink)}
-.sidebar{background:var(--brand-dark)}
+.sidebar{background:var(--brand-soft)}
 .brand strong{letter-spacing:-.035em}
 .hero{border:1px solid var(--line);background:var(--brand-soft)}
 .hero-art{font-size:clamp(70px,11vw,140px)}
@@ -52,11 +52,11 @@ body{background:var(--bg);color:var(--ink)}
 .topbar{background:var(--paper)}
 .notice{background:var(--brand-soft);color:var(--brand-dark)}
 .backup-actions button:hover{border-color:var(--brand)}
-@media(max-width:900px){.sidebar{background:var(--brand-dark)}}
+@media(max-width:900px){.sidebar{background:var(--brand-soft)}}
 /* V3 structural layout only: colors are controlled by theme tokens. */
 /* Footprints workspace redesign: warm editorial canvas, responsive map tools */
 
-body{background:var(--bg)}.sidebar{background:var(--brand-dark)}.monogram,.hero-art{background:var(--brand)}.topbar{background:var(--paper)}.content{max-width:1480px}.panel{border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.045)}.panel:has(.footprint-summary){background:transparent;border:0;box-shadow:none;padding:0}.panel:has(.footprint-summary)>h2{font-size:clamp(26px,3vw,40px);letter-spacing:-.05em;margin:8px 0}.panel:has(.footprint-summary)>p{max-width:800px;font-size:13px}.footprint-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.footprint-summary>div{background:var(--paper);border:1px solid var(--line);padding:20px;border-radius:17px;box-shadow:0 6px 24px rgba(0,0,0,.045)}.footprint-summary strong{font-size:34px;letter-spacing:-.06em;color:var(--brand)}.panel:has(.footprint-summary)>.map-controls{padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.panel:has(.footprint-summary)>.map-controls button{border-radius:10px;padding:11px 16px}.panel:has(.footprint-summary)>.footprint-filters{background:var(--paper);border:1px solid var(--line);padding:18px;border-radius:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.footprint-filters label{min-width:0;display:grid;gap:6px;font-size:12px;font-weight:700}.footprint-filters input,.footprint-filters select{min-width:0;width:100%;padding:10px 12px;background:var(--paper);border:1px solid var(--line);border-radius:10px;color:var(--ink)}.fan-map{border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:420px;box-shadow:0 12px 30px rgba(0,0,0,.065)}.venue-manager,.panel:has(.footprint-summary)>.map-editor,.merge-box{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:20px}.venue-manager-head{margin-bottom:14px}.venue-row{background:var(--bg)}.place-list{grid-template-columns:repeat(2,minmax(0,1fr))}.place-card{border-radius:16px}.dialog{border-radius:18px}.media-gallery img{border:1px solid var(--line)}
+body{background:var(--bg)}.sidebar{background:var(--brand-soft)}.monogram,.hero-art{background:var(--brand)}.topbar{background:var(--paper)}.content{max-width:1480px}.panel{border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.045)}.panel:has(.footprint-summary){background:transparent;border:0;box-shadow:none;padding:0}.panel:has(.footprint-summary)>h2{font-size:clamp(26px,3vw,40px);letter-spacing:-.05em;margin:8px 0}.panel:has(.footprint-summary)>p{max-width:800px;font-size:13px}.footprint-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.footprint-summary>div{background:var(--paper);border:1px solid var(--line);padding:20px;border-radius:17px;box-shadow:0 6px 24px rgba(0,0,0,.045)}.footprint-summary strong{font-size:34px;letter-spacing:-.06em;color:var(--brand)}.panel:has(.footprint-summary)>.map-controls{padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.panel:has(.footprint-summary)>.map-controls button{border-radius:10px;padding:11px 16px}.panel:has(.footprint-summary)>.footprint-filters{background:var(--paper);border:1px solid var(--line);padding:18px;border-radius:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.footprint-filters label{min-width:0;display:grid;gap:6px;font-size:12px;font-weight:700}.footprint-filters input,.footprint-filters select{min-width:0;width:100%;padding:10px 12px;background:var(--paper);border:1px solid var(--line);border-radius:10px;color:var(--ink)}.fan-map{border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:420px;box-shadow:0 12px 30px rgba(0,0,0,.065)}.venue-manager,.panel:has(.footprint-summary)>.map-editor,.merge-box{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:20px}.venue-manager-head{margin-bottom:14px}.venue-row{background:var(--bg)}.place-list{grid-template-columns:repeat(2,minmax(0,1fr))}.place-card{border-radius:16px}.dialog{border-radius:18px}.media-gallery img{border:1px solid var(--line)}
 @media(max-width:850px){.panel:has(.footprint-summary)>.footprint-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.place-list{grid-template-columns:1fr}.fan-map{min-height:360px}}
 @media(max-width:500px){.content{padding-left:14px;padding-right:14px}.panel:has(.footprint-summary)>h2{font-size:28px}.footprint-summary{gap:7px}.footprint-summary>div{padding:12px 9px}.footprint-summary strong{font-size:24px}.panel:has(.footprint-summary)>.map-controls{gap:6px;padding:8px}.panel:has(.footprint-summary)>.map-controls button{flex:1;padding:10px 8px;font-size:12px}.panel:has(.footprint-summary)>.footprint-filters{padding:11px;gap:9px}.fan-map{min-height:330px}.venue-manager{padding:13px}.dialog{padding:18px}}
 </style>
@@ -276,6 +276,21 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
  .v3-journal-search{flex-basis:100%}
  .cards{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Shared semantic surfaces for journal, recap, venues and maps. */
+:root{--v3-focus:var(--brand);--v3-control-bg:var(--paper);--v3-surface-tint:var(--brand-soft)}
+.primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
+.primary{background:var(--brand);color:var(--on-brand);border-radius:12px}
+.primary:hover{filter:brightness(.96)}
+.primary:focus-visible,.secondary:focus-visible,.subtle:focus-visible,.search:focus-visible,.card button:focus-visible,.panel button:focus-visible{outline:3px solid var(--v3-focus);outline-offset:2px}
+.card,.panel,.metric,.venue-manager{border-color:var(--line);background:var(--paper)}
+.card{border-left:3px solid var(--brand);border-radius:18px}
+.card .meta,.eyebrow{color:var(--brand)}
+.search{background:var(--v3-control-bg);border-color:var(--line);color:var(--ink)}
+.search:focus{border-color:var(--brand)}
+.hero,.notice,.v3-favorite-venue{background:var(--v3-surface-tint)}
+.topbar{background:var(--paper);border-bottom-color:var(--line)}
+@media(prefers-reduced-motion:reduce){.primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:none}}
 </style></head>
 <body>
 <div id="app">
