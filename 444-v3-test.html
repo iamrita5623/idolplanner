@@ -296,13 +296,12 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .v3-favorite-grid{gap:clamp(10px,1.5vw,18px)}
 .v3-favorite-venue{position:relative;border-radius:18px;padding:clamp(16px,1.8vw,23px);min-height:116px;box-shadow:var(--v3-shadow)}
 .v3-favorite-venue strong{line-height:1.4}
-.place-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,20px);align-items:start}
+.place-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:clamp(12px,2vw,20px);align-items:start}
 .place-card{min-width:0;overflow-wrap:anywhere;border-radius:20px}
 .place-events{min-width:0}
 .fan-map{border-radius:22px;box-shadow:var(--v3-shadow)}
-@media(max-width:1100px){.place-list{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:900px){.v3-favorite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footprint-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:620px){.v3-favorite-grid,.footprint-summary,.v3-expense-summary{grid-template-columns:minmax(0,1fr)}.place-list{grid-template-columns:minmax(0,1fr)}.v3-favorite-venue{min-height:0}.v3-budget-controls{align-items:flex-start;flex-direction:column}}
+@media(max-width:900px){.v3-favorite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footprint-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.v3-favorite-grid,.footprint-summary,.v3-expense-summary{grid-template-columns:minmax(0,1fr)}.v3-favorite-venue{min-height:0}.v3-budget-controls{align-items:flex-start;flex-direction:column}.place-event .event-actions{display:flex;flex-wrap:wrap;gap:8px}.place-event .event-actions button{max-width:100%;white-space:normal}.v3-budget-form label{min-width:0;max-width:100%}}
 /* Shared semantic surfaces for journal, recap, venues and maps. */
 :root{--v3-focus:var(--brand);--v3-control-bg:var(--paper);--v3-surface-tint:var(--brand-soft)}
 .primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
