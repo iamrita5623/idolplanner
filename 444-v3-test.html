@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f7ff">
+<meta name="theme-color" content="#27243B">
 <title>RITA 444 V3｜222 功能遷移測試</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -430,7 +430,7 @@ backupStatus.value='匯入完成：新增 '+incoming.length+' 筆行程、'+inco
 <script>
 (function(){
 const key='rita-v3-theme-color';
-const valid=v=>/^#[0-9a-fA-F]{6}$/.test(v);
+const valid=v=>typeof v==='string'&&/^#[0-9a-fA-F]{6}$/.test(v);
 const apply=v=>{if(!valid(v))return;const n=parseInt(v.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;const max=Math.max(r,g,b)/255,min=Math.min(r,g,b)/255,d=max-min;let h=0;if(d){switch(max){case r/255:h=((g-b)/255/d)%6;break;case g/255:h=(b-r)/255/d+2;break;default:h=(r-g)/255/d+4}h=(h*60+360)%360}const l=(max+min)/2;const sat=d===0?0:d/(1-Math.abs(2*l-1));document.documentElement.style.setProperty('--brand',v);document.documentElement.style.setProperty('--theme-h',String(Math.round(h)));document.documentElement.style.setProperty('--theme-s',Math.round(sat*100)+'%');document.documentElement.style.setProperty('--theme-l',Math.round(l*100)+'%');const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=v;const linear=x=>{const s=x/255;return s<=0.04045?s/12.92:Math.pow((s+0.055)/1.055,2.4)};const luminance=0.2126*linear(r)+0.7152*linear(g)+0.0722*linear(b);const dark=0.2126*linear(31)+0.7152*linear(37)+0.0722*linear(48);const whiteContrast=1.05/(luminance+0.05),darkContrast=(luminance+0.05)/(dark+0.05);document.documentElement.style.setProperty('--on-brand',darkContrast>=whiteContrast?'#1f2530':'#ffffff');document.documentElement.style.setProperty('--theme-accent-h',String(Math.round(h)));document.documentElement.style.setProperty('--theme-accent-s',Math.round(sat*100)+'%')};
 let saved='#27243B';try{const stored=localStorage.getItem(key);if(valid(stored))saved=stored}catch(e){}apply(saved);
 const init=()=>{const bar=document.querySelector('.topbar');if(!bar)return;
