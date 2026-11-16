@@ -234,6 +234,21 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
 .v3-theme-control .v3-theme-hint{font-size:11px;color:#a02b3d}
 .v3-theme-control .v3-theme-hint:empty{display:none}
 @media(max-width:520px){.v3-theme-control{gap:7px}.v3-theme-control label{width:100%}}
+
+/* The color editor lives inside a popover and always presents HEX, not browser RGB UI. */
+.v3-theme-control{position:relative}
+.v3-theme-control .v3-theme-label{font-size:12px;font-weight:700;color:var(--ink)}
+.v3-theme-trigger{display:flex;align-items:center;justify-content:center;width:38px;height:34px;padding:5px;border:1px solid var(--line);border-radius:9px;background:var(--paper);cursor:pointer}
+.v3-theme-swatch{display:block;width:24px;height:23px;border-radius:5px;border:1px solid rgba(0,0,0,.12)}
+.v3-theme-popover{position:absolute;right:0;top:calc(100% + 9px);z-index:1000;width:min(275px,calc(100vw - 28px));padding:17px;border:1px solid var(--line);border-radius:15px;background:var(--paper);box-shadow:0 14px 38px rgba(0,0,0,.16);display:grid;gap:8px}
+.v3-theme-popover[hidden]{display:none}
+.v3-theme-popover strong{font-size:14px}
+.v3-theme-popover label{font-size:12px;font-weight:650}
+.v3-theme-popover input[type=range]{width:100%;accent-color:var(--brand);cursor:pointer}
+.v3-theme-popover #v3-theme-hue{accent-color:var(--brand);background:linear-gradient(to right,red,#ff0,lime,cyan,blue,magenta,red);height:10px;border-radius:6px;appearance:none}
+.v3-theme-preview{height:46px;border-radius:8px;border:1px solid var(--line)}
+.v3-theme-control .v3-theme-hint{font-size:11px;color:#a02b3d}
+.v3-theme-control .v3-theme-hint:empty{display:none}
 </style></head>
 <body>
 <div id="app">
@@ -346,17 +361,36 @@ const apply=v=>{if(!valid(v))return;const n=parseInt(v.slice(1),16),r=(n>>16)&25
 let saved='#8461b5';try{const stored=localStorage.getItem(key);if(valid(stored))saved=stored}catch(e){}apply(saved);
 const init=()=>{const bar=document.querySelector('.topbar');if(!bar)return;
 const group=document.createElement('div');group.className='v3-theme-control';
-const label=document.createElement('label');label.textContent='主題色 HEX';label.htmlFor='v3-theme-hex';
-const hex=document.createElement('input');hex.type='text';hex.id='v3-theme-hex';hex.className='v3-theme-hex';hex.setAttribute('aria-label','主題色 HEX 色碼');hex.setAttribute('autocomplete','off');hex.setAttribute('spellcheck','false');hex.setAttribute('maxlength','7');hex.setAttribute('inputmode','text');hex.placeholder='#8461B5';hex.value=saved.toUpperCase();
-const picker=document.createElement('input');picker.type='color';picker.id='v3-theme-picker';picker.setAttribute('aria-label','開啟選色器');picker.title='也可以使用選色器';picker.value=saved;
+const label=document.createElement('span');label.className='v3-theme-label';label.textContent='主題色';
+const trigger=document.createElement('button');trigger.type='button';trigger.className='v3-theme-trigger';trigger.setAttribute('aria-label','選擇主題色');trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','v3-theme-popover');trigger.title='選擇主題色';
+const swatch=document.createElement('span');swatch.className='v3-theme-swatch';trigger.append(swatch);
+const panel=document.createElement('div');panel.id='v3-theme-popover';panel.className='v3-theme-popover';panel.hidden=true;
+const heading=document.createElement('strong');heading.textContent='選擇主題色';
+const hexLabel=document.createElement('label');hexLabel.htmlFor='v3-theme-hex';hexLabel.textContent='HEX 色碼';
+const hex=document.createElement('input');hex.type='text';hex.id='v3-theme-hex';hex.className='v3-theme-hex';hex.setAttribute('aria-label','HEX 色碼');hex.setAttribute('maxlength','7');hex.setAttribute('autocomplete','off');hex.setAttribute('spellcheck','false');hex.value=saved.toUpperCase();
 const hint=document.createElement('span');hint.className='v3-theme-hint';hint.setAttribute('role','status');hint.setAttribute('aria-live','polite');
-const persist=value=>{apply(value);picker.value=value;hex.value=value.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent='';try{localStorage.setItem(key,value)}catch(e){hint.textContent='色彩已套用，但無法儲存偏好'}};
-const normalize=value=>{const trimmed=String(value??'').trim();const candidate=trimmed.startsWith('#')?trimmed:'#'+trimmed;return valid(candidate)?candidate.toLowerCase():null};
-hex.addEventListener('input',()=>{const normalized=normalize(hex.value);if(normalized){persist(normalized)}else{const complete=hex.value.trim().replace(/^#/,'').length>=6;hex.setAttribute('aria-invalid',complete?'true':'false');hint.textContent=complete?'請輸入有效的 6 位 HEX 色碼':''}});
-hex.addEventListener('blur',()=>{const normalized=normalize(hex.value);if(normalized)persist(normalized);else{hex.value=picker.value.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent=''}});
-hex.addEventListener('keydown',event=>{if(event.key==='Escape'){hex.value=picker.value.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent='';hex.blur()}else if(event.key==='Enter'){hex.blur()}});
-picker.addEventListener('input',()=>persist(picker.value));
-group.append(label,hex,picker,hint);bar.append(group)};
+const preview=document.createElement('div');preview.className='v3-theme-preview';
+const hueLabel=document.createElement('label');hueLabel.htmlFor='v3-theme-hue';hueLabel.textContent='色相';
+const hue=document.createElement('input');hue.type='range';hue.id='v3-theme-hue';hue.min='0';hue.max='360';hue.value='260';
+const satLabel=document.createElement('label');satLabel.htmlFor='v3-theme-sat';satLabel.textContent='彩度';
+const sat=document.createElement('input');sat.type='range';sat.id='v3-theme-sat';sat.min='0';sat.max='100';sat.value='42';
+const lightLabel=document.createElement('label');lightLabel.htmlFor='v3-theme-light';lightLabel.textContent='明度';
+const light=document.createElement('input');light.type='range';light.id='v3-theme-light';light.min='0';light.max='100';light.value='47';
+const normalize=value=>{const s=String(value??'').trim();const v=s.startsWith('#')?s:'#'+s;return valid(v)?v.toLowerCase():null};
+const hslFromHex=value=>{const n=parseInt(value.slice(1),16),r=((n>>16)&255)/255,g=((n>>8)&255)/255,b=(n&255)/255,max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min,l=(max+min)/2;let h=0,s=0;if(d){s=d/(1-Math.abs(2*l-1));switch(max){case r:h=((g-b)/d)%6;break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4}h=(h*60+360)%360}return [Math.round(h),Math.round(s*100),Math.round(l*100)]};
+const hexFromHsl=(h,s,l)=>{s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,9-k(n),1));return '#'+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join('')};
+const persist=value=>{apply(value);saved=value;hex.value=value.toUpperCase();swatch.style.background=value;preview.style.background=value;hex.setAttribute('aria-invalid','false');hint.textContent='';const hsl=hslFromHex(value);hue.value=String(hsl[0]);sat.value=String(hsl[1]);light.value=String(hsl[2]);try{localStorage.setItem(key,value)}catch(e){hint.textContent='已套用，但無法儲存偏好'}};
+const updateSliders=()=>persist(hexFromHsl(Number(hue.value),Number(sat.value),Number(light.value)));
+for(const slider of [hue,sat,light])slider.addEventListener('input',updateSliders);
+hex.addEventListener('input',()=>{const v=normalize(hex.value);if(v)persist(v);else{hex.setAttribute('aria-invalid','true');hint.textContent='請輸入 6 位 HEX 色碼'}});
+hex.addEventListener('blur',()=>{if(!normalize(hex.value)){hex.value=saved.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent=''}});
+const close=()=>{panel.hidden=true;trigger.setAttribute('aria-expanded','false')};
+trigger.addEventListener('click',()=>{panel.hidden=!panel.hidden;trigger.setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)hex.focus()});
+document.addEventListener('pointerdown',event=>{if(!group.contains(event.target))close()});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden){close();trigger.focus()}});
+panel.append(heading,preview,hexLabel,hex,hint,hueLabel,hue,satLabel,sat,lightLabel,light);
+group.append(label,trigger,panel);bar.append(group);persist(saved)};
+
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script></body></html>
