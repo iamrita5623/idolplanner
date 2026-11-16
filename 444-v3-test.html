@@ -346,6 +346,13 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .topbar .dot{background:var(--brand)}
 @media(prefers-reduced-motion:reduce){.primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:none}}
 
+/* Theme-aware form surfaces: keep the V3 palette consistent inside dialogs. */
+.form input,.form select,.form textarea,.secondary{background:var(--v3-control-bg,var(--paper));color:var(--ink);border-color:var(--line)}
+.form input:focus-visible,.form select:focus-visible,.form textarea:focus-visible{outline:3px solid var(--v3-focus,var(--brand));outline-offset:2px}
+.form input::placeholder,.form textarea::placeholder,.search::placeholder{color:var(--muted);opacity:1}
+.dialog{color:var(--ink);border:1px solid var(--line)}
+@media(prefers-reduced-motion:reduce){.topbar{transition:none}}
+
 /* Explicit opt-in expense reconciliation, never automatic. */
 .v3-expense-sync{display:inline-flex;align-items:center;justify-content:center;margin:8px 0 2px 10px;padding:7px 12px;min-height:36px;white-space:normal;vertical-align:middle;border:1px solid var(--brand);border-radius:10px;color:var(--brand);background:var(--paper);font-weight:700;cursor:pointer}
 .v3-expense-sync:hover{background:var(--brand-soft)}
