@@ -92,6 +92,29 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
 .v3-next-card strong{font-size:clamp(20px,2vw,28px);line-height:1.4;overflow-wrap:anywhere}.v3-next-card>span:not(.eyebrow){color:var(--muted);font-size:13px}.v3-next-card button{margin-top:auto}
 @media(max-width:700px){.v3-dashboard-intro{grid-template-columns:1fr;gap:12px}.v3-dashboard-copy{padding:24px}.v3-next-card{padding:22px}.v3-quick-links button{flex:1 1 auto}}
 .v3-budget-panel{padding:22px 25px;margin:0 0 22px;background:var(--paper);border:1px solid var(--line);border-radius:20px}.v3-budget-controls{display:flex;align-items:start;justify-content:space-between;gap:14px}.v3-budget-panel h2{margin:6px 0}.v3-budget-panel p{font-size:12px;color:var(--muted)}.v3-privacy-toggle{white-space:nowrap;font-size:13px;font-weight:700}.v3-budget-form{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-top:12px}.v3-budget-form label{display:grid;gap:7px;font-size:13px}.v3-budget-form input{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);color:var(--ink)}.v3-budget-form button{padding:10px 16px;border-radius:10px}.v3-budget-progress{margin-top:17px}.v3-budget-progress .card-foot{border:0;padding:0 0 9px}.v3-budget-progress small{font-size:12px;color:var(--muted)}@media(max-width:500px){.v3-budget-controls{flex-wrap:wrap}.v3-budget-form label,.v3-budget-form input{width:100%}}
+
+/* V3 journal layout refinement: all surfaces inherit the user-selected hue. */
+:root{--v3-radius:20px;--v3-shadow:0 10px 32px hsl(var(--theme-h) 22% 20% / .065)}
+.workspace,.content,.panel,.card,.venue-manager,.v3-budget-panel{min-width:0}
+.panel,.card,.venue-manager,.v3-budget-panel{border-color:var(--line);box-shadow:var(--v3-shadow)}
+.panel{border-radius:var(--v3-radius)}
+.card,.venue-manager{border-radius:18px}
+.content>section,.content>div{max-width:100%}
+.footprint-summary>div{background:var(--brand-soft);border-color:var(--line);border-radius:16px}
+.footprint-summary strong{color:var(--brand-dark)}
+.footprint-filters{background:var(--bg);border:1px solid var(--line);border-radius:16px}
+.footprint-filters input:focus-visible,.footprint-filters select:focus-visible,.v3-budget-form input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.map-controls button,.v3-quick-links button{min-height:40px}
+.place-card{border-top:3px solid var(--brand)}
+.place-card .meta{letter-spacing:.1em}
+.place-event{background:var(--brand-soft);border-color:var(--line)}
+.venue-row{border-color:var(--line)}
+.fan-map{box-shadow:var(--v3-shadow)}
+.v3-budget-progress progress{accent-color:var(--brand)}
+@media(min-width:901px) and (max-width:1180px){.sidebar{gap:12px;padding-inline:20px}.nav{gap:2px}.nav button{padding:10px 9px;font-size:12px}.sidebar .brand strong{font-size:15px}}
+@media(max-width:900px){.sidebar{padding-bottom:max(7px,env(safe-area-inset-bottom));height:calc(75px + env(safe-area-inset-bottom));border-top:1px solid var(--sidebar-line)}.content{padding-bottom:calc(115px + env(safe-area-inset-bottom))}.nav button{min-width:0}}
+@media(max-width:620px){.footprint-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.map-controls button{flex:1 1 auto}.place-card{padding:16px}.v3-budget-panel{padding:18px}.fan-map{min-height:320px}}
+@media(max-width:390px){.footprint-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.footprint-summary>div{padding:10px 6px;font-size:10px}.footprint-summary strong{font-size:20px}.map-controls button{font-size:11px;padding:9px 7px}}
 </style></head>
 <body>
 <div id="app">
