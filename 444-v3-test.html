@@ -521,6 +521,26 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .v3-recap-memory-panel{margin-bottom:24px}.v3-recap-media-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.v3-recap-media-metrics>div{display:grid;gap:6px;border:1px solid var(--line);border-radius:12px;padding:12px}.v3-recap-media-metrics small{color:var(--muted);font-size:12px}.v3-recap-media-metrics strong{font-size:18px}.v3-recap-memory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.v3-recap-memory-card{min-width:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}.v3-recap-memory-open{width:100%;padding:0;text-align:left;background:transparent;border:0;cursor:pointer;color:inherit}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{display:grid;place-items:center;width:100%;height:150px;object-fit:cover;background:var(--brand-soft)}.v3-recap-memory-placeholder{font-size:42px}.v3-recap-memory-info{display:grid;gap:6px;padding:12px}.v3-recap-memory-info strong{overflow-wrap:anywhere}.v3-recap-memory-info small{color:var(--muted)}.v3-recap-memory-link{font-size:12px;color:var(--brand);font-weight:700}.v3-recap-memory-open:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}@media(max-width:540px){.v3-recap-media-metrics{gap:6px}.v3-recap-media-metrics>div{padding:9px}.v3-recap-media-metrics strong{font-size:15px}.v3-recap-memory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{height:115px}.v3-recap-memory-info{padding:9px}}
 
 .v3-artist-profile{margin-top:18px}.v3-artist-profile textarea{display:block;width:100%;min-height:125px;resize:vertical;margin:8px 0 12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit}.v3-artist-profile-actions{display:flex;flex-wrap:wrap;gap:9px}
+/* Map placebook redesign: unified venue cards, controls and responsive map canvas. */
+.v3-map-toolbar{padding:14px 16px;border:1px solid var(--line);border-radius:20px;background:var(--paper);box-shadow:var(--v3-shadow)}
+.v3-map-view-switch{border-radius:13px;padding:4px;gap:5px}
+.v3-map-view-switch button{min-height:41px;font-weight:700;transition:background-color .16s ease,color .16s ease}
+.v3-map-locate button{min-height:41px}
+.place-list{gap:clamp(12px,1.8vw,22px);align-items:start}
+.place-list>.place-card{position:relative;border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:20px;padding:clamp(17px,2vw,25px);background:var(--paper);box-shadow:var(--v3-shadow);overflow:hidden}
+.place-list>.place-card::before{content:"";position:absolute;right:0;top:0;width:110px;height:95px;background:radial-gradient(circle at top right,var(--brand-soft),transparent 75%);pointer-events:none}
+.place-card .meta,.place-card h3,.place-card h4{overflow-wrap:anywhere}
+.place-events{gap:10px;border-top-style:solid}
+.place-event{border-radius:13px;background:var(--brand-soft);border-color:var(--line)}
+.place-event .card-foot{align-items:flex-start}
+.venue-directory{gap:12px}
+.venue-row{align-items:flex-start;border-radius:15px;padding:clamp(12px,1.6vw,19px);background:var(--paper);box-shadow:var(--v3-shadow);min-width:0}
+.venue-row>div{min-width:0;overflow-wrap:anywhere}
+.venue-buttons{align-items:center}
+.fan-map{height:clamp(340px,54vh,640px);border:1px solid var(--line);border-radius:22px;box-shadow:var(--v3-shadow);background:var(--brand-soft)}
+@media(max-width:700px){.v3-map-toolbar{padding:11px;border-radius:15px}.place-list>.place-card{padding:16px;border-radius:16px}.venue-row{flex-direction:column;gap:10px}.venue-buttons{width:100%}.fan-map{height:52vh;min-height:315px;border-radius:16px}}
+@media(max-width:420px){.v3-map-view-switch button{font-size:11px}.place-event{padding:11px}.venue-buttons button{max-width:100%;white-space:normal}}
+@media(prefers-reduced-motion:reduce){.v3-map-view-switch button{transition:none}}
 /* Event journal redesign: consistent hierarchy and responsive card rhythm. */
 .cards>.card{position:relative;isolation:isolate;border:1px solid var(--line);border-left:0;border-radius:20px;background:var(--paper);padding:clamp(18px,2vw,27px);gap:14px;box-shadow:var(--v3-shadow);overflow:hidden}
 .cards>.card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;height:auto;background:var(--brand);pointer-events:none}
