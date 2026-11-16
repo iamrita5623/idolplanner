@@ -146,7 +146,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
 
 @media(min-width:901px){
  #app{display:grid;grid-template-columns:clamp(220px,19vw,286px) minmax(0,1fr);align-items:start;min-height:100dvh}
- .sidebar{position:sticky;top:0;left:0;width:auto;height:100dvh;min-height:0;padding:clamp(24px,3vw,42px) 18px 24px;display:flex;flex-direction:column;align-items:stretch;gap:34px;overflow-y:auto;background:var(--brand-dark);border-right:1px solid var(--sidebar-line)}
+ .sidebar{position:sticky;top:0;left:0;width:auto;height:100dvh;min-height:0;padding:clamp(24px,3vw,42px) 18px 24px;display:flex;flex-direction:column;align-items:stretch;gap:34px;overflow-y:auto;background:var(--brand-soft);border-right:1px solid var(--line)}
  .sidebar .brand{padding:5px 10px;gap:12px;align-items:center}
  .sidebar .brand strong{font-size:clamp(15px,1.5vw,19px);letter-spacing:-.04em}
  .sidebar .brand small{font-size:10px}
@@ -172,7 +172,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
  .content{padding-inline:24px}
 }
 @media(max-width:900px){
- .sidebar{background:var(--brand-dark)}
+ .sidebar{background:var(--brand-soft)}
  .nav{width:100%}
  .nav button{min-width:0}
 }
@@ -263,6 +263,44 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
 .v3-expense-review-row>div{display:grid;gap:4px;min-width:0;overflow-wrap:anywhere}
 .v3-expense-review-row button{flex-shrink:0}
 @media(max-width:480px){.v3-expense-review-row{align-items:flex-start;flex-direction:column}}
+
+/* V3 responsive editorial workspace: all accents derive from the selected theme. */
+@media(min-width:901px){
+ .workspace{background:var(--bg)}
+ .topbar{background:var(--paper);border-bottom:1px solid var(--line)}
+ .content{display:block}
+ .heading{align-items:center;gap:24px}
+ .heading>div{min-width:0}
+ .heading h1{overflow-wrap:anywhere}
+ .sidebar .brand{border-bottom:1px solid var(--line);padding-bottom:22px}
+ .sidebar .nav button{border:1px solid transparent}
+ .sidebar .nav button.active{box-shadow:0 6px 18px color-mix(in srgb,var(--brand) 17%,transparent)}
+ .sidebar .nav button:not(.active):hover{border-color:var(--line)}
+}
+@media(min-width:1101px){
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+ .card{padding:clamp(20px,2vw,28px)}
+ .section-head{margin-top:36px}
+}
+@media(min-width:901px) and (max-width:1190px){
+ .v3-dashboard-intro{grid-template-columns:1fr}
+ .v3-favorite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+ .workspace{min-width:0}
+ .content{overflow-wrap:anywhere}
+ .section-head{flex-wrap:wrap}
+ .section-head>h2{min-width:0}
+ .v3-journal-search{flex:1 1 260px}
+}
+@media(max-width:540px){
+ .heading{align-items:flex-start;flex-wrap:wrap}
+ .heading h1{font-size:clamp(28px,8vw,38px)}
+ .heading>.primary{max-width:100%}
+ .section-head{align-items:stretch}
+ .v3-journal-search{flex-basis:100%}
+ .cards{grid-template-columns:minmax(0,1fr)}
+}
 </style></head>
 <body>
 <div id="app">
