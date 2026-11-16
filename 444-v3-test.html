@@ -176,6 +176,22 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
  .nav{width:100%}
  .nav button{min-width:0}
 }
+
+/* Accessibility fix: the final sidebar background must agree with default nav text. */
+@media(min-width:901px){
+ .sidebar{background:var(--brand-soft);color:var(--ink);border-right:1px solid var(--line)}
+ .sidebar .brand strong,.sidebar .brand small,.sidebar .nav-caption,.sidebar .sidebar-foot{color:var(--ink)}
+ .sidebar .nav button{color:var(--ink);opacity:1}
+ .sidebar .nav button:hover,.sidebar .nav button:focus-visible{background:var(--paper);color:var(--ink)}
+ .sidebar .nav button.active,.sidebar .nav button.active:hover,.sidebar .nav button.active:focus-visible{background:var(--brand);color:var(--on-brand)}
+ .sidebar .sidebar-foot{border-color:var(--line)}
+}
+@media(max-width:900px){
+ .sidebar{background:var(--brand-soft);color:var(--ink);border-top:1px solid var(--line)}
+ .sidebar .nav button{color:var(--ink);opacity:1}
+ .sidebar .nav button:hover,.sidebar .nav button:focus-visible{background:var(--paper);color:var(--ink)}
+ .sidebar .nav button.active,.sidebar .nav button.active:hover,.sidebar .nav button.active:focus-visible{background:var(--brand);color:var(--on-brand)}
+}
 </style></head>
 <body>
 <div id="app">
