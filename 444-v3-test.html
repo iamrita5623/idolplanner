@@ -57,7 +57,7 @@ body{background:var(--bg)}.monogram,.hero-art{background:var(--brand)}.topbar{ba
 <style id="v3-theme-system">
 :root{--theme-h:248;--theme-s:24%;--theme-l:19%;--theme-accent-h:248;--theme-accent-s:24%;--brand:hsl(var(--theme-h) var(--theme-s) var(--theme-l));--brand-dark:color-mix(in srgb,var(--brand) 35%,#18202a);--brand-soft:color-mix(in srgb,var(--brand) 13%,#fff);--bg:color-mix(in srgb,var(--brand) 4%,#fff);--paper:#fff;--ink:color-mix(in srgb,var(--brand) 8%,#20242c);--muted:color-mix(in srgb,var(--brand) 13%,#646b75);--line:color-mix(in srgb,var(--brand) 13%,#dfe2e7);--sage:var(--brand-soft);--blue:var(--brand-soft);--gold:var(--brand-soft);--on-brand:#fff;--on-sidebar:var(--ink);--sidebar-line:var(--line)}
 body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft);color:var(--ink)}.topbar,.card,.panel,.metric,.dialog,.venue-manager{background:var(--paper)}.hero-art,.monogram,.primary{background:var(--brand);color:var(--on-brand)}.nav button.active{background:var(--brand);color:var(--on-brand)}.eyebrow,.subtle,.card .meta,.footprint-summary strong{color:var(--brand)}.metric:nth-child(2),.metric:nth-child(3){background:var(--brand-soft)}.sidebar-foot{border-color:var(--line)}.dot{background:var(--brand)}
-.v3-theme-control{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid var(--line);padding:7px 11px;border-radius:12px;background:var(--paper)}.v3-theme-control label{font-size:12px;font-weight:700;color:var(--ink)}.v3-theme-control input[type=color]{width:36px;height:32px;border:0;background:transparent;cursor:pointer}
+.v3-theme-control{display:flex;align-items:center;gap:10px;border:1px solid var(--line);padding:7px 11px;border-radius:12px;background:var(--paper)}
 @media(min-width:1000px){#app{grid-template-columns:222px minmax(0,1fr)}.sidebar{padding:28px 14px;gap:24px}.topbar{height:68px}.content{padding-top:30px}.heading{padding-bottom:16px;border-bottom:1px solid var(--line)}.heading h1{font-size:clamp(32px,3vw,46px)}}
 @media(max-width:650px){.topbar{height:auto;min-height:62px;padding:10px 14px;flex-wrap:wrap}.v3-theme-control{margin-left:auto}.v3-theme-control label{font-size:11px}.content{padding-top:18px}.heading{align-items:flex-start}.heading h1{font-size:29px}}
 
@@ -202,7 +202,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .v3-theme-control .v3-theme-hex[aria-invalid=true]{border-color:#b33b4b}
 .v3-theme-control .v3-theme-hint{font-size:11px;color:#a02b3d}
 .v3-theme-control .v3-theme-hint:empty{display:none}
-@media(max-width:520px){.v3-theme-control{gap:7px}.v3-theme-control label{width:100%}}
+@media(max-width:520px){.v3-theme-control{gap:7px}}
 
 /* The color editor lives inside a popover and always presents HEX, not browser RGB UI. */
 .v3-theme-control{position:relative}
@@ -445,11 +445,11 @@ const hex=document.createElement('input');hex.type='text';hex.id='v3-theme-hex';
 const hint=document.createElement('span');hint.className='v3-theme-hint';hint.setAttribute('role','status');hint.setAttribute('aria-live','polite');
 const preview=document.createElement('div');preview.className='v3-theme-preview';
 const hueLabel=document.createElement('label');hueLabel.htmlFor='v3-theme-hue';hueLabel.textContent='色相';
-const hue=document.createElement('input');hue.type='range';hue.id='v3-theme-hue';hue.min='0';hue.max='360';hue.value='260';
+const hue=document.createElement('input');hue.type='range';hue.id='v3-theme-hue';hue.min='0';hue.max='360';hue.value='0';
 const satLabel=document.createElement('label');satLabel.htmlFor='v3-theme-sat';satLabel.textContent='彩度';
-const sat=document.createElement('input');sat.type='range';sat.id='v3-theme-sat';sat.min='0';sat.max='100';sat.value='42';
+const sat=document.createElement('input');sat.type='range';sat.id='v3-theme-sat';sat.min='0';sat.max='100';sat.value='0';
 const lightLabel=document.createElement('label');lightLabel.htmlFor='v3-theme-light';lightLabel.textContent='明度';
-const light=document.createElement('input');light.type='range';light.id='v3-theme-light';light.min='0';light.max='100';light.value='47';
+const light=document.createElement('input');light.type='range';light.id='v3-theme-light';light.min='0';light.max='100';light.value='0';
 const normalize=value=>{const s=String(value??'').trim();const v=s.startsWith('#')?s:'#'+s;return valid(v)?v.toLowerCase():null};
 const hslFromHex=value=>{const n=parseInt(value.slice(1),16),r=((n>>16)&255)/255,g=((n>>8)&255)/255,b=(n&255)/255,max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min,l=(max+min)/2;let h=0,s=0;if(d){s=d/(1-Math.abs(2*l-1));switch(max){case r:h=((g-b)/d)%6;break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4}h=(h*60+360)%360}return [Math.round(h),Math.round(s*100),Math.round(l*100)]};
 const hexFromHsl=(h,s,l)=>{s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,9-k(n),1));return '#'+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join('')};
