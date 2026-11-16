@@ -383,7 +383,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 <script>
 window.v3DownloadRawBackup=()=>{try{const data={format:'rita-v3-raw-rescue',exportedAt:new Date().toISOString(),items:{}};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&(key.startsWith('rita-v3-lab-v1-')||key==='rita-v3-theme-color'))data.items[key]=localStorage.getItem(key)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='rita-v3-raw-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)}catch(err){alert('備份失敗：'+err.message)}};
 const v3SafeMode=new URLSearchParams(location.search).get('v3safe')==='1';
-const readV3Storage=key=>v3SafeMode&&String(key).startsWith('rita-v3-lab-v1-')?null:localStorage.getItem(key);
+const readV3Storage=key=>{if(v3SafeMode&&String(key).startsWith('rita-v3-lab-v1-'))return null;try{return localStorage.getItem(key)}catch(error){showV3Failure('瀏覽器儲存空間無法讀取；測試版會以暫存資料顯示，不會覆寫原始資料。'+String(error?.message||''));return null}};
 const writeV3Storage=(key,value)=>{if(!v3SafeMode)localStorage.setItem(key,value)};
 const showV3Failure=message=>{
  const panel=document.getElementById('v3-diagnostic');
@@ -397,7 +397,7 @@ window.addEventListener('unhandledrejection',event=>showV3Failure(event.reason?.
 if(!window.Vue){showV3Failure('Vue 載入失敗，請檢查瀏覽器擴充功能或網路封鎖。')}else{
 const {createApp,ref,computed,watch,nextTick}=Vue;
 const v3App=createApp({setup(){try{
- const validDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const [y,m,d]=value.split('-').map(Number);const dt=new Date(Date.UTC(y,m-1,d));return dt.getUTCFullYear()===y&&dt.getUTCMonth()===m-1&&dt.getUTCDate()===d};
+ const validDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const [y,m,d]=value.split('-').map(Number);const dt=new Date(0);dt.setUTCHours(0,0,0,0);dt.setUTCFullYear(y,m-1,d);return dt.getUTCFullYear()===y&&dt.getUTCMonth()===m-1&&dt.getUTCDate()===d};
 
  const tabs=[{id:'home',icon:'◈',label:'行程',en:'JOURNAL',title:'我的追星日記',desc:'整理每一段奔赴的旅程。'},{id:'fandom',icon:'♡',label:'紀念日',en:'MILESTONES',title:'心動紀念日',desc:'把重要的日子好好收藏。'},{id:'artists',icon:'♫',label:'藝人',en:'ARTISTS',title:'藝人收藏',desc:'每一位喜歡的藝人，都有專屬的位置。'},{id:'map',icon:'⌖',label:'地圖',en:'PLACES',title:'追星足跡',desc:'走過的城市，都是故事。'},{id:'stats',icon:'▥',label:'回顧',en:'YEARBOOK',title:'年度回顧',desc:'翻閱這一年留下的美好。'}];
  const tab=ref('home'),query=ref(''),eventFilter=ref('all'),calendarChoice=ref(null),dialog=ref(false),draft=ref({}),backupStatus=ref(''),anniversaryDialog=ref(false),anniversaryDraft=ref({}),newTask=ref(''),taskEvent=ref(null);
