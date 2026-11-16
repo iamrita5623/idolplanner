@@ -381,8 +381,8 @@ const showV3Failure=message=>{
  const detail=panel.querySelector('[data-v3-error]');
  if(detail)detail.textContent=String(message||'未知錯誤').slice(0,450);
 };
-window.addEventListener('error',event=>showV3Failure(event.message));
-window.addEventListener('unhandledrejection',event=>showV3Failure(event.reason?.message||event.reason));
+window.addEventListener('error',event=>showV3Failure(event.error?.stack||event.message));
+window.addEventListener('unhandledrejection',event=>showV3Failure(event.reason?.stack||event.reason?.message||event.reason));
 if(!window.Vue){showV3Failure('Vue 載入失敗，請檢查瀏覽器擴充功能或網路封鎖。')}else{
 const {createApp,ref,computed,watch,nextTick}=Vue;
 const v3App=createApp({setup(){try{
@@ -468,7 +468,7 @@ backupStatus.value='匯入完成：新增 '+incoming.length+' 筆行程、'+inco
  const remove=e=>{if(confirm('確定刪除「'+e.title+'」？此活動專屬清單也會一起刪除。')){events.value=events.value.filter(x=>x.id!==e.id);tasks.value=tasks.value.filter(t=>t.eventId!==e.id);const next={...eventMedia.value};delete next[e.id];eventMedia.value=next}};
  return{tabs,tab,query,dialog,draft,events,filtered,upcoming,total,money,openCreate,edit,save,remove,backupStatus,exportBackup,importBackup,addToApple,addToGoogle,calendarChoice,chooseCalendar,anniversaries,anniversaryDialog,anniversaryDraft,sortedAnniversaries,daysUntil,openAnniversary,editAnniversary,saveAnniversary,removeAnniversary,places,eventMedia,uploadMedia,removeMedia,detailEvent,showEventDetail,footprintYear,footprintArtist,footprintCategory,footprintStatus,footprintYears,footprintArtists,footprintCategories,visitedPlaces,plannedPlaces,venueInfo,commonVenues,venueSuggestions,myVenues,venueCatalog,favoriteVenues,filteredVenues,venueSearch,venueCountry,venueCountryOf,venueEditor,venueDraft,saveVenue,removeVenue,openVenueEditor,mergeFrom,mergeTo,mergeVenueNames,placeView,placeQuery,placeScope,resetPlaceFilters,openFavoritePlace,visiblePlaces,expandedPlace,eventsAtPlace,mapBusy,mapStatus,mappedCount,filteredVisitedCount,filteredPlannedCount,footprintEvents,locatePlaces,editingPlace,pendingCoords,saveMapPosition,cancelMapPosition,artists,filters,eventFilter,yearStats,categoryStats,expenseCategories,finiteExpense,expenseStats,expenseCategorizedTotal,expenseUnallocatedTotal,expenseChartTotal,expensePercent,expenseHasNegative,expenseOverallocated,expenseOverallocatedEvents,recapYear,recapEvents,recapTotal,recapPlaces,recapPrivate,budgetDraft,recapBudget,recapBudgetRemaining,recapBudgetPercent,saveRecapBudget,hasExpenseBreakdown,draftExpenseTotal,today,nearEvents,nextEvent,daysToEvent,tasks,newTask,addTask,toggleTask,removeTask,taskEvent,eventTasks,unassignedTasks,openEventTasks,assignTask};
 }catch(err){showV3Failure('初始化失敗：'+(err?.stack||err?.message||err));return {tabs:[],tab:'home'}}
-}});v3App.config.errorHandler=(err)=>showV3Failure(err?.message||err);try{v3App.mount('#app')}catch(err){showV3Failure(err?.message||err)}
+}});v3App.config.errorHandler=(err,instance,info)=>showV3Failure('Vue '+info+'：\n'+(err?.stack||err?.message||err));try{v3App.mount('#app')}catch(err){showV3Failure(err?.message||err)}
 }
 </script>
 <script>
