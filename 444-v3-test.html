@@ -271,6 +271,21 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
  .cards{grid-template-columns:minmax(0,1fr)}
 }
 
+/* 222-inspired journal identity in the V3 responsive workspace. */
+:root{--v3-rose:#E9BFDD;--v3-ink:#27243B}
+.heading{position:relative;padding-left:clamp(16px,2vw,26px);border-left:4px solid var(--brand);align-items:center}
+.heading .eyebrow{letter-spacing:.2em;font-size:10px;font-weight:800}
+.heading h1{font-family:"Noto Sans TC","DM Sans",sans-serif;letter-spacing:-.045em;line-height:1.22}
+.heading p{max-width:46ch;line-height:1.8}
+.hero{border-radius:24px;grid-template-columns:minmax(0,1.45fr) minmax(150px,.55fr)}
+.hero-copy{position:relative;z-index:1}
+.hero-art{border-radius:0;display:flex;align-items:center;justify-content:center}
+.cards{align-items:stretch}
+.card{position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;right:0;width:58px;height:3px;background:var(--brand-soft);pointer-events:none}
+.card h3{line-height:1.4}
+@media(max-width:900px){.heading{margin-left:0;padding-left:14px}.hero{grid-template-columns:minmax(0,1fr) minmax(92px,.32fr)}.hero-copy{padding:clamp(18px,4vw,28px)}}
+@media(max-width:540px){.heading{border-left-width:3px}.hero{grid-template-columns:minmax(0,1fr) 90px}.hero h2{overflow-wrap:anywhere}.hero-art{min-width:0}}
 /* Shared semantic surfaces for journal, recap, venues and maps. */
 :root{--v3-focus:var(--brand);--v3-control-bg:var(--paper);--v3-surface-tint:var(--brand-soft)}
 .primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
