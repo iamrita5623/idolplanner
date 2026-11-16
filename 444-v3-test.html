@@ -226,6 +226,14 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-dark)
 .v3-theme-control input[type=color]{accent-color:var(--brand)}
 @media(min-width:901px){.sidebar{background:var(--brand-soft);color:var(--ink)}}
 @media(max-width:900px){.sidebar{background:var(--brand-soft);color:var(--ink)}}
+
+/* HEX is the primary theme editor; the native color picker is optional. */
+.v3-theme-control .v3-theme-hex{width:105px;max-width:100%;min-height:34px;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:600 13px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.02em}
+.v3-theme-control .v3-theme-hex:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.v3-theme-control .v3-theme-hex[aria-invalid=true]{border-color:#b33b4b}
+.v3-theme-control .v3-theme-hint{font-size:11px;color:#a02b3d}
+.v3-theme-control .v3-theme-hint:empty{display:none}
+@media(max-width:520px){.v3-theme-control{gap:7px}.v3-theme-control label{width:100%}}
 </style></head>
 <body>
 <div id="app">
@@ -336,7 +344,19 @@ const key='rita-v3-theme-color';
 const valid=v=>/^#[0-9a-fA-F]{6}$/.test(v);
 const apply=v=>{if(!valid(v))return;const n=parseInt(v.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;const max=Math.max(r,g,b)/255,min=Math.min(r,g,b)/255,d=max-min;let h=0;if(d){switch(max){case r/255:h=((g-b)/255/d)%6;break;case g/255:h=(b-r)/255/d+2;break;default:h=(r-g)/255/d+4}h=(h*60+360)%360}const l=(max+min)/2;const sat=d===0?0:d/(1-Math.abs(2*l-1));document.documentElement.style.setProperty('--brand',v);document.documentElement.style.setProperty('--theme-h',String(Math.round(h)));document.documentElement.style.setProperty('--theme-s',Math.round(sat*100)+'%');document.documentElement.style.setProperty('--theme-l',Math.round(l*100)+'%');const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=v;const linear=x=>{const s=x/255;return s<=0.04045?s/12.92:Math.pow((s+0.055)/1.055,2.4)};const luminance=0.2126*linear(r)+0.7152*linear(g)+0.0722*linear(b);const dark=0.2126*linear(31)+0.7152*linear(37)+0.0722*linear(48);const whiteContrast=1.05/(luminance+0.05),darkContrast=(luminance+0.05)/(dark+0.05);document.documentElement.style.setProperty('--on-brand',darkContrast>=whiteContrast?'#1f2530':'#ffffff');document.documentElement.style.setProperty('--theme-accent-h',String(Math.round(h)));document.documentElement.style.setProperty('--theme-accent-s',Math.round(sat*100)+'%')};
 let saved='#8461b5';try{const stored=localStorage.getItem(key);if(valid(stored))saved=stored}catch(e){}apply(saved);
-const init=()=>{const bar=document.querySelector('.topbar');if(!bar)return;const group=document.createElement('div');group.className='v3-theme-control';const label=document.createElement('label');label.textContent='自訂主題色';label.htmlFor='v3-theme-picker';const picker=document.createElement('input');picker.type='color';picker.id='v3-theme-picker';picker.setAttribute('aria-label','自訂主題色');picker.value=valid(saved)?saved:'#8461b5';picker.addEventListener('input',()=>{apply(picker.value);try{localStorage.setItem(key,picker.value)}catch(e){}});const reset=document.createElement('button');reset.type='button';reset.className='subtle';reset.textContent='重設';reset.setAttribute('aria-label','重設預設主題色');reset.title='恢復預設主題色';reset.addEventListener('click',()=>{picker.value='#8461b5';apply(picker.value);try{localStorage.removeItem(key)}catch(e){console.warn('V3 theme preference could not be reset in storage',e)}});group.append(label,picker,reset);bar.append(group)};
+const init=()=>{const bar=document.querySelector('.topbar');if(!bar)return;
+const group=document.createElement('div');group.className='v3-theme-control';
+const label=document.createElement('label');label.textContent='主題色 HEX';label.htmlFor='v3-theme-hex';
+const hex=document.createElement('input');hex.type='text';hex.id='v3-theme-hex';hex.className='v3-theme-hex';hex.setAttribute('aria-label','主題色 HEX 色碼');hex.setAttribute('autocomplete','off');hex.setAttribute('spellcheck','false');hex.setAttribute('maxlength','7');hex.setAttribute('inputmode','text');hex.placeholder='#8461B5';hex.value=saved.toUpperCase();
+const picker=document.createElement('input');picker.type='color';picker.id='v3-theme-picker';picker.setAttribute('aria-label','開啟選色器');picker.title='也可以使用選色器';picker.value=saved;
+const hint=document.createElement('span');hint.className='v3-theme-hint';hint.setAttribute('role','status');hint.setAttribute('aria-live','polite');
+const persist=value=>{apply(value);picker.value=value;hex.value=value.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent='';try{localStorage.setItem(key,value)}catch(e){hint.textContent='色彩已套用，但無法儲存偏好'}};
+const normalize=value=>{const trimmed=String(value??'').trim();const candidate=trimmed.startsWith('#')?trimmed:'#'+trimmed;return valid(candidate)?candidate.toLowerCase():null};
+hex.addEventListener('input',()=>{const normalized=normalize(hex.value);if(normalized){persist(normalized)}else{hex.setAttribute('aria-invalid','true');hint.textContent='請輸入 6 位 HEX，例如 #8461B5'}});
+hex.addEventListener('blur',()=>{const normalized=normalize(hex.value);if(normalized)persist(normalized);else{hex.value=picker.value.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent=''}});
+picker.addEventListener('input',()=>persist(picker.value));
+const reset=document.createElement('button');reset.type='button';reset.className='subtle';reset.textContent='重設';reset.setAttribute('aria-label','重設預設主題色');reset.title='恢復預設主題色';reset.addEventListener('click',()=>{persist('#8461b5');try{localStorage.removeItem(key)}catch(e){hint.textContent='已恢復預設色，但無法清除儲存偏好'}});
+group.append(label,hex,picker,reset,hint);bar.append(group)};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script></body></html>
