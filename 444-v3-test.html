@@ -434,6 +434,26 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
  .v3-home-metrics+.v3-favorite-spotlight{margin-top:0}
 }
 @media(max-width:390px){.v3-home-metrics .metric{padding:10px 7px}.v3-home-metrics .metric strong{font-size:18px}}
+
+/* Compact secondary pages on narrow screens without changing desktop layout. */
+@media(max-width:700px){
+ .content>.heading:not(.heading--home){margin-bottom:16px;padding-bottom:12px;gap:8px}
+ .content>.heading:not(.heading--home) h1{margin:5px 0 7px;font-size:clamp(27px,7vw,34px)}
+ .content>.heading:not(.heading--home) p{line-height:1.5;font-size:13px}
+ .v3-anniversary-grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ .v3-anniversary-card{min-height:0;padding:16px 18px;gap:12px;border-radius:16px}
+ .v3-anniversary-date{gap:4px}
+ .v3-anniversary-date strong{font-size:17px}
+ .v3-anniversary-content h3{font-size:19px;margin-bottom:5px}
+ .v3-anniversary-content p{font-size:13px;line-height:1.5}
+ .v3-anniversary-footer{padding-top:10px;gap:8px}
+ .v3-anniversary-footer button{padding:9px 11px;font-size:12px}
+ .empty{min-height:0;padding:20px 16px}
+ .empty p{margin-bottom:0;line-height:1.5}
+ .v3-year-toolbar{gap:8px;margin-bottom:14px}
+ .v3-year-toolbar>span{font-size:12px}
+ .v3-artist-controls{gap:8px;margin-bottom:12px}
+}
 </style></head>
 <body>
 <div id="v3-diagnostic" hidden role="alert" style="position:relative;z-index:99999;margin:16px;padding:18px;border:2px solid #9c3b3b;border-radius:14px;background:#fff7f7;color:#542626;font:15px/1.7 sans-serif"><strong>V3 測試版載入遇到問題</strong><p>正式版資料不會被清除。請先嘗試 <a href="?v3safe=1" style="text-decoration:underline">安全檢視模式（不讀取或寫入 V3 測試資料）</a>。</p><code data-v3-error style="white-space:pre-wrap;overflow-wrap:anywhere"></code><p><button type="button" onclick="window.v3DownloadRawBackup()" style="padding:10px 14px;border-radius:8px;border:1px solid #9c3b3b;background:white;color:#542626">下載 V3 原始資料備份</button></p></div>
