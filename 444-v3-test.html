@@ -521,6 +521,22 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .v3-recap-memory-panel{margin-bottom:24px}.v3-recap-media-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.v3-recap-media-metrics>div{display:grid;gap:6px;border:1px solid var(--line);border-radius:12px;padding:12px}.v3-recap-media-metrics small{color:var(--muted);font-size:12px}.v3-recap-media-metrics strong{font-size:18px}.v3-recap-memory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.v3-recap-memory-card{min-width:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}.v3-recap-memory-open{width:100%;padding:0;text-align:left;background:transparent;border:0;cursor:pointer;color:inherit}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{display:grid;place-items:center;width:100%;height:150px;object-fit:cover;background:var(--brand-soft)}.v3-recap-memory-placeholder{font-size:42px}.v3-recap-memory-info{display:grid;gap:6px;padding:12px}.v3-recap-memory-info strong{overflow-wrap:anywhere}.v3-recap-memory-info small{color:var(--muted)}.v3-recap-memory-link{font-size:12px;color:var(--brand);font-weight:700}.v3-recap-memory-open:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}@media(max-width:540px){.v3-recap-media-metrics{gap:6px}.v3-recap-media-metrics>div{padding:9px}.v3-recap-media-metrics strong{font-size:15px}.v3-recap-memory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{height:115px}.v3-recap-memory-info{padding:9px}}
 
 .v3-artist-profile{margin-top:18px}.v3-artist-profile textarea{display:block;width:100%;min-height:125px;resize:vertical;margin:8px 0 12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit}.v3-artist-profile-actions{display:flex;flex-wrap:wrap;gap:9px}
+/* Event journal redesign: consistent hierarchy and responsive card rhythm. */
+.cards>.card{position:relative;isolation:isolate;border:1px solid var(--line);border-left:0;border-radius:20px;background:var(--paper);padding:clamp(18px,2vw,27px);gap:14px;box-shadow:var(--v3-shadow);overflow:hidden}
+.cards>.card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;height:auto;background:var(--brand);pointer-events:none}
+.cards>.card::after{content:"";position:absolute;inset:0 0 auto auto;width:85px;height:85px;background:radial-gradient(circle at top right,var(--brand-soft),transparent 70%);pointer-events:none;z-index:-1}
+.cards>.card h3{font-size:clamp(19px,2vw,25px);line-height:1.38;overflow-wrap:anywhere}
+.cards>.card .meta{font-size:11px;letter-spacing:.08em}
+.cards>.card .v3-event-details{margin:4px 0 8px;gap:12px;padding:14px;background:var(--brand-soft);border-radius:13px}
+.cards>.card .card-foot{width:100%;padding-top:14px;gap:10px;flex-wrap:wrap}
+.cards>.card .event-actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.cards>.card .event-actions button{min-height:36px;border-radius:10px}
+.cards>.card .v3-event-cover{margin:0 0 2px;border-radius:13px}
+.cards>.card .v3-event-cover img{height:clamp(165px,21vw,240px)}
+@media(min-width:1200px){.cards{gap:22px}}
+@media(max-width:900px){.cards{grid-template-columns:minmax(0,1fr)}.cards>.card .v3-event-details{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.cards>.card{padding:17px;gap:11px;border-radius:17px}.cards>.card h3{font-size:19px}.cards>.card .v3-event-cover img{height:185px}.cards>.card .card-foot{align-items:flex-start}}
+@media(max-width:420px){.cards>.card .v3-event-details{grid-template-columns:minmax(0,1fr)}.cards>.card .v3-event-cover img{height:155px}}
 /* V3 collection and yearbook redesign: a responsive editorial gallery, not legacy flat tiles. */
 .artist-tiles{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:clamp(12px,1.7vw,22px);align-items:stretch}
 .artist-tile{position:relative;isolation:isolate;min-height:248px;border-radius:22px;border:1px solid var(--line);padding:clamp(18px,2.1vw,28px);background:linear-gradient(150deg,var(--paper) 0%,var(--paper) 58%,var(--brand-soft) 100%);box-shadow:var(--v3-shadow);overflow:hidden}
