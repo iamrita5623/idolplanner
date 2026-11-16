@@ -521,6 +521,31 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .v3-recap-memory-panel{margin-bottom:24px}.v3-recap-media-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.v3-recap-media-metrics>div{display:grid;gap:6px;border:1px solid var(--line);border-radius:12px;padding:12px}.v3-recap-media-metrics small{color:var(--muted);font-size:12px}.v3-recap-media-metrics strong{font-size:18px}.v3-recap-memory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}.v3-recap-memory-card{min-width:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}.v3-recap-memory-open{width:100%;padding:0;text-align:left;background:transparent;border:0;cursor:pointer;color:inherit}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{display:grid;place-items:center;width:100%;height:150px;object-fit:cover;background:var(--brand-soft)}.v3-recap-memory-placeholder{font-size:42px}.v3-recap-memory-info{display:grid;gap:6px;padding:12px}.v3-recap-memory-info strong{overflow-wrap:anywhere}.v3-recap-memory-info small{color:var(--muted)}.v3-recap-memory-link{font-size:12px;color:var(--brand);font-weight:700}.v3-recap-memory-open:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}@media(max-width:540px){.v3-recap-media-metrics{gap:6px}.v3-recap-media-metrics>div{padding:9px}.v3-recap-media-metrics strong{font-size:15px}.v3-recap-memory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{height:115px}.v3-recap-memory-info{padding:9px}}
 
 .v3-artist-profile{margin-top:18px}.v3-artist-profile textarea{display:block;width:100%;min-height:125px;resize:vertical;margin:8px 0 12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit}.v3-artist-profile-actions{display:flex;flex-wrap:wrap;gap:9px}
+/* Home overview redesign: distinct story panel, next-event ticket and compact metrics. */
+.v3-dashboard-intro{grid-template-columns:minmax(0,1.35fr) minmax(250px,.85fr);gap:clamp(12px,2vw,24px);align-items:stretch}
+.v3-dashboard-copy{position:relative;isolation:isolate;overflow:hidden;border-radius:25px;border:1px solid var(--line);background:linear-gradient(130deg,var(--brand-soft),var(--paper));padding:clamp(24px,3.5vw,48px)}
+.v3-dashboard-copy::after{content:"";position:absolute;right:-72px;bottom:-92px;width:270px;height:270px;border:45px solid color-mix(in srgb,var(--brand) 9%,transparent);border-radius:50%;pointer-events:none;z-index:-1}
+.v3-dashboard-copy h2{max-width:17ch;font-size:clamp(28px,3.4vw,48px);line-height:1.3}
+.v3-dashboard-copy p{max-width:42ch}
+.v3-quick-links{margin-top:auto}
+.v3-quick-links button{min-height:44px;border-radius:12px}
+.v3-next-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:25px;padding:clamp(22px,2.7vw,35px);background:var(--paper);box-shadow:var(--v3-shadow)}
+.v3-next-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--brand)}
+.v3-next-card .eyebrow{margin-bottom:7px}
+.v3-next-card strong{font-size:clamp(21px,2.3vw,30px);color:var(--ink)}
+.v3-next-card>span:not(.eyebrow){overflow-wrap:anywhere}
+.v3-next-card .subtle{margin-top:auto;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--brand-soft)}
+.v3-home-metrics{gap:clamp(9px,1.4vw,18px);margin-bottom:clamp(18px,2vw,28px)}
+.v3-home-metrics .metric{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:18px;padding:clamp(15px,2vw,25px);background:var(--paper);box-shadow:var(--v3-shadow)}
+.v3-home-metrics .metric::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand)}
+.v3-home-metrics .metric small{line-height:1.5;color:var(--muted)}
+.v3-home-metrics .metric strong{font-size:clamp(22px,2.8vw,38px);line-height:1.2;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;color:var(--brand-dark)}
+.v3-upcoming-panel{border-radius:21px}
+.v3-upcoming-panel .archive-row{gap:12px;align-items:center}
+.v3-upcoming-panel .archive-row strong{overflow-wrap:anywhere}
+@media(max-width:1100px){.v3-dashboard-intro{grid-template-columns:1fr}.v3-next-card{min-height:190px}}
+@media(max-width:700px){.v3-dashboard-intro{gap:11px;margin-bottom:14px}.v3-dashboard-copy{padding:20px;border-radius:18px}.v3-dashboard-copy h2{font-size:clamp(24px,6vw,33px);margin:10px 0}.v3-dashboard-copy::after{width:150px;height:150px;right:-55px;bottom:-65px;border-width:25px}.v3-next-card{min-height:0;padding:20px;border-radius:18px;gap:10px}.v3-next-card strong{font-size:21px}.v3-home-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v3-home-metrics .metric{padding:13px 9px;border-radius:13px}.v3-home-metrics .metric small{font-size:10px}.v3-home-metrics .metric strong{font-size:clamp(17px,4.7vw,25px)}}
+@media(max-width:370px){.v3-home-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.v3-home-metrics .metric:last-child{grid-column:1/-1}}
 /* Map placebook redesign: unified venue cards, controls and responsive map canvas. */
 .v3-map-toolbar{padding:14px 16px;border:1px solid var(--line);border-radius:20px;background:var(--paper);box-shadow:var(--v3-shadow)}
 .v3-map-view-switch{border-radius:13px;padding:4px;gap:5px}
