@@ -286,6 +286,23 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .card h3{line-height:1.4}
 @media(max-width:900px){.heading{margin-left:0;padding-left:14px}.hero{grid-template-columns:minmax(0,1fr) minmax(92px,.32fr)}.hero-copy{padding:clamp(18px,4vw,28px)}}
 @media(max-width:540px){.heading{border-left-width:3px}.hero{grid-template-columns:minmax(0,1fr) 90px}.hero h2{overflow-wrap:anywhere}.hero-art{min-width:0}}
+/* V3 placebook and yearbook: balanced editorial panels across breakpoints. */
+.footprint-summary,.v3-expense-summary{gap:clamp(10px,1.6vw,20px)}
+.footprint-summary>div,.v3-expense-summary>div{min-width:0;border:1px solid var(--line);border-radius:18px;padding:clamp(16px,2vw,24px);box-shadow:var(--v3-shadow)}
+.footprint-summary strong,.v3-expense-summary strong{display:block;line-height:1.3;overflow-wrap:anywhere}
+.v3-budget-panel{padding:clamp(18px,2.4vw,30px);border-radius:22px;box-shadow:var(--v3-shadow)}
+.v3-budget-controls{flex-wrap:wrap}
+.v3-budget-form input{max-width:100%}
+.v3-favorite-grid{gap:clamp(10px,1.5vw,18px)}
+.v3-favorite-venue{position:relative;border-radius:18px;padding:clamp(16px,1.8vw,23px);min-height:116px;box-shadow:var(--v3-shadow)}
+.v3-favorite-venue strong{line-height:1.4}
+.place-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,20px);align-items:start}
+.place-card{min-width:0;overflow-wrap:anywhere;border-radius:20px}
+.place-events{min-width:0}
+.fan-map{border-radius:22px;box-shadow:var(--v3-shadow)}
+@media(max-width:1100px){.place-list{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){.v3-favorite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footprint-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.v3-favorite-grid,.footprint-summary,.v3-expense-summary{grid-template-columns:minmax(0,1fr)}.place-list{grid-template-columns:minmax(0,1fr)}.v3-favorite-venue{min-height:0}.v3-budget-controls{align-items:flex-start;flex-direction:column}}
 /* Shared semantic surfaces for journal, recap, venues and maps. */
 :root{--v3-focus:var(--brand);--v3-control-bg:var(--paper);--v3-surface-tint:var(--brand-soft)}
 .primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
