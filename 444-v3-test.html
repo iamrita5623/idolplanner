@@ -101,7 +101,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 @media(min-width:901px) and (max-width:1180px){.sidebar{gap:12px;padding-inline:20px}.nav{gap:2px}.nav button{padding:10px 9px;font-size:12px}.sidebar .brand strong{font-size:15px}}
 @media(max-width:900px){.sidebar{padding-bottom:max(7px,env(safe-area-inset-bottom));height:calc(75px + env(safe-area-inset-bottom));border-top:1px solid var(--sidebar-line)}.content{padding-bottom:calc(115px + env(safe-area-inset-bottom))}.nav button{min-width:0}}
 @media(max-width:620px){.footprint-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.map-controls button{flex:1 1 auto}.place-card{padding:16px}.v3-budget-panel{padding:18px}.fan-map{min-height:320px}}
-@media(max-width:390px){.footprint-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.footprint-summary>div{padding:10px 6px;font-size:10px}.footprint-summary strong{font-size:20px}.map-controls button{font-size:11px;padding:9px 7px}}
+@media(max-width:390px){.map-controls button{font-size:11px;padding:9px 7px}}
 
 /* V3 editorial workspace: independent desktop rail, responsive journal canvas */
 /* Theme-driven journal surfaces: remove static dark rail and keep contrast on custom hues */
@@ -273,7 +273,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 
 /* 222-inspired journal identity in the V3 responsive workspace. */
 :root{--v3-rose:#E9BFDD;--v3-ink:#27243B}
-.heading{position:relative;padding-left:clamp(16px,2vw,26px);border-left:4px solid var(--brand);align-items:center}
+.heading{position:relative;padding-left:clamp(16px,2vw,26px);border-left:4px solid var(--brand);align-items:center;min-width:0}
 .heading .eyebrow{letter-spacing:.2em;font-size:10px;font-weight:800}
 .heading h1{font-family:"Noto Sans TC","DM Sans",sans-serif;letter-spacing:-.045em;line-height:1.22}
 .heading p{max-width:46ch;line-height:1.8}
@@ -301,7 +301,7 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .place-events{min-width:0}
 .fan-map{border-radius:22px;box-shadow:var(--v3-shadow)}
 @media(max-width:900px){.v3-favorite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footprint-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.v3-favorite-grid,.footprint-summary,.v3-expense-summary{grid-template-columns:minmax(0,1fr)}.v3-favorite-venue{min-height:0}.v3-budget-controls{align-items:flex-start;flex-direction:column}.place-event .event-actions{display:flex;flex-wrap:wrap;gap:8px}.place-event .event-actions button{max-width:100%;white-space:normal}.v3-budget-form label{min-width:0;max-width:100%}}
+@media(max-width:620px){.v3-favorite-grid,.footprint-summary,.v3-expense-summary{grid-template-columns:minmax(0,1fr)}.v3-favorite-venue{min-height:0}.v3-budget-controls{align-items:flex-start;flex-direction:column}.place-event .event-actions{display:flex;flex-wrap:wrap;gap:8px}.place-event .event-actions button{max-width:100%;white-space:normal}.v3-budget-form label{min-width:0;max-width:100%}.map-controls{flex-wrap:wrap}.map-controls button{min-width:0;white-space:normal}.footprint-filters>*{min-width:0}}
 /* Shared semantic surfaces for journal, recap, venues and maps. */
 :root{--v3-focus:var(--brand);--v3-control-bg:var(--paper);--v3-surface-tint:var(--brand-soft)}
 .primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease}
