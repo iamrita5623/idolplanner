@@ -340,7 +340,10 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 .search{background:var(--v3-control-bg);border-color:var(--line);color:var(--ink)}
 .search:focus{border-color:var(--brand)}
 .hero,.notice,.v3-favorite-venue{background:var(--v3-surface-tint)}
-.topbar{background:var(--paper);border-bottom-color:var(--line)}
+/* V3 theme: header follows the user's selected accent without changing layout. */
+.topbar{background:var(--brand-soft);border-bottom-color:var(--line);transition:background-color .2s ease}
+.topbar .trail{color:var(--ink)}
+.topbar .dot{background:var(--brand)}
 @media(prefers-reduced-motion:reduce){.primary,.secondary,.subtle,.search,.card,.panel,.metric,.venue-manager{transition:none}}
 
 /* Explicit opt-in expense reconciliation, never automatic. */
