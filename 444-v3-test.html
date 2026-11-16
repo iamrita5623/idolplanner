@@ -65,6 +65,24 @@ body{background:var(--bg)}.monogram,.hero-art{background:var(--brand)}.topbar{ba
 .dialog .form input[type=date]::-webkit-date-and-time-value,.dialog .form input[type=time]::-webkit-date-and-time-value{text-align:start;min-width:0}
 @media(max-width:600px){.dialog-backdrop{padding:12px}.dialog{width:100%;max-width:100%;padding:20px 16px}.dialog .form{gap:14px}}
 </style>
+<style id="v3-mobile-heading-compact">
+/* Mobile heading uses column flex: never let the desktop 280px flex-basis become vertical empty space. */
+@media(max-width:900px){
+ .heading{height:auto;min-height:0;align-items:stretch;gap:14px;padding-top:0;padding-bottom:16px;margin-bottom:18px}
+ .heading-copy{flex:0 1 auto;flex-basis:auto;min-height:0;width:100%}
+ .heading .eyebrow{margin-bottom:6px}
+ .heading h1{margin:6px 0 8px;line-height:1.2}
+ .heading p{margin:0;line-height:1.55}
+ .heading>.primary{align-self:flex-start;margin-top:0}
+ .v3-dashboard-intro{margin-top:0}
+}
+@media(max-width:540px){
+ .heading{gap:12px;margin-bottom:16px}
+ .heading-copy{flex:0 0 auto}
+ .heading>.primary{padding:12px 18px}
+ .v3-dashboard-copy{padding:20px}
+}
+</style>
 <style id="v3-theme-system">
 :root{--theme-h:248;--theme-s:24%;--theme-l:19%;--brand:hsl(var(--theme-h) var(--theme-s) var(--theme-l));--brand-dark:color-mix(in srgb,var(--brand) 35%,#18202a);--brand-soft:color-mix(in srgb,var(--brand) 13%,#fff);--bg:color-mix(in srgb,var(--brand) 4%,#fff);--paper:#fff;--ink:color-mix(in srgb,var(--brand) 8%,#20242c);--muted:color-mix(in srgb,var(--brand) 13%,#646b75);--line:color-mix(in srgb,var(--brand) 13%,#dfe2e7);--sage:var(--brand-soft);--blue:var(--brand-soft);--on-brand:#fff;--on-sidebar:var(--ink);--sidebar-line:var(--line)}
 body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft);color:var(--ink)}.topbar,.card,.panel,.metric,.dialog,.venue-manager{background:var(--paper)}.hero-art,.monogram,.primary{background:var(--brand);color:var(--on-brand)}.nav button.active{background:var(--brand);color:var(--on-brand)}.eyebrow,.subtle,.card .meta,.footprint-summary strong{color:var(--brand)}.metric:nth-child(2),.metric:nth-child(3){background:var(--brand-soft)}.sidebar-foot{border-color:var(--line)}.dot{background:var(--brand)}
