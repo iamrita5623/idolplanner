@@ -355,8 +355,7 @@ const normalize=value=>{const trimmed=String(value??'').trim();const candidate=t
 hex.addEventListener('input',()=>{const normalized=normalize(hex.value);if(normalized){persist(normalized)}else{hex.setAttribute('aria-invalid','true');hint.textContent='請輸入 6 位 HEX，例如 #8461B5'}});
 hex.addEventListener('blur',()=>{const normalized=normalize(hex.value);if(normalized)persist(normalized);else{hex.value=picker.value.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent=''}});
 picker.addEventListener('input',()=>persist(picker.value));
-const reset=document.createElement('button');reset.type='button';reset.className='subtle';reset.textContent='重設';reset.setAttribute('aria-label','重設預設主題色');reset.title='恢復預設主題色';reset.addEventListener('click',()=>{persist('#8461b5');try{localStorage.removeItem(key)}catch(e){hint.textContent='已恢復預設色，但無法清除儲存偏好'}});
-group.append(label,hex,picker,reset,hint);bar.append(group)};
+group.append(label,hex,picker,hint);bar.append(group)};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script></body></html>
