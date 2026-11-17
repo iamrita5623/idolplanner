@@ -801,7 +801,7 @@ trigger.addEventListener('click',()=>{panel.hidden=!panel.hidden;trigger.setAttr
 document.addEventListener('pointerdown',event=>{if(!group.contains(event.target))close()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden){close();trigger.focus()}});
 panel.append(heading,preview,presets,hexLabel,hex,hint,hueLabel,hue,satLabel,sat,lightLabel,light,reset);
-group.append(label,trigger,panel);bar.append(group);persist(saved)};
+group.append(label,trigger,panel);bar.append(group);apply(saved);swatch.style.background=saved;preview.style.background=saved;window.addEventListener('storage',event=>{if(event.key!==key)return;const incoming=valid(event.newValue)?event.newValue:'#7C3AED';saved=incoming;apply(incoming);swatch.style.background=incoming;preview.style.background=incoming;hex.value=incoming.toUpperCase();hex.setAttribute('aria-invalid','false');hint.textContent='';const hsl=hslFromHex(incoming);hue.value=String(hsl[0]);sat.value=String(hsl[1]);light.value=String(hsl[2])})};
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
