@@ -747,8 +747,8 @@ const staged=[[key,nextEvents],[anniversaryKey,nextAnniversaries],[taskKey,nextT
 if(data.version>=4)staged.push([venueKey,nextVenues],[mapCacheKey,nextCoords]);
 if(data.version>=5)staged.push([budgetKey,nextBudgets]);
 if(data.version>=6)staged.push([artistNoteKey,nextArtistNotes],[activityCategoryKey,nextActivityCategories],[confirmedSeriesKey,nextConfirmedSeries],[rejectedSeriesKey,nextRejectedSeries]);
-const previous=[];try{
-let structuredFallbackCount=0;for(const [storageKey,value] of staged){const before=readV3Storage(storageKey);const beforeDb=await readStateDb(storageKey).catch(()=>null);previous.push([storageKey,before,beforeDb]);const target=await persistStructured(storageKey,JSON.stringify(value));if(target==='indexedDB')structuredFallbackCount++}
+const previous=[];let structuredFallbackCount=0;try{
+for(const [storageKey,value] of staged){const before=readV3Storage(storageKey);const beforeDb=await readStateDb(storageKey).catch(()=>null);previous.push([storageKey,before,beforeDb]);const target=await persistStructured(storageKey,JSON.stringify(value));if(target==='indexedDB')structuredFallbackCount++}
 if(data.version>=4){await saveMediaDb(nextMedia);eventMedia.value=nextMedia;}if((data.version>=6&&data.coverImages)||Object.keys(importedInlineCovers).length){await saveCoverDb(nextCoverImages);coverImages.value=nextCoverImages;}
 }catch(writeError){
 let rollbackFailed=false;
