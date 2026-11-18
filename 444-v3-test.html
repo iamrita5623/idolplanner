@@ -759,7 +759,7 @@ let mediaImportWarning='',coverImportWarning='';
 const hasIncomingMedia=data.version>=4&&data.media&&Object.values(data.media).some(items=>Array.isArray(items)&&items.length);
 if(hasIncomingMedia){try{await saveMediaDb(nextMedia);eventMedia.value=nextMedia}catch(mediaError){mediaImportWarning=' 照片／票根因瀏覽器空間不足未匯入，但行程資料已保留。錯誤：'+String(mediaError?.message||mediaError)}}
 const hasIncomingCovers=(data.version>=6&&data.coverImages&&Object.keys(data.coverImages).length)||Object.keys(importedInlineCovers).length;
-if(hasIncomingCovers){try{await saveCoverDb(nextCoverImages);coverImages.value=nextCoverImages}catch(coverError){coverImportWarning=' 部分封面因瀏覽器空間不足未匯入，但行程與紀念日資料已保留。錯誤：'+String(coverError?.message||coverError)}}
+if(hasIncomingCovers){try{const coverImportJob=coverWriteQueue.catch(()=>{}).then(async()=>{const merged={...nextCoverImages,...coverImages.value};await saveCoverDb(merged);coverImages.value=merged});coverWriteQueue=coverImportJob;await coverImportJob}catch(coverError){coverImportWarning=' 部分封面因瀏覽器空間不足未匯入，但行程與紀念日資料已保留。錯誤：'+String(coverError?.message||coverError)}}
 events.value=nextEvents;anniversaries.value=nextAnniversaries;tasks.value=nextTasks;
 if(data.version>=4){myVenues.value=nextVenues;mapCoords.value=nextCoords;if(!mediaImportWarning&&hasIncomingMedia)eventMedia.value=nextMedia}
 if(data.version>=6){artistNotes.value=nextArtistNotes;activityCategoryMap.value=nextActivityCategories;confirmedSeries.value=nextConfirmedSeries;rejectedSeries.value=nextRejectedSeries;}
