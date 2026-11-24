@@ -747,7 +747,7 @@ if(data.version>=4)staged.push([venueKey,nextVenues],[mapCacheKey,nextCoords]);
 if(data.version>=5)staged.push([budgetKey,nextBudgets]);
 if(data.version>=6)staged.push([artistNoteKey,nextArtistNotes],[activityCategoryKey,nextActivityCategories],[confirmedSeriesKey,nextConfirmedSeries],[rejectedSeriesKey,nextRejectedSeries]);if(typeof data.recapHomeCity==='string'&&data.recapHomeCity.length<=200&&!recapHomeCity.value)staged.push([recapHomeCityKey,nextRecapHomeCity]);if(incomingCustomTitle&&customTitle.value===customTitleDefault)staged.push([customTitleKey,nextCustomTitle]);
 const previous=[];let structuredFallbackCount=0;try{
-for(const [storageKey,value] of staged){const before=readV3Storage(storageKey);const beforeDb=await readStateDb(storageKey).catch(()=>null);previous.push([storageKey,before,beforeDb]);const target=await persistStructured(storageKey,JSON.stringify(value));if(target==='indexedDB')structuredFallbackCount++}
+for(const [storageKey,value] of staged){const before=readV3Storage(storageKey);const beforeDb=await readStateDb(storageKey).catch(()=>null);previous.push([storageKey,before,beforeDb]);const target=await persistStructured(storageKey,value);if(target==='indexedDB')structuredFallbackCount++}
 }catch(writeError){
 let rollbackFailed=false;
 for(const [storageKey,before,beforeDb] of previous.reverse()){try{if(before===null)localStorage.removeItem(storageKey);else localStorage.setItem(storageKey,before);if(beforeDb&&typeof beforeDb.value==='string')await saveStateDb(storageKey,beforeDb.value);else await deleteStateDb(storageKey).catch(()=>{})}catch(e){rollbackFailed=true}}
