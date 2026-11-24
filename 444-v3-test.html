@@ -630,6 +630,30 @@ body{background:var(--bg);color:var(--ink)}.sidebar{background:var(--brand-soft)
 @media(max-width:700px){.artist-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.artist-tile{min-height:205px;padding:14px;border-radius:17px;gap:10px}.artist-tile-monogram{width:50px;height:50px;font-size:23px;border-radius:14px}.artist-tile strong{font-size:17px}.artist-tile-index{font-size:9px;letter-spacing:.08em}.v3-recap-memory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v3-recap-memory-open>img,.v3-recap-memory-placeholder{height:135px}.v3-recap-memory-info{padding:11px}.v3-recap-memory-card{border-radius:15px}}
 @media(max-width:370px){.artist-tiles{grid-template-columns:1fr}.artist-tile{min-height:165px}.v3-recap-memory-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.artist-tile,.v3-recap-memory-card{transition:none}.artist-tile:hover,.v3-recap-memory-card:hover{transform:none}}
+</style><style id="v3-compact-mobile-layout">
+@media(max-width:760px){
+.content>.heading{height:auto;min-height:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;flex-wrap:nowrap;gap:12px;padding:0 0 12px 14px;margin:0 0 16px}
+.content>.heading>.heading-copy{flex:0 0 auto;width:100%;min-height:0}
+.content>.heading h1{margin:6px 0;font-size:clamp(26px,7vw,34px)}
+.content>.heading p{margin:0;font-size:13px;line-height:1.5}
+.topbar{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;height:auto;min-height:56px;padding:8px 12px}
+.topbar .trail{flex:1;min-width:0;font-size:10px;letter-spacing:.06em;overflow-wrap:anywhere}
+.topbar .v3-topbar-actions{flex:0 0 auto;gap:0}
+.topbar .v3-settings-shortcut{white-space:nowrap;font-size:11px;padding:8px}
+.topbar .v3-theme-control{flex:0 0 auto;margin:0;padding:4px;gap:4px}
+.topbar .v3-theme-label{font-size:11px}
+.topbar .v3-theme-trigger{width:34px;height:34px}
+.footprint-summary,.v3-expense-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.footprint-summary>div,.v3-expense-summary>div{min-height:0;padding:12px;gap:5px;border-radius:12px;box-shadow:none}
+.footprint-summary small,.v3-expense-summary small{font-size:11px;line-height:1.4;letter-spacing:0}
+.footprint-summary strong,.v3-expense-summary strong{font-size:23px;line-height:1.2;letter-spacing:-.035em}
+.footprint-summary>div:last-child strong{font-size:clamp(17px,5vw,23px)}
+.v3-dashboard-copy{padding:16px;border-radius:16px}
+.v3-dashboard-copy p{margin-bottom:12px;line-height:1.5}
+.v3-quick-links{gap:6px}
+.v3-quick-links button{padding:9px 6px;font-size:12px}
+}
+@media(max-width:350px){.topbar .v3-theme-label{display:none}.topbar .trail{font-size:9px}}
 </style></head>
 <body>
 <div id="v3-diagnostic" hidden role="alert" style="position:relative;z-index:99999;margin:16px;padding:18px;border:2px solid #9c3b3b;border-radius:14px;background:#fff7f7;color:#542626;font:15px/1.7 sans-serif"><strong>V3 測試版載入遇到問題</strong><p>正式版資料不會被清除。請先嘗試 <a href="?v3safe=1" style="text-decoration:underline">安全檢視模式（不讀取或寫入 V3 測試資料）</a>。</p><code data-v3-error style="white-space:pre-wrap;overflow-wrap:anywhere"></code><p style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" onclick="window.v3DownloadRawBackup()" style="padding:10px 14px;border-radius:8px;border:1px solid #9c3b3b;background:white;color:#542626">下載 V3 原始資料備份</button><button type="button" onclick="location.reload()" style="padding:10px 14px;border-radius:8px;border:1px solid #9c3b3b;background:white;color:#542626">重新讀取</button><button type="button" onclick="location.href=location.pathname+'?v3safe=1'" style="padding:10px 14px;border-radius:8px;border:1px solid #9c3b3b;background:white;color:#542626">⚠️ 畫面全白點我修復</button></p></div>
