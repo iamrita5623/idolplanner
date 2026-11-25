@@ -940,13 +940,13 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
 <div class="flex justify-between items-center p-4 border-b"><h3 class="font-bold text-sm">費用分類管理</h3><button @click="showExpenseManager=false"><i class="ph ph-x"></i></button></div>
 <div class="overflow-y-auto p-3 space-y-2">
 <div v-for="(cat,i) in expenseDraft" :key="i" class="border rounded-lg p-2 space-y-1">
-<div class="flex items-center gap-1"><input v-model="cat.name" placeholder="分類名稱" class="min-w-0 flex-1 bg-slate-50 rounded p-1 text-sm"><button @click="moveExpenseDraft(i,-1)" :disabled="i===0"><i class="ph ph-caret-up"></i></button><button @click="moveExpenseDraft(i,1)" :disabled="i===expenseDraft.length-1"><i class="ph ph-caret-down"></i></button><button @click="expenseDraft.splice(i,1)" class="text-slate-500"><i class="ph ph-trash"></i></button></div>
+<div class="flex items-center gap-1"><input v-model="cat.name" placeholder="分類名稱" class="min-w-0 flex-1 bg-slate-50 rounded p-1 text-sm"><button @click="moveExpenseDraft(i,-1)" :disabled="i===0"><i class="ph ph-caret-up"></i></button><button @click="moveExpenseDraft(i,1)" :disabled="i===expenseDraft.length-1"><i class="ph ph-caret-down"></i></button><span v-if="cat.systemKey" class="text-slate-400" title="系統分類不可刪除"><i class="ph ph-lock"></i></span><button v-else @click="removeExpenseDraft(i)" class="text-slate-500"><i class="ph ph-trash"></i></button></div>
 <input v-model="cat.keywords" placeholder="辨識關鍵字，以逗號分隔" class="w-full bg-slate-50 rounded p-1 text-xs">
 </div>
 <div v-for="old in expenseCategories.filter(x=>!expenseDraft.some(d=>d.original===x.name))" :key="old.name" class="text-xs p-2 bg-slate-50 rounded">刪除 {{old.name}}：原手動分類轉移至<select v-model="expenseTransfers[old.name]" class="w-full mt-1 border rounded p-1"><option :value="undefined">未分類支出</option><option v-for="d in expenseDraft" :key="d.name">{{d.name}}</option></select></div>
 <div class="text-xs text-slate-500 p-2">未分類支出 <i class="ph ph-lock"></i></div>
 <button @click="expenseDraft.push({name:'',keywords:'',original:''})" class="w-full border border-dashed rounded-lg p-2 text-xs">＋ 新增分類</button>
-<p class="text-[10px] text-slate-500">關鍵字衝突時保留未分類。刪除分類不會刪除支出；自動分類依新規則重新判斷。</p>
+<div class="flex flex-wrap gap-2 text-xs"><button v-if="expenseRemoved.length" @click="undoExpenseDraft" class="underline">復原剛才刪除</button><button @click="restoreExpenseDefaults" class="underline">補回預設分類及關鍵字</button><button v-if="expenseUndo" @click="undoExpenseSettings" class="underline">復原上一次已儲存設定</button></div><p class="text-[10px] text-slate-500">關鍵字衝突時保留未分類。刪除分類不會刪除支出；自動分類依新規則重新判斷。</p>
 </div><div class="p-3 border-t"><button @click="saveExpenseManager" :style="{backgroundColor:themeColor}" class="w-full rounded-lg p-2 text-sm text-white">完成</button></div>
 </div></div>
 <div v-if="showSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showSettingsModal = false">
@@ -1378,7 +1378,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=6"></script>
+<script src="./js/app-222-test.js?v=7"></script>
     
 </body>
 </html>
