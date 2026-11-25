@@ -232,13 +232,33 @@ const openImportModal = () => { showImportModal.value = true; };
 
 const isStatsPrivacy = ref(true); 
 // 初始化預算，預設 50000
-const yearlyBudget = ref(Number(testStorage.getItem('idolYearlyBudget')) || 50000); 
+const currentBudgetYear = ref(String(new Date().getFullYear()));
+const refreshBudgetYear = () => { const y=String(new Date().getFullYear()); if(y!==currentBudgetYear.value){if(selectedYear.value===currentBudgetYear.value)selectedYear.value=y;currentBudgetYear.value=y;} };
+window.addEventListener('focus',refreshBudgetYear);
+document.addEventListener('visibilitychange',refreshBudgetYear);
+setInterval(refreshBudgetYear,60000);
+const cleanBudgets = raw => Object.fromEntries(Object.entries(raw && typeof raw==='object' && !Array.isArray(raw)?raw:{}).filter(([y,v])=>/^\d{4}$/.test(y)&&Number.isFinite(Number(v))&&Number(v)>0).map(([y,v])=>[y,Number(v)]));
+const yearlyBudgets = ref(cleanBudgets(JSON.parse(testStorage.getItem('idolYearlyBudgets')||'{}')));
+const budgetEditYear = ref(currentBudgetYear.value);
+const yearlyBudget = computed({get:()=>yearlyBudgets.value[currentBudgetYear.value]||0,set:v=>{const n=Number(v);const next={...yearlyBudgets.value};if(Number.isFinite(n)&&n>0)next[currentBudgetYear.value]=n;else delete next[currentBudgetYear.value];yearlyBudgets.value=next;}});
+const budgetEditValue = computed({get:()=>yearlyBudgets.value[budgetEditYear.value]||'',set:v=>{const n=Number(v);const next={...yearlyBudgets.value};if(Number.isFinite(n)&&n>0)next[budgetEditYear.value]=n;else delete next[budgetEditYear.value];yearlyBudgets.value=next;}});
+watch(yearlyBudgets,v=>testStorage.setItem('idolYearlyBudgets',JSON.stringify(v)),{deep:true});
+const openBudgetSettings=()=>{budgetEditYear.value=currentBudgetYear.value;showSettingsModal.value=true;};
+const expenseCategoryStats=computed(()=>{
+const labels=['票券','交通','住宿','周邊','其他','未分類支出'];
+const totals=labels.map(label=>({label,amount:0,count:0}));
+for(const e of events.value){if(selectedYear.value!=='ALL'&&!String(e.date||'').startsWith(selectedYear.value))continue;const seen=new Set();for(const item of Array.isArray(e.expenses)?e.expenses:[]){const n=Number(item?.amount);if(!Number.isFinite(n)||!n)continue;const name=String(item?.item||'').trim();const i=/門票|票券|ticket/i.test(name)?0:/交通|機票|車票|計程車|捷運|高鐵|uber|flight|train/i.test(name)?1:/住宿|飯店|旅館|hotel/i.test(name)?2:/周邊|週邊|專輯|手燈|merch/i.test(name)?3:/其他|餐飲|餐費|餐點|飲食/i.test(name)?4:5;totals[i].amount+=n;seen.add(i);}for(const i of seen)totals[i].count++;}
+return totals;
+});
+const expenseBarBase=computed(()=>Math.max(1,...expenseCategoryStats.value.map(x=>x.amount),expenseCategoryStats.value.reduce((s,x)=>s+Math.max(0,x.amount),0)));
+ 
 
 // 監聽並存入本地儲存
 watch(yearlyBudget, (newVal) => testStorage.setItem('idolYearlyBudget', newVal));
 
 // 級距碎碎念邏輯
 const budgetNagging = computed(() => {
+    if(!yearlyBudget.value)return '設定預算';
     const percent = (currentYearExpense.value / yearlyBudget.value) * 100;
     if (percent >= 100) return "⚠️ 預算炸裂！請開始吃土模式";
     if (percent >= 80) return "🚨 亮紅燈！再買要喝西北風了";
@@ -1109,11 +1129,11 @@ watch(activeTab, (newTab) => {
 
                 const upcomingCount = computed(() => events.value.filter(e => e.date >= new Date().toLocaleDateString('sv-SE')).length);
                 const currentYearExpense = computed(() => {
-                    const y = new Date().getFullYear().toString();
-                    return events.value.filter(e => e.date.startsWith(y)).reduce((sum, e) => sum + calculateTotal(e.expenses), 0);
+                    const y = currentBudgetYear.value;
+                    return events.value.filter(e => String(e.date||'').startsWith(y)).reduce((sum, e) => sum + calculateTotal(e.expenses), 0);
                 });
 const availableYears = computed(() => {
-    const currentYear = new Date().getFullYear().toString();
+    const currentYear = currentBudgetYear.value;
     const years = new Set(events.value.map(e => {
         const match = e.date.match(/^(\d{4})/);
         return match ? match[1] : null;
@@ -1800,6 +1820,7 @@ watch(events, stopReplay, { deep: true });
                                 customTitle: customTitle.value,
                                 themeColor: themeColor.value,
                                 yearlyBudget: yearlyBudget.value,
+                                yearlyBudgets: {...yearlyBudgets.value},
                                 activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value)),
                                 confirmedSeries: JSON.parse(JSON.stringify(confirmedSeries.value)),
                                 rejectedSeries: JSON.parse(JSON.stringify(rejectedSeries.value))
@@ -1861,7 +1882,7 @@ watch(events, stopReplay, { deep: true });
                                 next.idolRejectedSeries = JSON.stringify(validMap(restoreData.rejectedSeries) ? restoreData.rejectedSeries : rejectedSeries.value);
                                 next.appTitle = typeof restoreData.customTitle === 'string' ? restoreData.customTitle : customTitle.value;
                                 next.idolTheme = typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor) ? restoreData.themeColor : themeColor.value;
-                                next.idolYearlyBudget = String(Number(restoreData.yearlyBudget)>0 && Number.isFinite(Number(restoreData.yearlyBudget)) ? Number(restoreData.yearlyBudget) : yearlyBudget.value);
+                                next.idolYearlyBudgets = JSON.stringify(restoreData.yearlyBudgets ? cleanBudgets(restoreData.yearlyBudgets) : yearlyBudgets.value);
                             }
                             try { await testStorage.commit(next); }
                             catch (storageError) { alert('IndexedDB 儲存失敗，已取消還原，原有資料保留。'+(storageError.message||storageError)); return; }
@@ -1873,7 +1894,7 @@ watch(events, stopReplay, { deep: true });
                                 rejectedSeries.value = JSON.parse(next.idolRejectedSeries);
                                 customTitle.value = next.appTitle;
                                 themeColor.value = next.idolTheme;
-                                yearlyBudget.value = Number(next.idolYearlyBudget);
+                                yearlyBudgets.value = JSON.parse(next.idolYearlyBudgets);
                             }
                             showSettingsModal.value = false;
                             alert('已還原 '+restoreData.events.length+' 筆行程，並儲存至測試版本機。未上傳雲端。');
@@ -2294,7 +2315,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, yearlyBudgets, currentBudgetYear, budgetEditYear, budgetEditValue, openBudgetSettings, expenseCategoryStats, expenseBarBase, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
