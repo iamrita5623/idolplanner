@@ -316,6 +316,21 @@ const filteredMapEventsCount = computed(() => {
 // 更新：totalDistance 也要隨著年份變動
 // Annual route estimate: home -> chronologically ordered geocoded events -> home.
 // Each calendar year is a separate round trip, including in ALL view.
+const validVenueCoords=e=>e&&e.lat!==null&&e.lng!==null&&e.lat!==''&&e.lng!==''&&Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180;
+const venueName=e=>String(e.location||'').trim();
+const venueKey=e=>JSON.stringify([venueName(e).toLowerCase(),validVenueCoords(e)?Number(e.lat).toFixed(4):null,validVenueCoords(e)?Number(e.lng).toFixed(4):null]);
+const cleanFavoriteVenues=raw=>(Array.isArray(raw)?raw:[]).filter(x=>x&&venueName(x)&&validVenueCoords(x)).map(x=>({location:venueName(x),lat:Number(x.lat),lng:Number(x.lng)}));
+const favoriteVenues=ref(cleanFavoriteVenues(JSON.parse(testStorage.getItem('idolFavoriteVenues')||'[]')));
+watch(favoriteVenues,v=>testStorage.setItem('idolFavoriteVenues',JSON.stringify(v)),{deep:true});
+const showVenueList=ref(false),venueListMode=ref('visited'),venueListQuery=ref(''),mergeVenueKeys=ref([]),mergeTargetKey=ref('');
+const allVenueGroups=computed(()=>{const groups=new Map();for(const e of events.value){if(!venueName(e))continue;const key=venueKey(e);if(!groups.has(key))groups.set(key,{key,location:venueName(e),lat:e.lat,lng:e.lng,events:[]});groups.get(key).events.push(e);}return [...groups.values()].sort((a,b)=>b.events.length-a.events.length||a.location.localeCompare(b.location));});
+const mapVenueGroups=computed(()=>allVenueGroups.value.map(g=>({...g,events:g.events.filter(e=>selectedMapYear.value==='ALL'||String(e.date||'').startsWith(selectedMapYear.value))})).filter(g=>g.events.length));
+const visibleVenueGroups=computed(()=>{const rows=venueListMode.value==='favorites'?favoriteVenues.value.map(g=>({...g,key:venueKey(g),events:allVenueGroups.value.find(x=>x.key===venueKey(g))?.events||[]})):venueListMode.value==='merge'?allVenueGroups.value:mapVenueGroups.value;const q=venueListQuery.value.trim().toLowerCase();return rows.filter(g=>!q||g.location.toLowerCase().includes(q));});
+const isFavoriteVenue=g=>favoriteVenues.value.some(x=>venueKey(x)===venueKey(g));
+const toggleFavoriteVenue=g=>{if(isFavoriteVenue(g))favoriteVenues.value=favoriteVenues.value.filter(x=>venueKey(x)!==venueKey(g));else if(venueName(g)&&validVenueCoords(g))favoriteVenues.value.push({location:venueName(g),lat:Number(g.lat),lng:Number(g.lng)});};
+const focusVenue=g=>{if(!validVenueCoords(g)||!map)return;showVenueList.value=false;stopReplay();map.setView([Number(g.lat),Number(g.lng)],15);};
+const useFavoriteVenue=g=>{form.value.location=g.location;form.value.lat=g.lat;form.value.lng=g.lng;searchError.value='已帶入收藏場館座標，請確認地點';};
+const mergeSelectedVenues=()=>{const groups=allVenueGroups.value.filter(g=>mergeVenueKeys.value.includes(g.key));const target=groups.find(g=>g.key===mergeTargetKey.value);if(groups.length<2||!target||!validVenueCoords(target)){alert('請選擇至少兩個場館及有座標的保留場館');return;}if(!confirm('將 '+groups.filter(g=>g.key!==target.key).map(g=>g.location).join('、')+' 合併至 '+target.location+'？將更新所選場館在所有年度的行程地點及座標。'))return;const keys=new Set(groups.map(g=>g.key));for(const e of events.value)if(keys.has(venueKey(e))){e.location=target.location;e.lat=Number(target.lat);e.lng=Number(target.lng);}if(favoriteVenues.value.some(g=>keys.has(venueKey(g)))){favoriteVenues.value=favoriteVenues.value.filter(g=>!keys.has(venueKey(g)));favoriteVenues.value.push({location:target.location,lat:Number(target.lat),lng:Number(target.lng)});}mergeVenueKeys.value=[];mergeTargetKey.value='';};
 const mapDistanceDetails = computed(() => {
     const selected = selectedMapYear.value;
     const rows = events.value.filter(e => selected === 'ALL' || String(e.date || '').startsWith(String(selected)));
@@ -1845,6 +1860,7 @@ watch(events, stopReplay, { deep: true });
                                 yearlyBudgets: {...yearlyBudgets.value},
                                 expenseRules: {...expenseRules.value},
                                 expenseCategories: expenseCategories.value.map(x=>({...x})),
+                                favoriteVenues: favoriteVenues.value.map(x=>({...x})),
                                 activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value)),
                                 confirmedSeries: JSON.parse(JSON.stringify(confirmedSeries.value)),
                                 rejectedSeries: JSON.parse(JSON.stringify(rejectedSeries.value))
@@ -1906,6 +1922,7 @@ watch(events, stopReplay, { deep: true });
                                 next.idolRejectedSeries = JSON.stringify(validMap(restoreData.rejectedSeries) ? restoreData.rejectedSeries : rejectedSeries.value);
                                 next.appTitle = typeof restoreData.customTitle === 'string' ? restoreData.customTitle : customTitle.value;
                                 next.idolTheme = typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor) ? restoreData.themeColor : themeColor.value;
+                                next.idolFavoriteVenues = JSON.stringify(restoreData.favoriteVenues ? cleanFavoriteVenues(restoreData.favoriteVenues) : favoriteVenues.value);
                                 next.idolExpenseCategories = JSON.stringify(restoreData.expenseCategories ? cleanExpenseCategories(restoreData.expenseCategories) : expenseCategories.value);
                                 next.idolExpenseRules = JSON.stringify(restoreData.expenseRules || expenseRules.value);
                                 next.idolYearlyBudgets = JSON.stringify(restoreData.yearlyBudgets ? cleanBudgets(restoreData.yearlyBudgets) : yearlyBudgets.value);
@@ -1922,6 +1939,7 @@ watch(events, stopReplay, { deep: true });
                                 themeColor.value = next.idolTheme;
                                 yearlyBudgets.value = JSON.parse(next.idolYearlyBudgets);
                                 expenseCategories.value = cleanExpenseCategories(JSON.parse(next.idolExpenseCategories));
+                                favoriteVenues.value = cleanFavoriteVenues(JSON.parse(next.idolFavoriteVenues));
                                 expenseRules.value = cleanExpenseRules(JSON.parse(next.idolExpenseRules));
                             }
                             showSettingsModal.value = false;
@@ -2343,7 +2361,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, yearlyBudgets, currentBudgetYear, budgetEditYear, budgetEditValue, openBudgetSettings, expenseCategoryStats, expenseBarBase, expenseLabels, expenseCategories, showExpenseManager, expenseDraft, expenseTransfers, openExpenseManager, moveExpenseDraft, removeExpenseDraft, undoExpenseDraft, restoreExpenseDefaults, undoExpenseSettings, expenseUndo, expenseRemoved, saveExpenseManager, resolveExpenseCategory, expenseOpen, changeExpenseCategory, resetExpenseCategory, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, showVenueList, venueListMode, venueListQuery, visibleVenueGroups, favoriteVenues, validVenueCoords, isFavoriteVenue, toggleFavoriteVenue, focusVenue, useFavoriteVenue, mergeVenueKeys, mergeTargetKey, mergeSelectedVenues, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, yearlyBudgets, currentBudgetYear, budgetEditYear, budgetEditValue, openBudgetSettings, expenseCategoryStats, expenseBarBase, expenseLabels, expenseCategories, showExpenseManager, expenseDraft, expenseTransfers, openExpenseManager, moveExpenseDraft, removeExpenseDraft, undoExpenseDraft, restoreExpenseDefaults, undoExpenseSettings, expenseUndo, expenseRemoved, saveExpenseManager, resolveExpenseCategory, expenseOpen, changeExpenseCategory, resetExpenseCategory, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
