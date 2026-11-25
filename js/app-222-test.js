@@ -1,4 +1,26 @@
-const testStorage = Object.freeze({getItem:key=>window.localStorage.getItem('rita-222-test-v1:'+key),setItem:(key,value)=>window.localStorage.setItem('rita-222-test-v1:'+key,value),removeItem:key=>window.localStorage.removeItem('rita-222-test-v1:'+key)});
+(async function boot222Test(){
+const prefix='rita-222-test-v1:';
+const cache=new Map();
+let db;
+const open=()=>new Promise((resolve,reject)=>{const q=indexedDB.open('rita-222-test-storage-v1',1);q.onupgradeneeded=()=>q.result.createObjectStore('state');q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);q.onblocked=()=>reject(new Error('資料庫被其他頁面阻擋'));});
+const persist=changes=>new Promise((resolve,reject)=>{const tx=db.transaction('state','readwrite');const s=tx.objectStore('state');for(const [k,v] of changes){if(v===null)s.delete(k);else s.put(v,k);}tx.oncomplete=resolve;tx.onabort=tx.onerror=()=>reject(tx.error||new Error('儲存失敗'));});
+try{
+db=await open();
+await new Promise((resolve,reject)=>{const tx=db.transaction('state','readonly');const q=tx.objectStore('state').openCursor();q.onsuccess=()=>{const cur=q.result;if(cur){cache.set(cur.key,cur.value);cur.continue();}};tx.oncomplete=resolve;tx.onabort=tx.onerror=()=>reject(tx.error);});
+if(!cache.has('__migrated')){
+const old=[];try{for(let i=0;i<window.localStorage.length;i++){const k=window.localStorage.key(i);if(k&&k.startsWith(prefix)){const key=k.slice(prefix.length);if(!cache.has(key))old.push([key,window.localStorage.getItem(k)]);}}}catch(e){console.warn(e);}
+old.push(['__migrated','1']);await persist(old);for(const [k,v] of old)cache.set(k,v);
+}
+}catch(e){alert('測試版資料庫無法開啟，為避免覆寫資料已停止載入。'+(e.message||e));return;}
+let queue=Promise.resolve();
+let warned=false;
+const enqueue=changes=>{const job=queue.then(()=>persist(changes));queue=job.catch(()=>{});return job;};
+const testStorage=Object.freeze({
+getItem:k=>cache.has(k)?cache.get(k):null,
+setItem:(k,v)=>{v=String(v);if(cache.get(k)===v)return;cache.set(k,v);enqueue([[k,v]]).catch(e=>{console.error(e);if(!warned){warned=true;alert('測試版本機儲存失敗，請先下載完整備份，勿重新整理。');}});},
+removeItem:k=>{cache.delete(k);enqueue([[k,null]]).catch(e=>console.error(e));},
+commit:async values=>{const changes=Object.entries(values);await enqueue(changes);for(const [k,v] of changes)cache.set(k,v);}
+});
 const { createApp, ref, computed, onMounted, watch, nextTick } = Vue;
         createApp({
             setup() {
@@ -1805,7 +1827,7 @@ watch(events, stopReplay, { deep: true });
                     if (!file) return;
                     // 還原前必須先驗證格式；絕不把不認識的 JSON 當成空資料。
                     const reader = new FileReader();
-                    reader.onload = (e) => {
+                    reader.onload = async (e) => {
                         try {
                             const parsed = JSON.parse(e.target.result);
                             const isLegacy = Array.isArray(parsed);
@@ -1830,7 +1852,6 @@ watch(events, stopReplay, { deep: true });
                             if (!confirm(summary)) return;
                             const validMap = v => v && typeof v === 'object' && !Array.isArray(v);
                             const next = {
-                                idolEvents: JSON.stringify(restoreData.events),
                                 idolGuestEvents: JSON.stringify(restoreData.events)
                             };
                             if (isFull) {
@@ -1842,23 +1863,8 @@ watch(events, stopReplay, { deep: true });
                                 next.idolTheme = typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor) ? restoreData.themeColor : themeColor.value;
                                 next.idolYearlyBudget = String(Number(restoreData.yearlyBudget)>0 && Number.isFinite(Number(restoreData.yearlyBudget)) ? Number(restoreData.yearlyBudget) : yearlyBudget.value);
                             }
-                            const before = Object.keys(next).map(key => [key,testStorage.getItem(key)]);
-                            const written = [];
-                            try {
-                                for (const [key,value] of Object.entries(next)) {
-                                    testStorage.setItem(key,value);
-                                    written.push(key);
-                                }
-                            } catch (storageError) {
-                                let rollbackOK = true;
-                                for (const [key,value] of before.reverse()) {
-                                    if (!written.includes(key)) continue;
-                                    try { if (value === null) testStorage.removeItem(key); else testStorage.setItem(key,value); }
-                                    catch (_) { rollbackOK = false; }
-                                }
-                                alert(rollbackOK ? '本機儲存失敗，已取消還原，原有資料保留。可能是瀏覽器儲存空間不足。' : '本機儲存失敗且部分資料無法復原，請保留原始備份，不要清除瀏覽器資料。');
-                                return;
-                            }
+                            try { await testStorage.commit(next); }
+                            catch (storageError) { alert('IndexedDB 儲存失敗，已取消還原，原有資料保留。'+(storageError.message||storageError)); return; }
                             events.value = restoreData.events;
                             if (isFull) {
                                 fandoms.value = restoreData.fandoms;
@@ -2293,3 +2299,5 @@ replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay,
                 };
             }
         }).mount('#app');
+
+})();
