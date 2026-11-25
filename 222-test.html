@@ -142,8 +142,8 @@
     </div>
 
     <div :class="isThemeColorLight ? 'bg-black/10' : 'bg-white/20'" class="backdrop-blur-md rounded-xl p-2 flex-1 text-center h-13 flex flex-col justify-start pt-1.5 relative">
-        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">年支出</div>
-        <div class="text-base font-bold leading-none">{{ isYearlyPrivacy ? '****' : formatMoney(currentYearExpense) }}</div>
+        <div :class="isThemeColorLight ? 'text-slate-600' : 'text-white/80'" class="text-[10px] mb-0.5">{{currentBudgetYear}} 年支出</div>
+        <div class="text-base font-bold leading-none">{{ isYearlyPrivacy ? '***' : formatMoney(currentYearExpense) }}</div>
         <button @click="isYearlyPrivacy = !isYearlyPrivacy" class="absolute top-1 right-1 opacity-50 p-1">
             <i class="ph text-[10px]" :class="isYearlyPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i>
         </button>
@@ -154,10 +154,10 @@
         <div class="px-1">
             <div class="w-full h-1 bg-black/10 rounded-full overflow-hidden mb-1">
                 <div class="h-full bg-white transition-all duration-500" 
-                     :style="{ width: Math.min((currentYearExpense / yearlyBudget) * 100, 100) + '%' }"></div>
+                     :style="{ width: (yearlyBudget ? Math.min(Math.max(currentYearExpense / yearlyBudget * 100, 0), 100) : 0) + '%' }"></div>
             </div>
             <div class="text-[8px] font-medium leading-none truncate" :style="{ color: isThemeColorLight ? '#475569' : '#f1f5f9' }">
-                {{ budgetNagging }}
+                <button v-if="!yearlyBudget" @click="openBudgetSettings" class="underline">設定預算</button><span v-else>{{ Math.round(currentYearExpense / yearlyBudget * 100) }}% · {{ budgetNagging }}</span>
             </div>
         </div>
     </div>
@@ -358,7 +358,7 @@
   
                                         <span class="font-bold text-xs">總支出: </span>
                                         <span class="font-mono font-bold">
-    {{ isEventPrivacy ? '****' : '$' + formatMoney(calculateTotal(event.expenses)) }}
+    {{ isEventPrivacy ? '***' : '$' + formatMoney(calculateTotal(event.expenses)) }}
 </span>
 <button @click.stop="isEventPrivacy = !isEventPrivacy" class="text-slate-400 hover:text-slate-500 ml-1 p-1 transition-colors">
     <i class="ph" :class="isEventPrivacy ? 'ph-eye-slash' : 'ph-eye'"></i>
@@ -740,7 +740,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     </button>
 </div>
 <div class="text-2xl font-bold text-slate-800"> 
-    {{ isStatsPrivacy ? '****' : '$' + formatMoney(statsData.totalSpent) }}
+    {{ isStatsPrivacy ? '***' : '$' + formatMoney(statsData.totalSpent) }}
 </div>
 
                        <div class="text-[10px] font-medium mt-1 leading-tight opacity-80 italic text-slate-500">
@@ -750,6 +750,12 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
   
  
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+<h3 class="font-bold text-sm text-slate-800 mb-3">費用分類統計</h3>
+<div v-for="row in expenseCategoryStats" :key="row.label" class="mb-2">
+<div class="flex justify-between text-xs text-slate-600"><span>{{row.label}} · {{row.count}} 場</span><span>{{isStatsPrivacy ? '***' : 'NT$ '+formatMoney(row.amount)}}</span></div>
+<div v-if="!isStatsPrivacy" class="h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden"><div class="h-full rounded-full" :style="{backgroundColor:themeColor,width:Math.max(0,row.amount)/expenseBarBase*100+'%'}"></div></div>
+</div><p class="text-[10px] text-slate-400">依所選年份及原有支出項目統計，自訂項目未能辨識時列為未分類；退款保留原金額。</p></div>
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-crown text-yellow-500"></i> 本命排行榜</h3><span class="text-[10px] text-slate-500 px-2 py-1 rounded-full">含見面/錄製/簽售</span></div>
                     <div v-if="statsData.topArtists.length > 0" class="space-y-4">
@@ -980,8 +986,8 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 </div>
 
                 <div class="border-b border-slate-100 pb-4">
-                    <p class="text-xs font-medium text-slate-500 mb-2">年度追星預算 (TWD)</p>
-                    <input type="number" v-model.number="yearlyBudget" placeholder="例如: 50000"
+                    <p class="text-xs font-medium text-slate-500 mb-2">年度追星預算 (TWD)</p><select v-model="budgetEditYear" class="w-full bg-slate-100 rounded-lg p-2 text-xs mb-2"><option v-for="year in availableYears" :key="year" :value="year">{{year}} 年</option></select>
+                    <input type="number" v-model.number="budgetEditValue" min="0" placeholder="設定預算"
                            class="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 text-sm text-slate-800 text-center focus:ring-primary/50">
                     <p class="text-[10px] text-slate-400 mt-2 italic">※ 設定後，首頁會提醒你是否花太多錢囉！</p>
                 </div>
@@ -1350,7 +1356,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=3"></script>
+<script src="./js/app-222-test.js?v=4"></script>
     
 </body>
 </html>
