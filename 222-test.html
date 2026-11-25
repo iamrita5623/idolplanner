@@ -553,7 +553,7 @@
     <div class="flex justify-between items-start">
         <div class="flex flex-col gap-1.5 flex-1 min-w-0">
             <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
-                <i class="ph ph-map-trifold text-primary"></i> 追星足跡
+                <i class="ph ph-map-trifold text-primary"></i> 追星足跡 <button @click="showVenueList=true;venueListMode='visited'" class="text-[10px] font-normal text-slate-500 ml-1"><i class="ph ph-list"></i> 地點清單</button>
             </h3>
             
             <div class="flex items-center gap-2">
@@ -587,6 +587,21 @@
 </div>
 
 
+<div v-if="showVenueList" class="absolute inset-0 z-[1000] bg-black/20 flex items-end" @click.self="showVenueList=false">
+<div class="bg-white rounded-t-2xl w-full max-h-[75%] flex flex-col shadow-xl">
+<div class="p-3 border-b flex items-center justify-between"><h3 class="text-sm font-bold">地點清單</h3><button @click="showVenueList=false"><i class="ph ph-x"></i></button></div>
+<div class="p-2 flex gap-1"><button v-for="m in [{id:'visited',label:'活動地點'},{id:'favorites',label:'收藏場館'},{id:'merge',label:'合併場館'}]" :key="m.id" @click="venueListMode=m.id" class="flex-1 rounded-lg text-xs p-2" :style="venueListMode===m.id?{backgroundColor:themeColor,color:isThemeColorLight?'#263238':'white'}:{}">{{m.label}}</button></div>
+<input v-model="venueListQuery" placeholder="搜尋地點" class="mx-3 mb-2 bg-slate-100 rounded-lg p-2 text-xs">
+<p v-if="venueListMode==='merge'" class="px-3 pb-2 text-[10px] text-slate-500">合併適用所有年度，請確認為同一場館並選擇保留座標。</p>
+<div class="overflow-y-auto px-3 pb-3 space-y-2">
+<p v-if="!visibleVenueGroups.length" class="text-xs text-slate-400 py-3">沒有符合的場館</p>
+<div v-for="g in visibleVenueGroups" :key="g.key" class="border-b border-slate-100 pb-2">
+<div class="flex gap-2 items-center"><input v-if="venueListMode==='merge'" type="checkbox" v-model="mergeVenueKeys" :value="g.key"><button class="flex-1 text-left min-w-0" @click="focusVenue(g)" :disabled="!validVenueCoords(g)"><div class="text-xs font-semibold break-words">{{g.location}}</div><div class="text-[10px] text-slate-500">{{g.events.length}} 場 · {{validVenueCoords(g)?Number(g.lat).toFixed(4)+', '+Number(g.lng).toFixed(4):'待定位'}}</div></button><button v-if="validVenueCoords(g)" @click="toggleFavoriteVenue(g)" :style="{color:themeColor}" aria-label="收藏場館"><i class="ph" :class="isFavoriteVenue(g)?'ph-fill ph-star':'ph-star'"></i></button></div>
+<label v-if="venueListMode==='merge'&&mergeVenueKeys.includes(g.key)&&validVenueCoords(g)" class="text-[10px] flex gap-1 mt-1"><input type="radio" v-model="mergeTargetKey" :value="g.key">保留此場館</label>
+<details v-if="g.events.length&&venueListMode!=='merge'" class="text-[10px] text-slate-500 mt-1"><summary>查看活動</summary><button v-for="e in g.events" :key="e.id" @click="editEvent(e)" class="block text-left py-1 underline">{{e.date}} · {{e.title}}</button></details>
+</div></div>
+<div v-if="venueListMode==='merge'" class="p-3 border-t"><button @click="mergeSelectedVenues" :disabled="mergeVenueKeys.length<2||!mergeTargetKey" class="w-full rounded-lg p-2 text-xs text-white disabled:opacity-40" :style="{backgroundColor:themeColor}">確認合併 {{mergeVenueKeys.length}} 個場館</button></div>
+</div></div>
 <!-- 年度足跡：極簡播放列，不遮住地圖 -->
 <div v-show="!showSettingsModal" class="map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
   <div class="pointer-events-auto flex items-center gap-2 bg-white/95 backdrop-blur rounded-full shadow-md border border-slate-100 px-3 py-2 min-h-[44px]">
@@ -1225,7 +1240,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                             </div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
-                            <div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
+                            <div class="flex items-center gap-2 mt-1"><select v-if="favoriteVenues.length" class="flex-1 min-w-0 bg-slate-50 rounded p-1 text-xs" value="" @change="useFavoriteVenue(favoriteVenues[Number($event.target.value)]);$event.target.value=''"><option value="" disabled>我的收藏場館</option><option v-for="(g,i) in favoriteVenues" :key="i" :value="i">{{g.location}}</option></select><button v-if="form.location&&validVenueCoords(form)" @click="toggleFavoriteVenue(form)" class="text-xs text-slate-500"><i class="ph ph-star"></i> {{isFavoriteVenue(form)?'取消收藏':'收藏場館'}}</button></div><div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
                                 <p class="text-xs text-slate-500 px-2 pb-1">常見場館搜尋建議 · 最多 5 筆</p>
                                 <button v-for="venue in windowVenueMatches(form.location)" :key="venue.country + venue.label" type="button"
                                     class="block w-full rounded-lg px-2 py-2 text-left text-xs hover:bg-blue-50"
@@ -1378,7 +1393,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=7"></script>
+<script src="./js/app-222-test.js?v=8"></script>
     
 </body>
 </html>
