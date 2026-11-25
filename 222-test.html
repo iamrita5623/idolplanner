@@ -592,7 +592,7 @@
 <div class="p-3 border-b flex items-center justify-between"><h3 class="text-sm font-bold">地點清單</h3><button @click="showVenueList=false"><i class="ph ph-x"></i></button></div>
 <div class="p-2 flex gap-1"><button v-for="m in [{id:'visited',label:'活動地點'},{id:'favorites',label:'收藏場館'},{id:'merge',label:'合併場館'}]" :key="m.id" @click="venueListMode=m.id" class="flex-1 rounded-lg text-xs p-2" :style="venueListMode===m.id?{backgroundColor:themeColor,color:isThemeColorLight?'#263238':'white'}:{}">{{m.label}}</button></div>
 <input v-model="venueListQuery" placeholder="搜尋地點" class="mx-3 mb-2 bg-slate-100 rounded-lg p-2 text-xs">
-<p v-if="venueListMode==='merge'" class="px-3 pb-2 text-[10px] text-slate-500">合併適用所有年度，請確認為同一場館並選擇保留座標。</p>
+<p v-if="venueListMode==='merge'" class="px-3 pb-2 text-[10px] text-slate-500">合併適用所有年度。變更搜尋會清除勾選，請確認為同一場館。</p>
 <div class="overflow-y-auto px-3 pb-3 space-y-2">
 <p v-if="!visibleVenueGroups.length" class="text-xs text-slate-400 py-3">沒有符合的場館</p>
 <div v-for="g in visibleVenueGroups" :key="g.key" class="border-b border-slate-100 pb-2">
@@ -600,7 +600,7 @@
 <label v-if="venueListMode==='merge'&&mergeVenueKeys.includes(g.key)&&validVenueCoords(g)" class="text-[10px] flex gap-1 mt-1"><input type="radio" v-model="mergeTargetKey" :value="g.key">保留此場館</label>
 <details v-if="g.events.length&&venueListMode!=='merge'" class="text-[10px] text-slate-500 mt-1"><summary>查看活動</summary><button v-for="e in g.events" :key="e.id" @click="editEvent(e)" class="block text-left py-1 underline">{{e.date}} · {{e.title}}</button></details>
 </div></div>
-<div v-if="venueListMode==='merge'" class="p-3 border-t"><button @click="mergeSelectedVenues" :disabled="mergeVenueKeys.length<2||!mergeTargetKey" class="w-full rounded-lg p-2 text-xs text-white disabled:opacity-40" :style="{backgroundColor:themeColor}">確認合併 {{mergeVenueKeys.length}} 個場館</button></div>
+<div v-if="venueListMode==='merge'" class="p-3 border-t"><div v-if="selectedMergeVenues.length" class="text-[10px] text-slate-500 mb-2 break-words">已選：{{selectedMergeVenues.map(g=>g.location).join("、")}}</div><button @click="mergeSelectedVenues" :disabled="selectedMergeVenues.length<2||!selectedMergeVenues.some(g=>g.key===mergeTargetKey)" class="w-full rounded-lg p-2 text-xs text-white disabled:opacity-40" :style="{backgroundColor:themeColor}">確認合併 {{selectedMergeVenues.length}} 個場館</button></div>
 </div></div>
 <!-- 年度足跡：極簡播放列，不遮住地圖 -->
 <div v-show="!showSettingsModal" class="map-replay-controls absolute bottom-3 left-3 right-3 z-[500] pointer-events-none">
@@ -1393,7 +1393,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=8"></script>
+<script src="./js/app-222-test.js?v=9"></script>
     
 </body>
 </html>
