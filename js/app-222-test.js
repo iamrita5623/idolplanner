@@ -366,7 +366,7 @@ const distanceForYear = selected => {
     return { km: Math.round(distance), missing, homeMissing: false };
 };
 const mapDistanceDetails = computed(()=>distanceForYear(selectedMapYear.value));
-const recapDistanceDetails = computed(()=>distanceForYear(selectedYear.value));
+
 const totalDistance = computed(() => mapDistanceDetails.value.km);
 
 
@@ -1324,6 +1324,7 @@ const recapFarthestCity = computed(() => {
 });
 const recapTopVenue = computed(() => { const counts = new Map(); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const raw=String(e.location || '').trim(); if (!raw) return; const normalized=raw.replace(/臺/g,'台').replace(/\s+/g,' ').trim(); const isKspo=/^(?:올림픽체조경기장|KSPO\s*DOME)$/i.test(normalized); const isLinkou=/^(?:體大林口綜合體育館|國立體育大學綜合體育館|林口體育館)$/i.test(normalized); const isHandball=/^(?:올림픽핸드볼경기장|SK올림픽핸드볼경기장|티켓링크 라이브 아레나|ticketLINK Live Arena)$/i.test(normalized); const isInspire=/^(?:INSPIRE ARENA|NAVER ARENA|NAVER ARENA at INSPIRE|인스파이어 아레나|네이버 아레나)$/i.test(normalized); const key=isKspo?'KSPO DOME':isLinkou?'林口體育館':isHandball?'ticketLINK Live Arena':isInspire?'INSPIRE ARENA':normalized; const entry=counts.get(key) || {name:key,count:0}; entry.count++; counts.set(key,entry); }); return [...counts.values()].sort((a,b)=>b.count-a.count || a.name.localeCompare(b.name,'zh-Hant'))[0] || null; });
 const recapMonths = computed(() => { const months = Array(12).fill(0); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const m = Number(String(e.date || '').slice(5,7)); if(m>=1 && m<=12) months[m-1]++; }); return months; });
+const recapDistanceDetails = computed(()=>distanceForYear(selectedYear.value));
 const recapMonthOpen=ref(0);
 watch(selectedYear,()=>recapMonthOpen.value=0);
 const recapMonthDetails=computed(()=>Array.from({length:12},(_,i)=>{const rows=events.value.filter(e=>(selectedYear.value==='ALL'||String(e.date||'').startsWith(String(selectedYear.value)))&&Number(String(e.date||'').slice(5,7))===i+1).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));return {month:i+1,count:rows.length,amount:rows.reduce((sum,e)=>sum+calculateTotal(e.expenses),0),events:rows};}));
@@ -2378,4 +2379,4 @@ replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay,
             }
         }).mount('#app');
 
-})();
+})().catch(error=>{console.error(error);const el=document.getElementById('boot-error');if(el){el.hidden=false;el.textContent='測試版載入失敗：'+(error.message||error)+'。請截圖回報，資料未重置。';}});
