@@ -317,7 +317,10 @@ const filteredMapEventsCount = computed(() => {
 // Annual route estimate: home -> chronologically ordered geocoded events -> home.
 // Each calendar year is a separate round trip, including in ALL view.
 const validVenueCoords=e=>e&&e.lat!==null&&e.lng!==null&&e.lat!==''&&e.lng!==''&&Number.isFinite(Number(e.lat))&&Number.isFinite(Number(e.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180;
-const venueName=e=>String(e.location||'').trim();
+const venueRawName=e=>String(e?.location||'').trim();
+const exactVenueMatch=name=>(window.IDOL_VENUES||[]).find(v=>[v.label,v.search].some(n=>String(n||'').trim().toLowerCase()===String(name||'').trim().toLowerCase()));
+const venueName=e=>exactVenueMatch(venueRawName(e))?.label||venueRawName(e);
+const chooseVenueSuggestion=v=>{form.value.location=v.label;form.value.lat=null;form.value.lng=null;searchError.value='';};
 const venueKey=e=>JSON.stringify([venueName(e).toLowerCase(),validVenueCoords(e)?Number(e.lat).toFixed(4):null,validVenueCoords(e)?Number(e.lng).toFixed(4):null]);
 const cleanFavoriteVenues=raw=>(Array.isArray(raw)?raw:[]).filter(x=>x&&venueName(x)&&validVenueCoords(x)).map(x=>({location:venueName(x),lat:Number(x.lat),lng:Number(x.lng)}));
 const favoriteVenues=ref(cleanFavoriteVenues(JSON.parse(testStorage.getItem('idolFavoriteVenues')||'[]')));
@@ -331,7 +334,7 @@ watch([venueListQuery,venueListMode,showVenueList],resetVenueSelection,{flush:'s
 watch(mergeVenueKeys,keys=>{if(!keys.includes(mergeTargetKey.value))mergeTargetKey.value='';},{deep:true,flush:'sync'});
 const selectedMergeVenues=computed(()=>visibleVenueGroups.value.filter(g=>mergeVenueKeys.value.includes(g.key)));
 const isFavoriteVenue=g=>favoriteVenues.value.some(x=>venueKey(x)===venueKey(g));
-const toggleFavoriteVenue=g=>{if(isFavoriteVenue(g))favoriteVenues.value=favoriteVenues.value.filter(x=>venueKey(x)!==venueKey(g));else if(venueName(g)&&validVenueCoords(g))favoriteVenues.value.push({location:venueName(g),lat:Number(g.lat),lng:Number(g.lng)});};
+const toggleFavoriteVenue=g=>{if(isFavoriteVenue(g))favoriteVenues.value=favoriteVenues.value.filter(x=>venueKey(x)!==venueKey(g));else if(venueName(g)&&validVenueCoords(g))favoriteVenues.value=[...favoriteVenues.value,{location:venueName(g),lat:Number(g.lat),lng:Number(g.lng)}];};
 const focusVenue=g=>{if(!validVenueCoords(g)||!map)return;showVenueList.value=false;stopReplay();map.setView([Number(g.lat),Number(g.lng)],15);};
 const useFavoriteVenue=g=>{form.value.location=g.location;form.value.lat=g.lat;form.value.lng=g.lng;searchError.value='已帶入收藏場館座標，請確認地點';};
 const mergeSelectedVenues=()=>{const groups=selectedMergeVenues.value;const target=groups.find(g=>g.key===mergeTargetKey.value);if(groups.length<2||!target||!validVenueCoords(target)){alert('請選擇至少兩個場館及有座標的保留場館');return;}if(!confirm('將 '+groups.filter(g=>g.key!==target.key).map(g=>g.location).join('、')+' 合併至 '+target.location+'？將更新所選場館在所有年度的行程地點及座標。'))return;const keys=new Set(groups.map(g=>g.key));for(const e of events.value)if(keys.has(venueKey(e))){e.location=target.location;e.lat=Number(target.lat);e.lng=Number(target.lng);}if(favoriteVenues.value.some(g=>keys.has(venueKey(g)))){favoriteVenues.value=favoriteVenues.value.filter(g=>!keys.has(venueKey(g)));favoriteVenues.value.push({location:target.location,lat:Number(target.lat),lng:Number(target.lng)});}mergeVenueKeys.value=[];mergeTargetKey.value='';};
@@ -1592,7 +1595,7 @@ const searchCoordinates = async () => {
     searchError.value = '定位中...';
 
     // 優化：加上時間戳記避免讀取到失敗的快取，並加入隨機身份識別
-    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(form.value.location)}&limit=1&t=${Date.now()}`;
+    const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(exactVenueMatch(form.value.location)?.search||form.value.location)}&limit=1&t=${Date.now()}`;
     
     try {
         const response = await fetch(apiUrl, {
@@ -2359,7 +2362,7 @@ const generateShareImageLegacy = () => {
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
-                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, windowVenueMatches, isSearching, searchError, mappedEventsCount, missingCoordsCount,
+                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, windowVenueMatches, chooseVenueSuggestion, isSearching, searchError, mappedEventsCount, missingCoordsCount,
     
                     downloadBackup, restoreBackup, idolNagging, showCalendarOptions, addToiCal, addToGoogleCalendar, showTicket, getTicketPrice, updateAppTitle,
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
