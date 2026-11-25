@@ -244,17 +244,26 @@ const yearlyBudget = computed({get:()=>yearlyBudgets.value[currentBudgetYear.val
 const budgetEditValue = computed({get:()=>yearlyBudgets.value[budgetEditYear.value]||'',set:v=>{const n=Number(v);const next={...yearlyBudgets.value};if(Number.isFinite(n)&&n>0)next[budgetEditYear.value]=n;else delete next[budgetEditYear.value];yearlyBudgets.value=next;}});
 watch(yearlyBudgets,v=>testStorage.setItem('idolYearlyBudgets',JSON.stringify(v)),{deep:true});
 const openBudgetSettings=()=>{budgetEditYear.value=currentBudgetYear.value;showSettingsModal.value=true;};
-const expenseLabels=['票券','交通','住宿','周邊','其他','未分類支出'];
-const cleanExpenseRules=raw=>Object.fromEntries(Object.entries(raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{}).filter(([k,v])=>k&&expenseLabels.includes(v)));
+const defaultExpenseCategories=[{name:'票券',keywords:'門票,票券,ticket,票價'},{name:'交通',keywords:'交通,機票,車票,計程車,捷運,高鐵,uber,flight,train,巴士,公車,地鐵,租車,接駁,行李費,機場快線'},{name:'住宿',keywords:'住宿,飯店,旅館,hotel,酒店,民宿,airbnb'},{name:'周邊',keywords:'周邊,週邊,專輯,手燈,merch,小卡,應援棒,娃娃,寫真,應援物,md'},{name:'其他',keywords:'其他,餐飲,餐費,餐點,飲食,飲料,網卡,sim,esim,旅遊保險'}];
+const cleanExpenseCategories=raw=>{const seen=new Set(['未分類支出']);return (Array.isArray(raw)?raw:defaultExpenseCategories).filter(x=>x&&typeof x.name==='string'&&x.name.trim()&&!seen.has(x.name.trim())&&seen.add(x.name.trim())).map(x=>({name:x.name.trim(),keywords:String(x.keywords||'')}));};
+const expenseCategories=ref(cleanExpenseCategories(JSON.parse(testStorage.getItem('idolExpenseCategories')||'null')));
+const expenseLabels=computed(()=>[...expenseCategories.value.map(x=>x.name),'未分類支出']);
+watch(expenseCategories,v=>testStorage.setItem('idolExpenseCategories',JSON.stringify(v)),{deep:true});
+const showExpenseManager=ref(false),expenseDraft=ref([]),expenseTransfers=ref({});
+const openExpenseManager=()=>{expenseDraft.value=expenseCategories.value.map(x=>({...x,original:x.name}));expenseTransfers.value={};showExpenseManager.value=true;};
+const moveExpenseDraft=(i,d)=>{const a=expenseDraft.value;if(i+d<0||i+d>=a.length)return;[a[i],a[i+d]]=[a[i+d],a[i]];};
+const saveExpenseManager=()=>{const rows=expenseDraft.value.map(x=>({...x,name:x.name.trim()}));if(rows.some(x=>!x.name||x.name==='未分類支出')||new Set(rows.map(x=>x.name)).size!==rows.length){alert('分類名稱不可空白、重複或使用未分類支出');return;}const map=new Map(rows.filter(x=>x.original).map(x=>[x.original,x.name]));const valid=new Set(rows.map(x=>x.name));const translate=v=>map.get(v)||(valid.has(v)?v:(valid.has(expenseTransfers.value[v])?expenseTransfers.value[v]:'未分類支出'));for(const e of events.value)for(const x of Array.isArray(e.expenses)?e.expenses:[])if(x.categoryOverride)x.categoryOverride=translate(x.categoryOverride);expenseRules.value=Object.fromEntries(Object.entries(expenseRules.value).map(([k,v])=>[k,translate(v)]));expenseCategories.value=cleanExpenseCategories(rows);expenseOpen.value='';showExpenseManager.value=false;};
+const resolveExpenseCategory=item=>{const name=String(item?.item||'').trim().toLowerCase();if(expenseLabels.value.includes(item?.categoryOverride))return item.categoryOverride;if(Object.prototype.hasOwnProperty.call(expenseRules.value,name)&&expenseLabels.value.includes(expenseRules.value[name]))return expenseRules.value[name];const exact=expenseCategories.value.filter(x=>x.name.toLowerCase()===name);if(exact.length===1)return exact[0].name;if(/機\s*[+＋加]\s*酒|機酒|機票.*住宿/.test(name)&&!expenseCategories.value.some(x=>x.keywords.split(/[,，、\n]/).some(k=>k.trim().toLowerCase()===name)))return '未分類支出';const hits=expenseCategories.value.filter(x=>x.keywords.split(/[,，、\n]/).map(k=>k.trim().toLowerCase()).filter(Boolean).some(k=>/^[a-z]+$/.test(k)?name.split(/[^a-z]+/).includes(k):name.includes(k)));return hits.length===1?hits[0].name:'未分類支出';};
+const cleanExpenseRules=raw=>Object.fromEntries(Object.entries(raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{}).filter(([k,v])=>k&&expenseLabels.value.includes(v)));
 const expenseRules=ref(cleanExpenseRules(JSON.parse(testStorage.getItem('idolExpenseRules')||'{}')));
 watch(expenseRules,v=>testStorage.setItem('idolExpenseRules',JSON.stringify(v)),{deep:true});
 const expenseOpen=ref('');
 const expenseCategoryStats=computed(()=>{
-const totals=expenseLabels.map(label=>({label,amount:0,count:0,details:[]}));
-for(const e of events.value){if(selectedYear.value!=='ALL'&&!String(e.date||'').startsWith(selectedYear.value))continue;const seen=new Set();for(const [index,item] of (Array.isArray(e.expenses)?e.expenses:[]).entries()){const n=Number(item?.amount);if(!Number.isFinite(n)||!n)continue;const name=String(item?.item||'').trim();const key=name.toLowerCase();const auto=/門票|票券|ticket/i.test(name)?0:/交通|機票|車票|計程車|捷運|高鐵|uber|flight|train/i.test(name)?1:/住宿|飯店|旅館|hotel/i.test(name)?2:/周邊|週邊|專輯|手燈|merch/i.test(name)?3:/其他|餐飲|餐費|餐點|飲食/i.test(name)?4:5;const manual=expenseLabels.includes(item.categoryOverride)?item.categoryOverride:Object.prototype.hasOwnProperty.call(expenseRules.value,key)?expenseRules.value[key]:null;const i=manual?expenseLabels.indexOf(manual):auto;totals[i].amount+=n;totals[i].details.push({event:e,index,name,amount:n,category:expenseLabels[i]});seen.add(i);}for(const i of seen)totals[i].count++;}
+const totals=expenseLabels.value.map(label=>({label,amount:0,count:0,details:[]}));
+for(const e of events.value){if(selectedYear.value!=='ALL'&&!String(e.date||'').startsWith(selectedYear.value))continue;const seen=new Set();for(const [index,item] of (Array.isArray(e.expenses)?e.expenses:[]).entries()){const n=Number(item?.amount);if(!Number.isFinite(n)||!n)continue;const name=String(item?.item||'').trim();const key=name.toLowerCase();const i=expenseLabels.value.indexOf(resolveExpenseCategory(item));totals[i].amount+=n;totals[i].details.push({event:e,index,name,amount:n,category:expenseLabels.value[i]});seen.add(i);}for(const i of seen)totals[i].count++;}
 return totals;
 });
-const changeExpenseCategory=(detail,label,remember)=>{if(!expenseLabels.includes(label))return;const item=detail.event.expenses[detail.index];if(!item)return;if(remember&&detail.name){expenseRules.value={...expenseRules.value,[detail.name.toLowerCase()]:label};for(const e of events.value)for(const x of Array.isArray(e.expenses)?e.expenses:[])if(String(x.item||'').trim().toLowerCase()===detail.name.toLowerCase())delete x.categoryOverride;}else item.categoryOverride=label;};
+const changeExpenseCategory=(detail,label,remember)=>{if(!expenseLabels.value.includes(label))return;const item=detail.event.expenses[detail.index];if(!item)return;if(remember&&detail.name){expenseRules.value={...expenseRules.value,[detail.name.toLowerCase()]:label};for(const e of events.value)for(const x of Array.isArray(e.expenses)?e.expenses:[])if(String(x.item||'').trim().toLowerCase()===detail.name.toLowerCase())delete x.categoryOverride;}else item.categoryOverride=label;};
 const resetExpenseCategory=detail=>{const item=detail.event.expenses[detail.index];if(item)delete item.categoryOverride;const next={...expenseRules.value};delete next[detail.name.toLowerCase()];expenseRules.value=next;};
 const expenseBarBase=computed(()=>Math.max(1,...expenseCategoryStats.value.map(x=>x.amount),expenseCategoryStats.value.reduce((s,x)=>s+Math.max(0,x.amount),0)));
  
@@ -1828,6 +1837,7 @@ watch(events, stopReplay, { deep: true });
                                 yearlyBudget: yearlyBudget.value,
                                 yearlyBudgets: {...yearlyBudgets.value},
                                 expenseRules: {...expenseRules.value},
+                                expenseCategories: expenseCategories.value.map(x=>({...x})),
                                 activityCategories: JSON.parse(JSON.stringify(activityCategoryMap.value)),
                                 confirmedSeries: JSON.parse(JSON.stringify(confirmedSeries.value)),
                                 rejectedSeries: JSON.parse(JSON.stringify(rejectedSeries.value))
@@ -1889,7 +1899,8 @@ watch(events, stopReplay, { deep: true });
                                 next.idolRejectedSeries = JSON.stringify(validMap(restoreData.rejectedSeries) ? restoreData.rejectedSeries : rejectedSeries.value);
                                 next.appTitle = typeof restoreData.customTitle === 'string' ? restoreData.customTitle : customTitle.value;
                                 next.idolTheme = typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor) ? restoreData.themeColor : themeColor.value;
-                                next.idolExpenseRules = JSON.stringify(restoreData.expenseRules ? cleanExpenseRules(restoreData.expenseRules) : expenseRules.value);
+                                next.idolExpenseCategories = JSON.stringify(restoreData.expenseCategories ? cleanExpenseCategories(restoreData.expenseCategories) : expenseCategories.value);
+                                next.idolExpenseRules = JSON.stringify(restoreData.expenseRules || expenseRules.value);
                                 next.idolYearlyBudgets = JSON.stringify(restoreData.yearlyBudgets ? cleanBudgets(restoreData.yearlyBudgets) : yearlyBudgets.value);
                             }
                             try { await testStorage.commit(next); }
@@ -1903,7 +1914,8 @@ watch(events, stopReplay, { deep: true });
                                 customTitle.value = next.appTitle;
                                 themeColor.value = next.idolTheme;
                                 yearlyBudgets.value = JSON.parse(next.idolYearlyBudgets);
-                                expenseRules.value = JSON.parse(next.idolExpenseRules);
+                                expenseCategories.value = cleanExpenseCategories(JSON.parse(next.idolExpenseCategories));
+                                expenseRules.value = cleanExpenseRules(JSON.parse(next.idolExpenseRules));
                             }
                             showSettingsModal.value = false;
                             alert('已還原 '+restoreData.events.length+' 筆行程，並儲存至測試版本機。未上傳雲端。');
@@ -2324,7 +2336,7 @@ const generateShareImageLegacy = () => {
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
                     getDebutCongrats,
                     handleFileUpload, 
-replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, yearlyBudgets, currentBudgetYear, budgetEditYear, budgetEditValue, openBudgetSettings, expenseCategoryStats, expenseBarBase, expenseLabels, expenseOpen, changeExpenseCategory, resetExpenseCategory, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
+replayPlaying, replayPaused, replayIndex, replayEvent, replayStops, startReplay, pauseReplay, stopReplay, previousReplayStop, nextReplayStop, openReplayEvent, selectedMapYear, filteredMapEventsCount, totalDistance, mapDistanceDetails, isYearlyPrivacy, isEventPrivacy, isStatsPrivacy, yearlyBudget, yearlyBudgets, currentBudgetYear, budgetEditYear, budgetEditValue, openBudgetSettings, expenseCategoryStats, expenseBarBase, expenseLabels, expenseCategories, showExpenseManager, expenseDraft, expenseTransfers, openExpenseManager, moveExpenseDraft, saveExpenseManager, resolveExpenseCategory, expenseOpen, changeExpenseCategory, resetExpenseCategory, budgetNagging, currentUser, loginEmail, loginWithEmail, logout, lastSyncTime, isInitializing, loadError, retryCloudLoad, 
 
                 };
             }
