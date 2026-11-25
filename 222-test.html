@@ -751,11 +751,19 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
   
  
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-<h3 class="font-bold text-sm text-slate-800 mb-3">費用分類統計</h3>
+<h3 class="font-bold text-sm text-slate-800 mb-2">費用分類統計</h3>
+<p class="text-[10px] text-slate-500 mb-2">點選分類查看明細 · {{expenseCategoryStats[5].details.length}} 筆未分類</p>
 <div v-for="row in expenseCategoryStats" :key="row.label" class="mb-2">
-<div class="flex justify-between text-xs text-slate-600"><span>{{row.label}} · {{row.count}} 場</span><span>{{isStatsPrivacy ? '***' : 'NT$ '+formatMoney(row.amount)}}</span></div>
-<div v-if="!isStatsPrivacy" class="h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden"><div class="h-full rounded-full" :style="{backgroundColor:themeColor,width:Math.max(0,row.amount)/expenseBarBase*100+'%'}"></div></div>
-</div><p class="text-[10px] text-slate-400">依所選年份及原有支出項目統計，自訂項目未能辨識時列為未分類；退款保留原金額。</p></div>
+<button type="button" @click="expenseOpen=expenseOpen===row.label?'':row.label" class="w-full flex justify-between items-center text-xs text-slate-600 py-1"><span>{{row.label}} · {{row.count}} 場</span><span>{{isStatsPrivacy ? '***' : 'NT$ '+formatMoney(row.amount)}} <i class="ph" :class="expenseOpen===row.label?'ph-caret-up':'ph-caret-down'"></i></span></button>
+<div v-if="!isStatsPrivacy" class="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full rounded-full" :style="{backgroundColor:themeColor,width:Math.max(0,row.amount)/expenseBarBase*100+'%'}"></div></div>
+<div v-if="expenseOpen===row.label" class="bg-slate-50 rounded-xl p-2 mt-2 space-y-2">
+<p v-if="!row.details.length" class="text-xs text-slate-400">沒有支出明細</p>
+<div v-for="d in row.details" :key="d.event.id+'-'+d.index" class="border-b border-slate-200 pb-2 last:border-0">
+<div class="flex justify-between gap-2 text-xs font-medium"><span>{{d.name||'未命名項目'}}</span><span>{{isStatsPrivacy?'***':'NT$ '+formatMoney(d.amount)}}</span></div>
+<button @click="editEvent(d.event)" class="text-[10px] text-slate-500 text-left underline">{{d.event.date}} · {{d.event.title}} ↗</button>
+<div class="flex flex-wrap gap-1 mt-1"><select :value="d.category" @change="changeExpenseCategory(d,$event.target.value,false)" class="text-xs rounded border bg-white p-1"><option v-for="label in expenseLabels" :key="label">{{label}}</option></select><select v-if="d.name" value="" @change="changeExpenseCategory(d,$event.target.value,true);$event.target.value=''" class="text-xs rounded border bg-white p-1"><option value="" disabled>同名項目全部分類</option><option v-for="label in expenseLabels" :key="label">{{label}}</option></select><button @click="resetExpenseCategory(d)" class="text-[10px] underline text-slate-500">恢復自動</button></div>
+</div></div></div>
+<p class="text-[10px] text-slate-400">依支出名稱自動分類；可調整單筆或記住同名項目分類，不改動原始金額。</p></div>
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-crown text-yellow-500"></i> 本命排行榜</h3><span class="text-[10px] text-slate-500 px-2 py-1 rounded-full">含見面/錄製/簽售</span></div>
                     <div v-if="statsData.topArtists.length > 0" class="space-y-4">
@@ -1356,7 +1364,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=4"></script>
+<script src="./js/app-222-test.js?v=5"></script>
     
 </body>
 </html>
