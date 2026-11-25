@@ -338,8 +338,7 @@ const toggleFavoriteVenue=g=>{if(isFavoriteVenue(g))favoriteVenues.value=favorit
 const focusVenue=g=>{if(!validVenueCoords(g)||!map)return;showVenueList.value=false;stopReplay();map.setView([Number(g.lat),Number(g.lng)],15);};
 const useFavoriteVenue=g=>{form.value.location=g.location;form.value.lat=g.lat;form.value.lng=g.lng;searchError.value='已帶入收藏場館座標，請確認地點';};
 const mergeSelectedVenues=()=>{const groups=selectedMergeVenues.value;const target=groups.find(g=>g.key===mergeTargetKey.value);if(groups.length<2||!target||!validVenueCoords(target)){alert('請選擇至少兩個場館及有座標的保留場館');return;}if(!confirm('將 '+groups.filter(g=>g.key!==target.key).map(g=>g.location).join('、')+' 合併至 '+target.location+'？將更新所選場館在所有年度的行程地點及座標。'))return;const keys=new Set(groups.map(g=>g.key));for(const e of events.value)if(keys.has(venueKey(e))){e.location=target.location;e.lat=Number(target.lat);e.lng=Number(target.lng);}if(favoriteVenues.value.some(g=>keys.has(venueKey(g)))){favoriteVenues.value=favoriteVenues.value.filter(g=>!keys.has(venueKey(g)));favoriteVenues.value.push({location:target.location,lat:Number(target.lat),lng:Number(target.lng)});}mergeVenueKeys.value=[];mergeTargetKey.value='';};
-const mapDistanceDetails = computed(() => {
-    const selected = selectedMapYear.value;
+const distanceForYear = selected => {
     const rows = events.value.filter(e => selected === 'ALL' || String(e.date || '').startsWith(String(selected)));
     const valid = e => Number.isFinite(Number(e.lat)) && Number.isFinite(Number(e.lng)) && e.lat !== null && e.lng !== null && e.lat !== '' && e.lng !== '';
     const missing = rows.filter(e => !valid(e)).length;
@@ -365,7 +364,9 @@ const mapDistanceDetails = computed(() => {
         distance += calculateKm(previous[0],previous[1],home[0],home[1]);
     }
     return { km: Math.round(distance), missing, homeMissing: false };
-});
+};
+const mapDistanceDetails = computed(()=>distanceForYear(selectedMapYear.value));
+const recapDistanceDetails = computed(()=>distanceForYear(selectedYear.value));
 const totalDistance = computed(() => mapDistanceDetails.value.km);
 
 
@@ -1191,7 +1192,7 @@ const availableYears = computed(() => {
                     let targetEvents = events.value;
       
                     if (selectedYear.value !== 'ALL') {
-                        targetEvents = events.value.filter(e => e.date.match(new RegExp(`^${selectedYear.value}`)));
+                        targetEvents = events.value.filter(e => String(e.date||'').startsWith(String(selectedYear.value)));
                     }
                     const count = targetEvents.length;
           
@@ -1323,6 +1324,9 @@ const recapFarthestCity = computed(() => {
 });
 const recapTopVenue = computed(() => { const counts = new Map(); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const raw=String(e.location || '').trim(); if (!raw) return; const normalized=raw.replace(/臺/g,'台').replace(/\s+/g,' ').trim(); const isKspo=/^(?:올림픽체조경기장|KSPO\s*DOME)$/i.test(normalized); const isLinkou=/^(?:體大林口綜合體育館|國立體育大學綜合體育館|林口體育館)$/i.test(normalized); const isHandball=/^(?:올림픽핸드볼경기장|SK올림픽핸드볼경기장|티켓링크 라이브 아레나|ticketLINK Live Arena)$/i.test(normalized); const isInspire=/^(?:INSPIRE ARENA|NAVER ARENA|NAVER ARENA at INSPIRE|인스파이어 아레나|네이버 아레나)$/i.test(normalized); const key=isKspo?'KSPO DOME':isLinkou?'林口體育館':isHandball?'ticketLINK Live Arena':isInspire?'INSPIRE ARENA':normalized; const entry=counts.get(key) || {name:key,count:0}; entry.count++; counts.set(key,entry); }); return [...counts.values()].sort((a,b)=>b.count-a.count || a.name.localeCompare(b.name,'zh-Hant'))[0] || null; });
 const recapMonths = computed(() => { const months = Array(12).fill(0); events.value.filter(e => selectedYear.value === 'ALL' || String(e.date || '').startsWith(String(selectedYear.value))).forEach(e => { const m = Number(String(e.date || '').slice(5,7)); if(m>=1 && m<=12) months[m-1]++; }); return months; });
+const recapMonthOpen=ref(0);
+watch(selectedYear,()=>recapMonthOpen.value=0);
+const recapMonthDetails=computed(()=>Array.from({length:12},(_,i)=>{const rows=events.value.filter(e=>(selectedYear.value==='ALL'||String(e.date||'').startsWith(String(selectedYear.value)))&&Number(String(e.date||'').slice(5,7))===i+1).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));return {month:i+1,count:rows.length,amount:rows.reduce((sum,e)=>sum+calculateTotal(e.expenses),0),events:rows};}));
 const recapMonthMax = computed(() => Math.max(1,...recapMonths.value));
 const recapPalette = computed(() => { const year=String(selectedYear.value); return year==='2024' ? {background:'#FFBE98',ink:'#563A3C'} : year==='2025' ? {background:'#A47864',ink:'#FFF8F0'} : year==='2026' ? {background:'#F5F3F0',ink:'#383437'} : year==='2023' ? {background:'#BB2649',ink:'#FFFFFF'} : year==='2022' ? {background:'#6667AB',ink:'#FFFFFF'} : year==='2021' ? {background:'#939597',ink:'#242424'} : year==='2020' ? {background:'#0F4C81',ink:'#FFFFFF'} : year==='2019' ? {background:'#FF6F61',ink:'#342C2D'} : year==='2018' ? {background:'#5F4B8B',ink:'#FFFFFF'} : year==='2017' ? {background:'#88B04B',ink:'#342C2D'} : year==='2016' ? {background:'#F7CAC9',ink:'#342C2D'} : year==='2015' ? {background:'#955251',ink:'#FFFFFF'} : year==='2014' ? {background:'#B163A3',ink:'#FFFFFF'} : year==='2013' ? {background:'#009B77',ink:'#FFFFFF'} : year==='2012' ? {background:'#DD4124',ink:'#FFFFFF'} : year==='2011' ? {background:'#D65076',ink:'#FFFFFF'} : year==='2010' ? {background:'#45B8AC',ink:'#342C2D'} : year==='2009' ? {background:'#F0C05A',ink:'#342C2D'} : year==='2008' ? {background:'#5A5B9F',ink:'#FFFFFF'} : year==='2007' ? {background:'#9B1B30',ink:'#FFFFFF'} : year==='2006' ? {background:'#DECDBE',ink:'#342C2D'} : year==='2005' ? {background:'#53B0AE',ink:'#342C2D'} : year==='2004' ? {background:'#E2583E',ink:'#FFFFFF'} : year==='2003' ? {background:'#7BC4C4',ink:'#342C2D'} : year==='2002' ? {background:'#BF1932',ink:'#FFFFFF'} : year==='2001' ? {background:'#C74375',ink:'#FFFFFF'} : year==='2000' ? {background:'#98B2D1',ink:'#342C2D'} : {background:'#F1E8E7',ink:'#40323A'}; });
 
@@ -2362,7 +2366,7 @@ const generateShareImageLegacy = () => {
                     toggleExpand, formatMoney, getDay, getMonth, getDaysDiff, getMapLink, 
                     calculateTotal, 
                     addExpenseItem, removeExpenseItem, addChecklistItem, removeChecklistItem, addDefaultChecklist, saveFandoms, addFandom, removeFandom, editFandom, closeFandomModal, openFandomModal, fandoms,
-                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapPalette, availableYears, searchCoordinates, windowVenueMatches, chooseVenueSuggestion, isSearching, searchError, mappedEventsCount, missingCoordsCount,
+                    getEventColor, emotionalSummary, recapCities, recapHomeCity, recapKnownCities, recapFarthestCity, recapTopVenue, recapMonths, recapMonthMax, recapMonthOpen, recapMonthDetails, recapDistanceDetails, recapPalette, availableYears, searchCoordinates, windowVenueMatches, chooseVenueSuggestion, isSearching, searchError, mappedEventsCount, missingCoordsCount,
     
                     downloadBackup, restoreBackup, idolNagging, showCalendarOptions, addToiCal, addToGoogleCalendar, showTicket, getTicketPrice, updateAppTitle,
                     isColorLight, isThemeColorLight, headerTextColor, appVersion, changelogContent, calculateFandomDays, fandomMessageStatic, calculateDaysToNextDate, calculateYearsAndDaysSinceDebut, getBirthdayCongrats, 
