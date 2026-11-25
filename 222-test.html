@@ -596,7 +596,7 @@
 <div class="overflow-y-auto px-3 pb-3 space-y-2">
 <p v-if="!visibleVenueGroups.length" class="text-xs text-slate-400 py-3">沒有符合的場館</p>
 <div v-for="g in visibleVenueGroups" :key="g.key" class="border-b border-slate-100 pb-2">
-<div class="flex gap-2 items-center"><input v-if="venueListMode==='merge'" type="checkbox" v-model="mergeVenueKeys" :value="g.key"><button class="flex-1 text-left min-w-0" @click="focusVenue(g)" :disabled="!validVenueCoords(g)"><div class="text-xs font-semibold break-words">{{g.location}}</div><div class="text-[10px] text-slate-500">{{g.events.length}} 場 · {{validVenueCoords(g)?Number(g.lat).toFixed(4)+', '+Number(g.lng).toFixed(4):'待定位'}}</div></button><button v-if="validVenueCoords(g)" @click="toggleFavoriteVenue(g)" :style="{color:themeColor}" aria-label="收藏場館"><i class="ph" :class="isFavoriteVenue(g)?'ph-fill ph-star':'ph-star'"></i></button></div>
+<div class="flex gap-2 items-center"><input v-if="venueListMode==='merge'" type="checkbox" v-model="mergeVenueKeys" :value="g.key"><button class="flex-1 text-left min-w-0" @click="focusVenue(g)" :disabled="!validVenueCoords(g)"><div class="text-xs font-semibold break-words">{{g.location}}</div><div class="text-[10px] text-slate-500">{{g.events.length}} 場 · {{validVenueCoords(g)?Number(g.lat).toFixed(4)+', '+Number(g.lng).toFixed(4):'待定位'}}</div></button><button type="button" v-if="validVenueCoords(g)" @click.stop="toggleFavoriteVenue(g)" class="shrink-0 min-w-[40px] min-h-[40px] text-xl" :style="{color:themeColor}" :aria-pressed="isFavoriteVenue(g)" :aria-label="isFavoriteVenue(g)?'取消收藏':'收藏場館'">{{isFavoriteVenue(g)?'★':'☆'}}</button></div>
 <label v-if="venueListMode==='merge'&&mergeVenueKeys.includes(g.key)&&validVenueCoords(g)" class="text-[10px] flex gap-1 mt-1"><input type="radio" v-model="mergeTargetKey" :value="g.key">保留此場館</label>
 <details v-if="g.events.length&&venueListMode!=='merge'" class="text-[10px] text-slate-500 mt-1"><summary>查看活動</summary><button v-for="e in g.events" :key="e.id" @click="editEvent(e)" class="block text-left py-1 underline">{{e.date}} · {{e.title}}</button></details>
 </div></div>
@@ -1240,16 +1240,16 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                             </div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">座位 (印在票根上)</label><input v-model="form.seat" type="text" placeholder="例如: 搖滾A區 1號" class="w-full bg-slate-50 border-none rounded-xl p-3 focus:ring-2 focus:ring-primary/50 text-slate-800"></div>
                             <div><label class="block text-sm font-medium text-slate-500 mb-1">地點</label><div class="flex gap-2"><div class="relative flex-1"><i class="ph ph-map-pin absolute left-3 top-3.5 text-slate-400"></i><input v-model="form.location" type="text" placeholder="地點" class="w-full bg-slate-50 border-none rounded-xl p-3 pl-10 focus:ring-2 focus:ring-primary/50 text-slate-800"></div><button @click="searchCoordinates" class="bg-blue-50 text-blue-600 px-3 rounded-xl border border-blue-100 hover:bg-blue-100 flex items-center justify-center shrink-0"><i class="ph ph-crosshair text-lg"></i></button></div></div>
-                            <div class="flex items-center gap-2 mt-1"><select v-if="favoriteVenues.length" class="flex-1 min-w-0 bg-slate-50 rounded p-1 text-xs" value="" @change="useFavoriteVenue(favoriteVenues[Number($event.target.value)]);$event.target.value=''"><option value="" disabled>我的收藏場館</option><option v-for="(g,i) in favoriteVenues" :key="i" :value="i">{{g.location}}</option></select><button v-if="form.location&&validVenueCoords(form)" @click="toggleFavoriteVenue(form)" class="text-xs text-slate-500"><i class="ph ph-star"></i> {{isFavoriteVenue(form)?'取消收藏':'收藏場館'}}</button></div><div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
+                            <div class="flex items-center gap-2 mt-1"><select v-if="favoriteVenues.length" class="flex-1 min-w-0 bg-slate-50 rounded p-1 text-xs" value="" @change="useFavoriteVenue(favoriteVenues[Number($event.target.value)]);$event.target.value=''"><option value="" disabled>我的收藏場館</option><option v-for="(g,i) in favoriteVenues" :key="i" :value="i">{{g.location}}</option></select><button type="button" v-if="form.location&&validVenueCoords(form)" @click.stop="toggleFavoriteVenue(form)" class="text-xs py-2" :style="{color:isFavoriteVenue(form)?themeColor:undefined}" :aria-pressed="isFavoriteVenue(form)">{{isFavoriteVenue(form)?'★ 已收藏（取消）':'☆ 收藏場館'}}</button></div><div v-if="(form.location || '').trim() && windowVenueMatches(form.location).length" class="mt-2 rounded-xl border border-slate-200 bg-white p-2">
                                 <p class="text-xs text-slate-500 px-2 pb-1">常見場館搜尋建議 · 最多 5 筆</p>
                                 <button v-for="venue in windowVenueMatches(form.location)" :key="venue.country + venue.label" type="button"
                                     class="block w-full rounded-lg px-2 py-2 text-left text-xs hover:bg-blue-50"
-                                    @click="form.location = venue.search; form.lat = null; form.lng = null; searchError = ''">
+                                    @click="chooseVenueSuggestion(venue)">
                                     <span class="font-semibold text-slate-800">{{ venue.label }}</span>
                                     <span class="text-slate-400 ml-1">· {{ venue.country }}</span>
                                     <span class="block text-slate-500 mt-0.5">{{ venue.search }}</span>
                                 </button>
-                                <p class="text-xs text-slate-400 px-2 pt-1">點選只會填入搜尋名稱；請再按定位按鈕確認座標。</p>
+                                <p class="text-xs text-slate-400 px-2 pt-1">點選帶入場館顯示名稱；定位時自動使用當地搜尋名稱。</p>
                             </div>
                             <p v-if="searchError" class="text-xs font-medium mt-2 p-2 rounded-lg" :class="searchError.includes('成功') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                                 {{ searchError }}
@@ -1393,7 +1393,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=9"></script>
+<script src="./js/app-222-test.js?v=10"></script>
     
 </body>
 </html>
