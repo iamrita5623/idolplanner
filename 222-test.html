@@ -96,7 +96,7 @@
  #app>main>.map-tab-panel>#map-container{height:100%!important;min-height:500px}
 }
 </style>
-</head>
+<style>[v-cloak]{display:none!important}</style></head>
 <body class="text-slate-700 antialiased selection:bg-primary selection:text-white flex flex-col">
 
     <button onclick="forceReset()" id="rescue-btn"
@@ -104,7 +104,7 @@
         ⚠️ 畫面全白點我修復
     </button>
 
-    <div id="app" v-cloak :style="cssVars" class="h-full flex flex-col relative w-full">
+    <div id="boot-error" hidden style="padding:20px;color:#991b1b;background:white;position:fixed;inset:0;z-index:99999"></div><div id="app" v-cloak :style="cssVars" class="h-full flex flex-col relative w-full">
         <!-- 啟動時遮住暫時的 0 筆畫面，避免誤認資料被清空 -->
         <div v-if="isInitializing || loadError" class="absolute inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center px-8 text-center" role="status" aria-live="polite">
             <template v-if="isInitializing">
@@ -768,7 +768,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
                 <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-100">
 <div class="flex justify-between items-center mb-2"><h3 class="font-bold text-sm text-slate-800">每月活動統計</h3><span class="text-[10px] text-slate-500">點選月份查看明細</span></div>
 <div class="grid grid-cols-12 gap-1 items-end h-20">
-<button v-for="m in recapMonthDetails" :key="m.month" @click="recapMonthOpen=recapMonthOpen===m.month?0:m.month" class="h-full flex flex-col justify-end items-center gap-1 min-w-0" :aria-expanded="recapMonthOpen===m.month"><span class="text-[9px] text-slate-500">{{m.count}}</span><span class="w-full rounded-t" :style="{height:Math.max(3,m.count/recapMonthMax*42)+'px',backgroundColor:themeColor,opacity:recapMonthOpen===m.month?1:m.count?.65:.12}"></span><span class="text-[9px] text-slate-500">{{m.month}}</span></button>
+<button v-for="m in recapMonthDetails" :key="m.month" @click="recapMonthOpen=recapMonthOpen===m.month?0:m.month" class="h-full flex flex-col justify-end items-center gap-1 min-w-0" :aria-expanded="recapMonthOpen===m.month"><span class="text-[9px] text-slate-500">{{m.count}}</span><span class="w-full rounded-t" :style="{height:Math.max(3,m.count/recapMonthMax*42)+'px',backgroundColor:themeColor,opacity:recapMonthOpen===m.month ? 1 : (m.count ? 0.65 : 0.12)}"></span><span class="text-[9px] text-slate-500">{{m.month}}</span></button>
 </div>
 <div v-if="recapMonthOpen" class="mt-2 border-t border-slate-100 pt-2">
 <div class="flex justify-between text-xs font-semibold"><span>{{recapMonthOpen}} 月 · {{recapMonthDetails[recapMonthOpen-1].count}} 場</span><span>{{isStatsPrivacy?'***':'</h3><button @click="openExpenseManager" class="text-xs text-slate-500"><i class="ph ph-gear"></i> 分類管理</button></div>
@@ -1398,7 +1398,7 @@ z-index: -1; display: flex; flex-direction: column;" :style="{ background: '#f8f
     <script src="./js/recap-222-test.js?v=1"></script>
     <script src="./js/events-222-test.js?v=1"></script>
     <script src="./js/venues-222-test.js?v=1"></script>
-<script src="./js/app-222-test.js?v=11"></script>
+<script src="./js/app-222-test.js?v=12"></script>
     
 </body>
 </html>
