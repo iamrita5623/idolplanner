@@ -1826,53 +1826,54 @@ watch(events, stopReplay, { deep: true });
                             const summary = '這份備份包含 ' + restoreData.events.length +
                                 ' 筆行程' + (isFull ? '、' + restoreData.fandoms.length +
                                 ' 筆紀念日與個人設定' : '（舊版格式，僅還原行程）') +
-                                '。\n還原後會取代目前對應的資料並同步到雲端。\n確定繼續嗎？';
+                                '。\n還原後會取代測試版本機對應資料，不會同步到雲端。\n確定繼續嗎？';
                             if (!confirm(summary)) return;
-                            // 將還原前狀態先留在本機，方便意外時找回。
-                            testStorage.setItem('idolPreRestoreBackup', JSON.stringify({
-                                events: events.value,
-                                fandoms: fandoms.value,
-                                customTitle: customTitle.value,
-                                themeColor: themeColor.value,
-                                yearlyBudget: yearlyBudget.value,
-                                activityCategories: activityCategoryMap.value,
-                                confirmedSeries: confirmedSeries.value,
-                                rejectedSeries: rejectedSeries.value,
-                                savedAt: new Date().toISOString()
-                            }));
+                            const validMap = v => v && typeof v === 'object' && !Array.isArray(v);
+                            const next = {
+                                idolEvents: JSON.stringify(restoreData.events),
+                                idolGuestEvents: JSON.stringify(restoreData.events)
+                            };
+                            if (isFull) {
+                                next.fandomFandoms = JSON.stringify(restoreData.fandoms);
+                                next.idolActivityCategories = JSON.stringify(validMap(restoreData.activityCategories) ? restoreData.activityCategories : activityCategoryMap.value);
+                                next.idolConfirmedSeries = JSON.stringify(validMap(restoreData.confirmedSeries) ? restoreData.confirmedSeries : confirmedSeries.value);
+                                next.idolRejectedSeries = JSON.stringify(validMap(restoreData.rejectedSeries) ? restoreData.rejectedSeries : rejectedSeries.value);
+                                next.appTitle = typeof restoreData.customTitle === 'string' ? restoreData.customTitle : customTitle.value;
+                                next.idolTheme = typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor) ? restoreData.themeColor : themeColor.value;
+                                next.idolYearlyBudget = String(Number(restoreData.yearlyBudget)>0 && Number.isFinite(Number(restoreData.yearlyBudget)) ? Number(restoreData.yearlyBudget) : yearlyBudget.value);
+                            }
+                            const before = Object.keys(next).map(key => [key,testStorage.getItem(key)]);
+                            const written = [];
+                            try {
+                                for (const [key,value] of Object.entries(next)) {
+                                    testStorage.setItem(key,value);
+                                    written.push(key);
+                                }
+                            } catch (storageError) {
+                                let rollbackOK = true;
+                                for (const [key,value] of before.reverse()) {
+                                    if (!written.includes(key)) continue;
+                                    try { if (value === null) testStorage.removeItem(key); else testStorage.setItem(key,value); }
+                                    catch (_) { rollbackOK = false; }
+                                }
+                                alert(rollbackOK ? '本機儲存失敗，已取消還原，原有資料保留。可能是瀏覽器儲存空間不足。' : '本機儲存失敗且部分資料無法復原，請保留原始備份，不要清除瀏覽器資料。');
+                                return;
+                            }
                             events.value = restoreData.events;
                             if (isFull) {
                                 fandoms.value = restoreData.fandoms;
-                                if (restoreData.activityCategories && typeof restoreData.activityCategories==='object' && !Array.isArray(restoreData.activityCategories)) activityCategoryMap.value = restoreData.activityCategories;
-                                if (restoreData.confirmedSeries && typeof restoreData.confirmedSeries==='object' && !Array.isArray(restoreData.confirmedSeries)) confirmedSeries.value=restoreData.confirmedSeries;
-                                if (restoreData.rejectedSeries && typeof restoreData.rejectedSeries==='object' && !Array.isArray(restoreData.rejectedSeries)) rejectedSeries.value=restoreData.rejectedSeries;
-                                if (typeof restoreData.customTitle === 'string') customTitle.value = restoreData.customTitle;
-                                if (typeof restoreData.themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(restoreData.themeColor)) {
-                                    themeColor.value = restoreData.themeColor;
-                                }
-                                if (Number.isFinite(Number(restoreData.yearlyBudget)) && Number(restoreData.yearlyBudget) > 0) {
-                                    yearlyBudget.value = Number(restoreData.yearlyBudget);
-                                }
+                                activityCategoryMap.value = JSON.parse(next.idolActivityCategories);
+                                confirmedSeries.value = JSON.parse(next.idolConfirmedSeries);
+                                rejectedSeries.value = JSON.parse(next.idolRejectedSeries);
+                                customTitle.value = next.appTitle;
+                                themeColor.value = next.idolTheme;
+                                yearlyBudget.value = Number(next.idolYearlyBudget);
                             }
-                            // Persist restored guest data synchronously before reporting success.
-                            // Vue watchers may not flush before the user refreshes the page.
-                            testStorage.setItem(currentUser.value ? 'idolEvents' : 'idolGuestEvents', JSON.stringify(events.value));
-                            if (isFull) {
-                                testStorage.setItem('fandomFandoms', JSON.stringify(fandoms.value));
-                                testStorage.setItem('idolActivityCategories', JSON.stringify(activityCategoryMap.value));
-                                testStorage.setItem('idolConfirmedSeries', JSON.stringify(confirmedSeries.value));
-                                testStorage.setItem('idolRejectedSeries', JSON.stringify(rejectedSeries.value));
-                                testStorage.setItem('appTitle', customTitle.value);
-                                testStorage.setItem('idolTheme', themeColor.value);
-                                testStorage.setItem('idolYearlyBudget', String(yearlyBudget.value));
-                            }
-                            // Explicitly queue the complete restored snapshot, including category settings.
-                            syncToCloud();
                             showSettingsModal.value = false;
-                            alert('備份已載入。若已登入且同步正常，系統會自動儲存至雲端。');
+                            alert('已還原 '+restoreData.events.length+' 筆行程，並儲存至測試版本機。未上傳雲端。');
                         } catch (error) {
                             console.error('備份還原失敗:', error);
-                            alert('備份讀取失敗，原有資料未變更。');
+                            alert('備份還原發生錯誤，請保留原始備份並確認目前資料。');
                         } finally {
                             event.target.value = '';
                         }
